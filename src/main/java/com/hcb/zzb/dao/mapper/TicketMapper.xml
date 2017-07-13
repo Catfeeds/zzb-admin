@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hcb.zzb.dao.interfaceClass.TicketMapper" >
+  <resultMap id="BaseResultMap" type="com.hcb.zzb.dto.Ticket" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="create_at" property="createAt" jdbcType="TIMESTAMP" />
+    <result column="update_at" property="updateAt" jdbcType="TIMESTAMP" />
+    <result column="delete_at" property="deleteAt" jdbcType="TIMESTAMP" />
+    <result column="ticket_uuid" property="ticketUuid" jdbcType="VARCHAR" />
+    <result column="order_number" property="orderNumber" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="money" property="money" jdbcType="REAL" />
+    <result column="points" property="points" jdbcType="INTEGER" />
+    <result column="illegal_time" property="illegalTime" jdbcType="TIMESTAMP" />
+    <result column="illegal_code" property="illegalCode" jdbcType="VARCHAR" />
+    <result column="ticket_status" property="ticketStatus" jdbcType="INTEGER" />
+    <result column="user_uuid" property="userUuid" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, create_at, update_at, delete_at, ticket_uuid, order_number, address, money, points, 
+    illegal_time, illegal_code, ticket_status, user_uuid
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ticket
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAllTickeByStstus" resultMap="BaseResultMap" parameterType="java.util.Map">
+  	select
+  	<include refid="Base_Column_List" />
+  	from ticket
+  	where user_uuid=#{user_uuid,jdbcType=VARCHAR} and ticket_status=#{ticketStatus,jdbcType=INTEGER} limit #{pageIndex},#{pageSize}
+  </select>
+  <select id="selectAllTickeByStstusCount" resultType="int" parameterType="java.util.Map">
+  	select count(1)
+	from ticket where user_uuid=#{user_uuid,jdbcType=VARCHAR} and ticket_status=#{ticketStatus,jdbcType=INTEGER}
+  </select>
+  <select id="selectByTicketUuid" parameterType="java.lang.String" resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from ticket
+    where ticket_uuid=#{ticket_uuid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ticket
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.hcb.zzb.dto.Ticket" >
+    insert into ticket (id, create_at, update_at, 
+      delete_at, ticket_uuid, order_number, 
+      address, money, points, 
+      illegal_time, illegal_code, ticket_status, 
+      user_uuid)
+    values (#{id,jdbcType=INTEGER}, #{createAt,jdbcType=TIMESTAMP}, #{updateAt,jdbcType=TIMESTAMP}, 
+      #{deleteAt,jdbcType=TIMESTAMP}, #{ticketUuid,jdbcType=VARCHAR}, #{orderNumber,jdbcType=VARCHAR}, 
+      #{address,jdbcType=VARCHAR}, #{money,jdbcType=REAL}, #{points,jdbcType=INTEGER}, 
+      #{illegalTime,jdbcType=TIMESTAMP}, #{illegalCode,jdbcType=VARCHAR}, #{ticketStatus,jdbcType=INTEGER}, 
+      #{userUuid,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hcb.zzb.dto.Ticket" >
+    insert into ticket
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="createAt != null" >
+        create_at,
+      </if>
+      <if test="updateAt != null" >
+        update_at,
+      </if>
+      <if test="deleteAt != null" >
+        delete_at,
+      </if>
+      <if test="ticketUuid != null" >
+        ticket_uuid,
+      </if>
+      <if test="orderNumber != null" >
+        order_number,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="money != null" >
+        money,
+      </if>
+      <if test="points != null" >
+        points,
+      </if>
+      <if test="illegalTime != null" >
+        illegal_time,
+      </if>
+      <if test="illegalCode != null" >
+        illegal_code,
+      </if>
+      <if test="ticketStatus != null" >
+        ticket_status,
+      </if>
+      <if test="userUuid != null" >
+        user_uuid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="createAt != null" >
+        #{createAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateAt != null" >
+        #{updateAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteAt != null" >
+        #{deleteAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="ticketUuid != null" >
+        #{ticketUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="orderNumber != null" >
+        #{orderNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="money != null" >
+        #{money,jdbcType=REAL},
+      </if>
+      <if test="points != null" >
+        #{points,jdbcType=INTEGER},
+      </if>
+      <if test="illegalTime != null" >
+        #{illegalTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="illegalCode != null" >
+        #{illegalCode,jdbcType=VARCHAR},
+      </if>
+      <if test="ticketStatus != null" >
+        #{ticketStatus,jdbcType=INTEGER},
+      </if>
+      <if test="userUuid != null" >
+        #{userUuid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hcb.zzb.dto.Ticket" >
+    update ticket
+    <set >
+      <if test="createAt != null" >
+        create_at = #{createAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateAt != null" >
+        update_at = #{updateAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteAt != null" >
+        delete_at = #{deleteAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="ticketUuid != null" >
+        ticket_uuid = #{ticketUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="orderNumber != null" >
+        order_number = #{orderNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="money != null" >
+        money = #{money,jdbcType=REAL},
+      </if>
+      <if test="points != null" >
+        points = #{points,jdbcType=INTEGER},
+      </if>
+      <if test="illegalTime != null" >
+        illegal_time = #{illegalTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="illegalCode != null" >
+        illegal_code = #{illegalCode,jdbcType=VARCHAR},
+      </if>
+      <if test="ticketStatus != null" >
+        ticket_status = #{ticketStatus,jdbcType=INTEGER},
+      </if>
+      <if test="userUuid != null" >
+        user_uuid = #{userUuid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hcb.zzb.dto.Ticket" >
+    update ticket
+    set create_at = #{createAt,jdbcType=TIMESTAMP},
+      update_at = #{updateAt,jdbcType=TIMESTAMP},
+      delete_at = #{deleteAt,jdbcType=TIMESTAMP},
+      ticket_uuid = #{ticketUuid,jdbcType=VARCHAR},
+      order_number = #{orderNumber,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      money = #{money,jdbcType=REAL},
+      points = #{points,jdbcType=INTEGER},
+      illegal_time = #{illegalTime,jdbcType=TIMESTAMP},
+      illegal_code = #{illegalCode,jdbcType=VARCHAR},
+      ticket_status = #{ticketStatus,jdbcType=INTEGER},
+      user_uuid = #{userUuid,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

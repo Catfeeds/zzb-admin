@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hcb.zzb.dao.interfaceClass.CarModelMapper" >
+  <resultMap id="BaseResultMap" type="com.hcb.zzb.dto.CarModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="create_at" property="createAt" jdbcType="TIMESTAMP" />
+    <result column="update_at" property="updateAt" jdbcType="TIMESTAMP" />
+    <result column="delete_at" property="deleteAt" jdbcType="TIMESTAMP" />
+    <result column="car_model_uuid" property="carModelUuid" jdbcType="VARCHAR" />
+    <result column="brand_model" property="brandModel" jdbcType="VARCHAR" />
+    <result column="brand" property="brand" jdbcType="VARCHAR" />
+    <result column="car_series" property="carSeries" jdbcType="VARCHAR" />
+    <result column="model_year" property="modelYear" jdbcType="VARCHAR" />
+    <result column="transmission_case" property="transmissionCase" jdbcType="VARCHAR" />
+    <result column="displacement" property="displacement" jdbcType="VARCHAR" />
+    <result column="car_model" property="carModel" jdbcType="VARCHAR" />
+    <result column="apply_user_uuid" property="applyUserUuid" jdbcType="VARCHAR" />
+    <result column="apply_status" property="applyStatus" jdbcType="INTEGER" />
+    <result column="operator_uuid" property="operatorUuid" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, create_at, update_at, delete_at, car_model_uuid, brand_model, brand, car_series, 
+    model_year, transmission_case, displacement, car_model, apply_user_uuid, apply_status, 
+    operator_uuid
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from car_model
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from car_model ORDER BY brand AND apply_status=2
+  </select>
+  
+  <select id="selectByCarBrand" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from car_model
+    where brand = #{brand,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectByApplyId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from car_model
+    where apply_user_uuid = #{userUuid,jdbcType=VARCHAR}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from car_model
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.hcb.zzb.dto.CarModel" >
+    insert into car_model (id, create_at, update_at, 
+      delete_at, car_model_uuid, brand_model, 
+      brand, car_series, model_year, 
+      transmission_case, displacement, car_model, 
+      apply_user_uuid, apply_status, operator_uuid
+      )
+    values (#{id,jdbcType=INTEGER}, #{createAt,jdbcType=TIMESTAMP}, #{updateAt,jdbcType=TIMESTAMP}, 
+      #{deleteAt,jdbcType=TIMESTAMP}, #{carModelUuid,jdbcType=VARCHAR}, #{brandModel,jdbcType=VARCHAR}, 
+      #{brand,jdbcType=VARCHAR}, #{carSeries,jdbcType=VARCHAR}, #{modelYear,jdbcType=VARCHAR}, 
+      #{transmissionCase,jdbcType=VARCHAR}, #{displacement,jdbcType=VARCHAR}, #{carModel,jdbcType=VARCHAR}, 
+      #{applyUserUuid,jdbcType=VARCHAR}, #{applyStatus,jdbcType=INTEGER}, #{operatorUuid,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.hcb.zzb.dto.CarModel" >
+    insert into car_model
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="createAt != null" >
+        create_at,
+      </if>
+      <if test="updateAt != null" >
+        update_at,
+      </if>
+      <if test="deleteAt != null" >
+        delete_at,
+      </if>
+      <if test="carModelUuid != null" >
+        car_model_uuid,
+      </if>
+      <if test="brandModel != null" >
+        brand_model,
+      </if>
+      <if test="brand != null" >
+        brand,
+      </if>
+      <if test="carSeries != null" >
+        car_series,
+      </if>
+      <if test="modelYear != null" >
+        model_year,
+      </if>
+      <if test="transmissionCase != null" >
+        transmission_case,
+      </if>
+      <if test="displacement != null" >
+        displacement,
+      </if>
+      <if test="carModel != null" >
+        car_model,
+      </if>
+      <if test="applyUserUuid != null" >
+        apply_user_uuid,
+      </if>
+      <if test="applyStatus != null" >
+        apply_status,
+      </if>
+      <if test="operatorUuid != null" >
+        operator_uuid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="createAt != null" >
+        #{createAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateAt != null" >
+        #{updateAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteAt != null" >
+        #{deleteAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="carModelUuid != null" >
+        #{carModelUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="brandModel != null" >
+        #{brandModel,jdbcType=VARCHAR},
+      </if>
+      <if test="brand != null" >
+        #{brand,jdbcType=VARCHAR},
+      </if>
+      <if test="carSeries != null" >
+        #{carSeries,jdbcType=VARCHAR},
+      </if>
+      <if test="modelYear != null" >
+        #{modelYear,jdbcType=VARCHAR},
+      </if>
+      <if test="transmissionCase != null" >
+        #{transmissionCase,jdbcType=VARCHAR},
+      </if>
+      <if test="displacement != null" >
+        #{displacement,jdbcType=VARCHAR},
+      </if>
+      <if test="carModel != null" >
+        #{carModel,jdbcType=VARCHAR},
+      </if>
+      <if test="applyUserUuid != null" >
+        #{applyUserUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="applyStatus != null" >
+        #{applyStatus,jdbcType=INTEGER},
+      </if>
+      <if test="operatorUuid != null" >
+        #{operatorUuid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hcb.zzb.dto.CarModel" >
+    update car_model
+    <set >
+      <if test="createAt != null" >
+        create_at = #{createAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateAt != null" >
+        update_at = #{updateAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteAt != null" >
+        delete_at = #{deleteAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="carModelUuid != null" >
+        car_model_uuid = #{carModelUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="brandModel != null" >
+        brand_model = #{brandModel,jdbcType=VARCHAR},
+      </if>
+      <if test="brand != null" >
+        brand = #{brand,jdbcType=VARCHAR},
+      </if>
+      <if test="carSeries != null" >
+        car_series = #{carSeries,jdbcType=VARCHAR},
+      </if>
+      <if test="modelYear != null" >
+        model_year = #{modelYear,jdbcType=VARCHAR},
+      </if>
+      <if test="transmissionCase != null" >
+        transmission_case = #{transmissionCase,jdbcType=VARCHAR},
+      </if>
+      <if test="displacement != null" >
+        displacement = #{displacement,jdbcType=VARCHAR},
+      </if>
+      <if test="carModel != null" >
+        car_model = #{carModel,jdbcType=VARCHAR},
+      </if>
+      <if test="applyUserUuid != null" >
+        apply_user_uuid = #{applyUserUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="applyStatus != null" >
+        apply_status = #{applyStatus,jdbcType=INTEGER},
+      </if>
+      <if test="operatorUuid != null" >
+        operator_uuid = #{operatorUuid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hcb.zzb.dto.CarModel" >
+    update car_model
+    set create_at = #{createAt,jdbcType=TIMESTAMP},
+      update_at = #{updateAt,jdbcType=TIMESTAMP},
+      delete_at = #{deleteAt,jdbcType=TIMESTAMP},
+      car_model_uuid = #{carModelUuid,jdbcType=VARCHAR},
+      brand_model = #{brandModel,jdbcType=VARCHAR},
+      brand = #{brand,jdbcType=VARCHAR},
+      car_series = #{carSeries,jdbcType=VARCHAR},
+      model_year = #{modelYear,jdbcType=VARCHAR},
+      transmission_case = #{transmissionCase,jdbcType=VARCHAR},
+      displacement = #{displacement,jdbcType=VARCHAR},
+      car_model = #{carModel,jdbcType=VARCHAR},
+      apply_user_uuid = #{applyUserUuid,jdbcType=VARCHAR},
+      apply_status = #{applyStatus,jdbcType=INTEGER},
+      operator_uuid = #{operatorUuid,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

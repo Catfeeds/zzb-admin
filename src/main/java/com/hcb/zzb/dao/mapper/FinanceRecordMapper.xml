@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hcb.zzb.dao.interfaceClass.FinanceRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.hcb.zzb.dto.FinanceRecord" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="create_at" property="createAt" jdbcType="TIMESTAMP" />
+    <result column="update_at" property="updateAt" jdbcType="TIMESTAMP" />
+    <result column="delete_at" property="deleteAt" jdbcType="TIMESTAMP" />
+    <result column="finance_record_uuid" property="financeRecordUuid" jdbcType="VARCHAR" />
+    <result column="record_type" property="recordType" jdbcType="INTEGER" />
+    <result column="order_record_type" property="orderRecordType" jdbcType="INTEGER" />
+    <result column="order_uuid" property="orderUuid" jdbcType="VARCHAR" />
+    <result column="recharge_record_uuid" property="rechargeRecordUuid" jdbcType="VARCHAR" />
+    <result column="withdrawals_record_uuid" property="withdrawalsRecordUuid" jdbcType="VARCHAR" />
+    <result column="money" property="money" jdbcType="REAL" />
+    <result column="finance_type" property="financeType" jdbcType="INTEGER" />
+    <result column="user_uuid" property="userUuid" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, create_at, update_at, delete_at, finance_record_uuid, record_type, order_record_type, 
+    order_uuid, recharge_record_uuid, withdrawals_record_uuid, money, finance_type, user_uuid
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from finance_record
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAllByUserUuid" resultMap="BaseResultMap" parameterType="java.util.Map">
+  	select 
+    <include refid="Base_Column_List" />
+    from finance_record
+    where user_uuid=#{user_uuid,jdbcType=VARCHAR} limit #{pageIndex},#{pageSize}
+  </select>
+  <select id="selectCountByUserUuid" resultType="int" parameterType="java.lang.String">
+  	select count(1)
+  	from finance_record
+  	where user_uuid=#{user_uuid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from finance_record
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.hcb.zzb.dto.FinanceRecord" >
+    insert into finance_record (id, create_at, update_at, 
+      delete_at, finance_record_uuid, record_type, 
+      order_record_type, order_uuid, recharge_record_uuid, 
+      withdrawals_record_uuid, money, finance_type, 
+      user_uuid)
+    values (#{id,jdbcType=INTEGER}, #{createAt,jdbcType=TIMESTAMP}, #{updateAt,jdbcType=TIMESTAMP}, 
+      #{deleteAt,jdbcType=TIMESTAMP}, #{financeRecordUuid,jdbcType=VARCHAR}, #{recordType,jdbcType=INTEGER}, 
+      #{orderRecordType,jdbcType=INTEGER}, #{orderUuid,jdbcType=VARCHAR}, #{rechargeRecordUuid,jdbcType=VARCHAR}, 
+      #{withdrawalsRecordUuid,jdbcType=VARCHAR}, #{money,jdbcType=REAL}, #{financeType,jdbcType=INTEGER}, 
+      #{userUuid,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hcb.zzb.dto.FinanceRecord" >
+    insert into finance_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="createAt != null" >
+        create_at,
+      </if>
+      <if test="updateAt != null" >
+        update_at,
+      </if>
+      <if test="deleteAt != null" >
+        delete_at,
+      </if>
+      <if test="financeRecordUuid != null" >
+        finance_record_uuid,
+      </if>
+      <if test="recordType != null" >
+        record_type,
+      </if>
+      <if test="orderRecordType != null" >
+        order_record_type,
+      </if>
+      <if test="orderUuid != null" >
+        order_uuid,
+      </if>
+      <if test="rechargeRecordUuid != null" >
+        recharge_record_uuid,
+      </if>
+      <if test="withdrawalsRecordUuid != null" >
+        withdrawals_record_uuid,
+      </if>
+      <if test="money != null" >
+        money,
+      </if>
+      <if test="financeType != null" >
+        finance_type,
+      </if>
+      <if test="userUuid != null" >
+        user_uuid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="createAt != null" >
+        #{createAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateAt != null" >
+        #{updateAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteAt != null" >
+        #{deleteAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="financeRecordUuid != null" >
+        #{financeRecordUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="recordType != null" >
+        #{recordType,jdbcType=INTEGER},
+      </if>
+      <if test="orderRecordType != null" >
+        #{orderRecordType,jdbcType=INTEGER},
+      </if>
+      <if test="orderUuid != null" >
+        #{orderUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="rechargeRecordUuid != null" >
+        #{rechargeRecordUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="withdrawalsRecordUuid != null" >
+        #{withdrawalsRecordUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="money != null" >
+        #{money,jdbcType=REAL},
+      </if>
+      <if test="financeType != null" >
+        #{financeType,jdbcType=INTEGER},
+      </if>
+      <if test="userUuid != null" >
+        #{userUuid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hcb.zzb.dto.FinanceRecord" >
+    update finance_record
+    <set >
+      <if test="createAt != null" >
+        create_at = #{createAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateAt != null" >
+        update_at = #{updateAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteAt != null" >
+        delete_at = #{deleteAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="financeRecordUuid != null" >
+        finance_record_uuid = #{financeRecordUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="recordType != null" >
+        record_type = #{recordType,jdbcType=INTEGER},
+      </if>
+      <if test="orderRecordType != null" >
+        order_record_type = #{orderRecordType,jdbcType=INTEGER},
+      </if>
+      <if test="orderUuid != null" >
+        order_uuid = #{orderUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="rechargeRecordUuid != null" >
+        recharge_record_uuid = #{rechargeRecordUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="withdrawalsRecordUuid != null" >
+        withdrawals_record_uuid = #{withdrawalsRecordUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="money != null" >
+        money = #{money,jdbcType=REAL},
+      </if>
+      <if test="financeType != null" >
+        finance_type = #{financeType,jdbcType=INTEGER},
+      </if>
+      <if test="userUuid != null" >
+        user_uuid = #{userUuid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hcb.zzb.dto.FinanceRecord" >
+    update finance_record
+    set create_at = #{createAt,jdbcType=TIMESTAMP},
+      update_at = #{updateAt,jdbcType=TIMESTAMP},
+      delete_at = #{deleteAt,jdbcType=TIMESTAMP},
+      finance_record_uuid = #{financeRecordUuid,jdbcType=VARCHAR},
+      record_type = #{recordType,jdbcType=INTEGER},
+      order_record_type = #{orderRecordType,jdbcType=INTEGER},
+      order_uuid = #{orderUuid,jdbcType=VARCHAR},
+      recharge_record_uuid = #{rechargeRecordUuid,jdbcType=VARCHAR},
+      withdrawals_record_uuid = #{withdrawalsRecordUuid,jdbcType=VARCHAR},
+      money = #{money,jdbcType=REAL},
+      finance_type = #{financeType,jdbcType=INTEGER},
+      user_uuid = #{userUuid,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

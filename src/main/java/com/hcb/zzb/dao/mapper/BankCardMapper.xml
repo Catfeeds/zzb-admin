@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hcb.zzb.dao.interfaceClass.BankCardMapper" >
+  <resultMap id="BaseResultMap" type="com.hcb.zzb.dto.BankCard" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="create_at" property="createAt" jdbcType="TIMESTAMP" />
+    <result column="update_at" property="updateAt" jdbcType="TIMESTAMP" />
+    <result column="delete_at" property="deleteAt" jdbcType="TIMESTAMP" />
+    <result column="bank_card_uuid" property="bankCardUuid" jdbcType="VARCHAR" />
+    <result column="user_uuid" property="userUuid" jdbcType="VARCHAR" />
+    <result column="card_number" property="cardNumber" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="card_user_name" property="cardUserName" jdbcType="VARCHAR" />
+    <result column="binding_time" property="bindingTime" jdbcType="TIMESTAMP" />
+    <result column="bank" property="bank" jdbcType="VARCHAR" />
+    <result column="bank_icon" property="bankIcon" jdbcType="VARCHAR" />
+    <result column="card_type" property="cardType" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, create_at, update_at, delete_at, bank_card_uuid, user_uuid, card_number, phone, 
+    card_user_name, binding_time, bank, bank_icon, card_type
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from bank_card
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByUserUuid" resultMap="BaseResultMap" parameterType="java.util.Map">
+  	select 
+    <include refid="Base_Column_List" />
+    from bank_card
+    where user_uuid=#{userUuid,jdbcType=VARCHAR} limit #{pageIndex},#{pageSize}
+  </select>
+  <select id="selectByUserUuidCount" resultType="int" parameterType="java.lang.String">
+  	select count(1)
+  	from bank_card
+  	where user_uuid=#{userUuid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from bank_card
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.hcb.zzb.dto.BankCard" >
+    insert into bank_card (id, create_at, update_at, 
+      delete_at, bank_card_uuid, user_uuid, 
+      card_number, phone, card_user_name, 
+      binding_time, bank, bank_icon, 
+      card_type)
+    values (#{id,jdbcType=INTEGER}, #{createAt,jdbcType=TIMESTAMP}, #{updateAt,jdbcType=TIMESTAMP}, 
+      #{deleteAt,jdbcType=TIMESTAMP}, #{bankCardUuid,jdbcType=VARCHAR}, #{userUuid,jdbcType=VARCHAR}, 
+      #{cardNumber,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{cardUserName,jdbcType=VARCHAR}, 
+      #{bindingTime,jdbcType=TIMESTAMP}, #{bank,jdbcType=VARCHAR}, #{bankIcon,jdbcType=VARCHAR}, 
+      #{cardType,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hcb.zzb.dto.BankCard" >
+    insert into bank_card
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="createAt != null" >
+        create_at,
+      </if>
+      <if test="updateAt != null" >
+        update_at,
+      </if>
+      <if test="deleteAt != null" >
+        delete_at,
+      </if>
+      <if test="bankCardUuid != null" >
+        bank_card_uuid,
+      </if>
+      <if test="userUuid != null" >
+        user_uuid,
+      </if>
+      <if test="cardNumber != null" >
+        card_number,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="cardUserName != null" >
+        card_user_name,
+      </if>
+      <if test="bindingTime != null" >
+        binding_time,
+      </if>
+      <if test="bank != null" >
+        bank,
+      </if>
+      <if test="bankIcon != null" >
+        bank_icon,
+      </if>
+      <if test="cardType != null" >
+        card_type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="createAt != null" >
+        #{createAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateAt != null" >
+        #{updateAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteAt != null" >
+        #{deleteAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="bankCardUuid != null" >
+        #{bankCardUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="userUuid != null" >
+        #{userUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="cardNumber != null" >
+        #{cardNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="cardUserName != null" >
+        #{cardUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="bindingTime != null" >
+        #{bindingTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="bank != null" >
+        #{bank,jdbcType=VARCHAR},
+      </if>
+      <if test="bankIcon != null" >
+        #{bankIcon,jdbcType=VARCHAR},
+      </if>
+      <if test="cardType != null" >
+        #{cardType,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hcb.zzb.dto.BankCard" >
+    update bank_card
+    <set >
+      <if test="createAt != null" >
+        create_at = #{createAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateAt != null" >
+        update_at = #{updateAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteAt != null" >
+        delete_at = #{deleteAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="bankCardUuid != null" >
+        bank_card_uuid = #{bankCardUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="userUuid != null" >
+        user_uuid = #{userUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="cardNumber != null" >
+        card_number = #{cardNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="cardUserName != null" >
+        card_user_name = #{cardUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="bindingTime != null" >
+        binding_time = #{bindingTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="bank != null" >
+        bank = #{bank,jdbcType=VARCHAR},
+      </if>
+      <if test="bankIcon != null" >
+        bank_icon = #{bankIcon,jdbcType=VARCHAR},
+      </if>
+      <if test="cardType != null" >
+        card_type = #{cardType,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hcb.zzb.dto.BankCard" >
+    update bank_card
+    set create_at = #{createAt,jdbcType=TIMESTAMP},
+      update_at = #{updateAt,jdbcType=TIMESTAMP},
+      delete_at = #{deleteAt,jdbcType=TIMESTAMP},
+      bank_card_uuid = #{bankCardUuid,jdbcType=VARCHAR},
+      user_uuid = #{userUuid,jdbcType=VARCHAR},
+      card_number = #{cardNumber,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      card_user_name = #{cardUserName,jdbcType=VARCHAR},
+      binding_time = #{bindingTime,jdbcType=TIMESTAMP},
+      bank = #{bank,jdbcType=VARCHAR},
+      bank_icon = #{bankIcon,jdbcType=VARCHAR},
+      card_type = #{cardType,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

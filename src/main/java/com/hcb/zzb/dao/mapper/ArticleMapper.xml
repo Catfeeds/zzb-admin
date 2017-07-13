@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hcb.zzb.dao.interfaceClass.ArticleMapper" >
+  <resultMap id="BaseResultMap" type="com.hcb.zzb.dto.Article" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="create_at" property="createAt" jdbcType="TIMESTAMP" />
+    <result column="update_at" property="updateAt" jdbcType="TIMESTAMP" />
+    <result column="delete_at" property="deleteAt" jdbcType="TIMESTAMP" />
+    <result column="article_uuid" property="articleUuid" jdbcType="VARCHAR" />
+    <result column="tittle" property="tittle" jdbcType="VARCHAR" />
+    <result column="article_type" property="articleType" jdbcType="INTEGER" />
+    <result column="article_picture" property="articlePicture" jdbcType="VARCHAR" />
+    <result column="car_id_list" property="carIdList" jdbcType="VARCHAR" />
+    <result column="creater" property="creater" jdbcType="VARCHAR" />
+    <result column="is_display" property="isDisplay" jdbcType="INTEGER" />
+    <result column="activity_cat" property="activityCat" jdbcType="INTEGER" />
+    <result column="activity_price" property="activityPrice" jdbcType="REAL" />
+    <result column="activity_start_time" property="activityStartTime" jdbcType="TIMESTAMP" />
+    <result column="activity_end_time" property="activityEndTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.hcb.zzb.dto.Article" extends="BaseResultMap" >
+    <result column="article_content" property="articleContent" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, create_at, update_at, delete_at, article_uuid, tittle, article_type, article_picture, 
+    car_id_list, creater, is_display, activity_cat, activity_price, activity_start_time, 
+    activity_end_time
+  </sql>
+  <sql id="Blob_Column_List" >
+    article_content
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from article
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByArticleUuid" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String">
+  	select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from article
+    where article_uuid=#{articleUuid,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from article where article_type=1
+  </select>
+  <select id="selectAllByTypeIsPremium_experience" resultMap="BaseResultMap" parameterType="java.util.Map">
+  	select
+  	<include refid="Base_Column_List" />
+  	from article 
+  	where article_type=#{article_type,jdbcType=INTEGER} limit #{pageIndex},#{pageSize}
+  </select>
+  <select id="selectAllByArticleTypeCount" resultType="int" parameterType="int">
+  	select count(1)
+  	from article
+  	where article_type=#{article_type,jdbcType=INTEGER}
+  </select>
+  <select id="selectTypeAll" resultMap="BaseResultMap">
+  	select
+  	<include refid="Base_Column_List" />
+  	from article 
+  	where article_type=3
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from article
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.hcb.zzb.dto.Article" >
+    insert into article (id, create_at, update_at, 
+      delete_at, article_uuid, tittle, 
+      article_type, article_picture, car_id_list, 
+      creater, is_display, activity_cat, 
+      activity_price, activity_start_time, activity_end_time, 
+      article_content)
+    values (#{id,jdbcType=INTEGER}, #{createAt,jdbcType=TIMESTAMP}, #{updateAt,jdbcType=TIMESTAMP}, 
+      #{deleteAt,jdbcType=TIMESTAMP}, #{articleUuid,jdbcType=VARCHAR}, #{tittle,jdbcType=VARCHAR}, 
+      #{articleType,jdbcType=INTEGER}, #{articlePicture,jdbcType=VARCHAR}, #{carIdList,jdbcType=VARCHAR}, 
+      #{creater,jdbcType=VARCHAR}, #{isDisplay,jdbcType=INTEGER}, #{activityCat,jdbcType=INTEGER}, 
+      #{activityPrice,jdbcType=REAL}, #{activityStartTime,jdbcType=TIMESTAMP}, #{activityEndTime,jdbcType=TIMESTAMP}, 
+      #{articleContent,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hcb.zzb.dto.Article" >
+    insert into article
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="createAt != null" >
+        create_at,
+      </if>
+      <if test="updateAt != null" >
+        update_at,
+      </if>
+      <if test="deleteAt != null" >
+        delete_at,
+      </if>
+      <if test="articleUuid != null" >
+        article_uuid,
+      </if>
+      <if test="tittle != null" >
+        tittle,
+      </if>
+      <if test="articleType != null" >
+        article_type,
+      </if>
+      <if test="articlePicture != null" >
+        article_picture,
+      </if>
+      <if test="carIdList != null" >
+        car_id_list,
+      </if>
+      <if test="creater != null" >
+        creater,
+      </if>
+      <if test="isDisplay != null" >
+        is_display,
+      </if>
+      <if test="activityCat != null" >
+        activity_cat,
+      </if>
+      <if test="activityPrice != null" >
+        activity_price,
+      </if>
+      <if test="activityStartTime != null" >
+        activity_start_time,
+      </if>
+      <if test="activityEndTime != null" >
+        activity_end_time,
+      </if>
+      <if test="articleContent != null" >
+        article_content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="createAt != null" >
+        #{createAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateAt != null" >
+        #{updateAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteAt != null" >
+        #{deleteAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="articleUuid != null" >
+        #{articleUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="tittle != null" >
+        #{tittle,jdbcType=VARCHAR},
+      </if>
+      <if test="articleType != null" >
+        #{articleType,jdbcType=INTEGER},
+      </if>
+      <if test="articlePicture != null" >
+        #{articlePicture,jdbcType=VARCHAR},
+      </if>
+      <if test="carIdList != null" >
+        #{carIdList,jdbcType=VARCHAR},
+      </if>
+      <if test="creater != null" >
+        #{creater,jdbcType=VARCHAR},
+      </if>
+      <if test="isDisplay != null" >
+        #{isDisplay,jdbcType=INTEGER},
+      </if>
+      <if test="activityCat != null" >
+        #{activityCat,jdbcType=INTEGER},
+      </if>
+      <if test="activityPrice != null" >
+        #{activityPrice,jdbcType=REAL},
+      </if>
+      <if test="activityStartTime != null" >
+        #{activityStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="activityEndTime != null" >
+        #{activityEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="articleContent != null" >
+        #{articleContent,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hcb.zzb.dto.Article" >
+    update article
+    <set >
+      <if test="createAt != null" >
+        create_at = #{createAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateAt != null" >
+        update_at = #{updateAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteAt != null" >
+        delete_at = #{deleteAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="articleUuid != null" >
+        article_uuid = #{articleUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="tittle != null" >
+        tittle = #{tittle,jdbcType=VARCHAR},
+      </if>
+      <if test="articleType != null" >
+        article_type = #{articleType,jdbcType=INTEGER},
+      </if>
+      <if test="articlePicture != null" >
+        article_picture = #{articlePicture,jdbcType=VARCHAR},
+      </if>
+      <if test="carIdList != null" >
+        car_id_list = #{carIdList,jdbcType=VARCHAR},
+      </if>
+      <if test="creater != null" >
+        creater = #{creater,jdbcType=VARCHAR},
+      </if>
+      <if test="isDisplay != null" >
+        is_display = #{isDisplay,jdbcType=INTEGER},
+      </if>
+      <if test="activityCat != null" >
+        activity_cat = #{activityCat,jdbcType=INTEGER},
+      </if>
+      <if test="activityPrice != null" >
+        activity_price = #{activityPrice,jdbcType=REAL},
+      </if>
+      <if test="activityStartTime != null" >
+        activity_start_time = #{activityStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="activityEndTime != null" >
+        activity_end_time = #{activityEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="articleContent != null" >
+        article_content = #{articleContent,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.hcb.zzb.dto.Article" >
+    update article
+    set create_at = #{createAt,jdbcType=TIMESTAMP},
+      update_at = #{updateAt,jdbcType=TIMESTAMP},
+      delete_at = #{deleteAt,jdbcType=TIMESTAMP},
+      article_uuid = #{articleUuid,jdbcType=VARCHAR},
+      tittle = #{tittle,jdbcType=VARCHAR},
+      article_type = #{articleType,jdbcType=INTEGER},
+      article_picture = #{articlePicture,jdbcType=VARCHAR},
+      car_id_list = #{carIdList,jdbcType=VARCHAR},
+      creater = #{creater,jdbcType=VARCHAR},
+      is_display = #{isDisplay,jdbcType=INTEGER},
+      activity_cat = #{activityCat,jdbcType=INTEGER},
+      activity_price = #{activityPrice,jdbcType=REAL},
+      activity_start_time = #{activityStartTime,jdbcType=TIMESTAMP},
+      activity_end_time = #{activityEndTime,jdbcType=TIMESTAMP},
+      article_content = #{articleContent,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hcb.zzb.dto.Article" >
+    update article
+    set create_at = #{createAt,jdbcType=TIMESTAMP},
+      update_at = #{updateAt,jdbcType=TIMESTAMP},
+      delete_at = #{deleteAt,jdbcType=TIMESTAMP},
+      article_uuid = #{articleUuid,jdbcType=VARCHAR},
+      tittle = #{tittle,jdbcType=VARCHAR},
+      article_type = #{articleType,jdbcType=INTEGER},
+      article_picture = #{articlePicture,jdbcType=VARCHAR},
+      car_id_list = #{carIdList,jdbcType=VARCHAR},
+      creater = #{creater,jdbcType=VARCHAR},
+      is_display = #{isDisplay,jdbcType=INTEGER},
+      activity_cat = #{activityCat,jdbcType=INTEGER},
+      activity_price = #{activityPrice,jdbcType=REAL},
+      activity_start_time = #{activityStartTime,jdbcType=TIMESTAMP},
+      activity_end_time = #{activityEndTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

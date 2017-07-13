@@ -1,0 +1,471 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hcb.zzb.dao.interfaceClass.OrdersMapper" >
+  <resultMap id="BaseResultMap" type="com.hcb.zzb.dto.Orders" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="create_at" property="createAt" jdbcType="TIMESTAMP" />
+    <result column="update_at" property="updateAt" jdbcType="TIMESTAMP" />
+    <result column="delete_at" property="deleteAt" jdbcType="TIMESTAMP" />
+    <result column="order_uuid" property="orderUuid" jdbcType="VARCHAR" />
+    <result column="order_number" property="orderNumber" jdbcType="VARCHAR" />
+    <result column="user_uuid" property="userUuid" jdbcType="VARCHAR" />
+    <result column="car_owner_uuid" property="carOwnerUuid" jdbcType="VARCHAR" />
+    <result column="car_uuid" property="carUuid" jdbcType="VARCHAR" />
+    <result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
+    <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="take_car_time" property="takeCarTime" jdbcType="TIMESTAMP" />
+    <result column="take_car_address" property="takeCarAddress" jdbcType="VARCHAR" />
+    <result column="return_car_time" property="returnCarTime" jdbcType="TIMESTAMP" />
+    <result column="return_car_address" property="returnCarAddress" jdbcType="VARCHAR" />
+    <result column="is_damage" property="isDamage" jdbcType="INTEGER" />
+    <result column="damage_dsp" property="damageDsp" jdbcType="VARCHAR" />
+    <result column="damage_picture" property="damagePicture" jdbcType="VARCHAR" />
+    <result column="compensate_money" property="compensateMoney" jdbcType="REAL" />
+    <result column="closing_time" property="closingTime" jdbcType="TIMESTAMP" />
+    <result column="deposit" property="deposit" jdbcType="REAL" />
+    <result column="deposit_status" property="depositStatus" jdbcType="INTEGER" />
+    <result column="lease_price" property="leasePrice" jdbcType="REAL" />
+    <result column="insurance_price" property="insurancePrice" jdbcType="REAL" />
+    <result column="other_price" property="otherPrice" jdbcType="REAL" />
+    <result column="total_price" property="totalPrice" jdbcType="REAL" />
+    <result column="pay_time" property="payTime" jdbcType="TIMESTAMP" />
+    <result column="order_status" property="orderStatus" jdbcType="INTEGER" />
+    <result column="pay_type" property="payType" jdbcType="INTEGER" />
+    <result column="order_remark" property="orderRemark" jdbcType="VARCHAR" />
+    <result column="evaluate_score" property="evaluateScore" jdbcType="INTEGER" />
+    <result column="evaluate_dsp" property="evaluateDsp" jdbcType="VARCHAR" />
+    <result column="take_car_address_map" property="takeCarAddressMap" jdbcType="VARCHAR" />
+    <result column="return_car_address_map" property="returnCarAddressMap" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, create_at, update_at, delete_at, order_uuid, order_number, user_uuid, car_owner_uuid, 
+    car_uuid, start_time, end_time, take_car_time, take_car_address, return_car_time, 
+    return_car_address, is_damage, damage_dsp, damage_picture, compensate_money, closing_time, 
+    deposit, deposit_status, lease_price, insurance_price, other_price, total_price, 
+    pay_time, order_status, pay_type, order_remark, evaluate_score, evaluate_dsp
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from orders
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectByOrdersUuid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from orders
+    where order_uuid = #{ordersUuid,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectByOrderStatus" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from orders
+    where order_status = #{orderStatus,jdbcType=INTEGER}
+  </select>
+  <select id="selectByUserUuid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from orders
+    where user_uuid = #{useruuid,jdbcType=VARCHAR} and order_status=2
+  </select>
+  
+  <select id="selectByUserUuid1" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from orders
+    where user_uuid = #{useruuid,jdbcType=VARCHAR} and order_status=3
+  </select>
+  <select id="selectByUserUuid2" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from orders
+    where user_uuid = #{useruuid,jdbcType=VARCHAR} and order_status=4
+  </select>
+  <select id="selectByOwnerUuid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from orders
+    where car_owner_uuid = #{useruuid,jdbcType=VARCHAR} and order_status=2
+  </select>
+  <select id="selectByOwnerUuid2" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from orders
+    where car_owner_uuid = #{useruuid,jdbcType=VARCHAR} and order_status=3
+  </select>
+  <select id="selectByOwnerUuid3" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from orders
+    where car_owner_uuid = #{useruuid,jdbcType=VARCHAR} and order_status=4
+  </select>
+  
+  
+  <select id="selectCountByUserUuid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select count(1) from orders where car_owner_uuid = #{useruuid,jdbcType=VARCHAR} and order_status=3
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from orders
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.hcb.zzb.dto.Orders" >
+    insert into orders (id, create_at, update_at, 
+      delete_at, order_uuid, order_number, 
+      user_uuid, car_owner_uuid, car_uuid, 
+      start_time, end_time, take_car_time, 
+      take_car_address, return_car_time, return_car_address, 
+      is_damage, damage_dsp, damage_picture, 
+      compensate_money, closing_time, deposit, 
+      deposit_status, lease_price, insurance_price, 
+      other_price, total_price, pay_time, 
+      order_status, pay_type, order_remark, 
+      evaluate_score, evaluate_dsp)
+    values (#{id,jdbcType=INTEGER}, #{createAt,jdbcType=TIMESTAMP}, #{updateAt,jdbcType=TIMESTAMP}, 
+      #{deleteAt,jdbcType=TIMESTAMP}, #{orderUuid,jdbcType=VARCHAR}, #{orderNumber,jdbcType=VARCHAR}, 
+      #{userUuid,jdbcType=VARCHAR}, #{carOwnerUuid,jdbcType=VARCHAR}, #{carUuid,jdbcType=VARCHAR}, 
+      #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, #{takeCarTime,jdbcType=TIMESTAMP}, 
+      #{takeCarAddress,jdbcType=VARCHAR}, #{returnCarTime,jdbcType=TIMESTAMP}, #{returnCarAddress,jdbcType=VARCHAR}, 
+      #{isDamage,jdbcType=INTEGER}, #{damageDsp,jdbcType=VARCHAR}, #{damagePicture,jdbcType=VARCHAR}, 
+      #{compensateMoney,jdbcType=REAL}, #{closingTime,jdbcType=TIMESTAMP}, #{deposit,jdbcType=REAL}, 
+      #{depositStatus,jdbcType=INTEGER}, #{leasePrice,jdbcType=REAL}, #{insurancePrice,jdbcType=REAL}, 
+      #{otherPrice,jdbcType=REAL}, #{totalPrice,jdbcType=REAL}, #{payTime,jdbcType=TIMESTAMP}, 
+      #{orderStatus,jdbcType=INTEGER}, #{payType,jdbcType=INTEGER}, #{orderRemark,jdbcType=VARCHAR}, 
+      #{evaluateScore,jdbcType=INTEGER}, #{evaluateDsp,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hcb.zzb.dto.Orders" >
+    insert into orders
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="createAt != null" >
+        create_at,
+      </if>
+      <if test="updateAt != null" >
+        update_at,
+      </if>
+      <if test="deleteAt != null" >
+        delete_at,
+      </if>
+      <if test="orderUuid != null" >
+        order_uuid,
+      </if>
+      <if test="orderNumber != null" >
+        order_number,
+      </if>
+      <if test="userUuid != null" >
+        user_uuid,
+      </if>
+      <if test="carOwnerUuid != null" >
+        car_owner_uuid,
+      </if>
+      <if test="carUuid != null" >
+        car_uuid,
+      </if>
+      <if test="startTime != null" >
+        start_time,
+      </if>
+      <if test="endTime != null" >
+        end_time,
+      </if>
+      <if test="takeCarTime != null" >
+        take_car_time,
+      </if>
+      <if test="takeCarAddress != null" >
+        take_car_address,
+      </if>
+      <if test="returnCarTime != null" >
+        return_car_time,
+      </if>
+      <if test="returnCarAddress != null" >
+        return_car_address,
+      </if>
+      <if test="isDamage != null" >
+        is_damage,
+      </if>
+      <if test="damageDsp != null" >
+        damage_dsp,
+      </if>
+      <if test="damagePicture != null" >
+        damage_picture,
+      </if>
+      <if test="compensateMoney != null" >
+        compensate_money,
+      </if>
+      <if test="closingTime != null" >
+        closing_time,
+      </if>
+      <if test="deposit != null" >
+        deposit,
+      </if>
+      <if test="depositStatus != null" >
+        deposit_status,
+      </if>
+      <if test="leasePrice != null" >
+        lease_price,
+      </if>
+      <if test="insurancePrice != null" >
+        insurance_price,
+      </if>
+      <if test="otherPrice != null" >
+        other_price,
+      </if>
+      <if test="totalPrice != null" >
+        total_price,
+      </if>
+      <if test="payTime != null" >
+        pay_time,
+      </if>
+      <if test="orderStatus != null" >
+        order_status,
+      </if>
+      <if test="payType != null" >
+        pay_type,
+      </if>
+      <if test="orderRemark != null" >
+        order_remark,
+      </if>
+      <if test="evaluateScore != null" >
+        evaluate_score,
+      </if>
+      <if test="evaluateDsp != null" >
+        evaluate_dsp,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="createAt != null" >
+        #{createAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateAt != null" >
+        #{updateAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteAt != null" >
+        #{deleteAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orderUuid != null" >
+        #{orderUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="orderNumber != null" >
+        #{orderNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="userUuid != null" >
+        #{userUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="carOwnerUuid != null" >
+        #{carOwnerUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="carUuid != null" >
+        #{carUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null" >
+        #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="takeCarTime != null" >
+        #{takeCarTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="takeCarAddress != null" >
+        #{takeCarAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="returnCarTime != null" >
+        #{returnCarTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="returnCarAddress != null" >
+        #{returnCarAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="isDamage != null" >
+        #{isDamage,jdbcType=INTEGER},
+      </if>
+      <if test="damageDsp != null" >
+        #{damageDsp,jdbcType=VARCHAR},
+      </if>
+      <if test="damagePicture != null" >
+        #{damagePicture,jdbcType=VARCHAR},
+      </if>
+      <if test="compensateMoney != null" >
+        #{compensateMoney,jdbcType=REAL},
+      </if>
+      <if test="closingTime != null" >
+        #{closingTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deposit != null" >
+        #{deposit,jdbcType=REAL},
+      </if>
+      <if test="depositStatus != null" >
+        #{depositStatus,jdbcType=INTEGER},
+      </if>
+      <if test="leasePrice != null" >
+        #{leasePrice,jdbcType=REAL},
+      </if>
+      <if test="insurancePrice != null" >
+        #{insurancePrice,jdbcType=REAL},
+      </if>
+      <if test="otherPrice != null" >
+        #{otherPrice,jdbcType=REAL},
+      </if>
+      <if test="totalPrice != null" >
+        #{totalPrice,jdbcType=REAL},
+      </if>
+      <if test="payTime != null" >
+        #{payTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orderStatus != null" >
+        #{orderStatus,jdbcType=INTEGER},
+      </if>
+      <if test="payType != null" >
+        #{payType,jdbcType=INTEGER},
+      </if>
+      <if test="orderRemark != null" >
+        #{orderRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="evaluateScore != null" >
+        #{evaluateScore,jdbcType=INTEGER},
+      </if>
+      <if test="evaluateDsp != null" >
+        #{evaluateDsp,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hcb.zzb.dto.Orders" >
+    update orders
+    <set >
+      <if test="createAt != null" >
+        create_at = #{createAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateAt != null" >
+        update_at = #{updateAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteAt != null" >
+        delete_at = #{deleteAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orderUuid != null" >
+        order_uuid = #{orderUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="orderNumber != null" >
+        order_number = #{orderNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="userUuid != null" >
+        user_uuid = #{userUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="carOwnerUuid != null" >
+        car_owner_uuid = #{carOwnerUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="carUuid != null" >
+        car_uuid = #{carUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null" >
+        start_time = #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="takeCarTime != null" >
+        take_car_time = #{takeCarTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="takeCarAddress != null" >
+        take_car_address = #{takeCarAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="returnCarTime != null" >
+        return_car_time = #{returnCarTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="returnCarAddress != null" >
+        return_car_address = #{returnCarAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="isDamage != null" >
+        is_damage = #{isDamage,jdbcType=INTEGER},
+      </if>
+      <if test="damageDsp != null" >
+        damage_dsp = #{damageDsp,jdbcType=VARCHAR},
+      </if>
+      <if test="damagePicture != null" >
+        damage_picture = #{damagePicture,jdbcType=VARCHAR},
+      </if>
+      <if test="compensateMoney != null" >
+        compensate_money = #{compensateMoney,jdbcType=REAL},
+      </if>
+      <if test="closingTime != null" >
+        closing_time = #{closingTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deposit != null" >
+        deposit = #{deposit,jdbcType=REAL},
+      </if>
+      <if test="depositStatus != null" >
+        deposit_status = #{depositStatus,jdbcType=INTEGER},
+      </if>
+      <if test="leasePrice != null" >
+        lease_price = #{leasePrice,jdbcType=REAL},
+      </if>
+      <if test="insurancePrice != null" >
+        insurance_price = #{insurancePrice,jdbcType=REAL},
+      </if>
+      <if test="otherPrice != null" >
+        other_price = #{otherPrice,jdbcType=REAL},
+      </if>
+      <if test="totalPrice != null" >
+        total_price = #{totalPrice,jdbcType=REAL},
+      </if>
+      <if test="payTime != null" >
+        pay_time = #{payTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orderStatus != null" >
+        order_status = #{orderStatus,jdbcType=INTEGER},
+      </if>
+      <if test="payType != null" >
+        pay_type = #{payType,jdbcType=INTEGER},
+      </if>
+      <if test="orderRemark != null" >
+        order_remark = #{orderRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="evaluateScore != null" >
+        evaluate_score = #{evaluateScore,jdbcType=INTEGER},
+      </if>
+      <if test="evaluateDsp != null" >
+        evaluate_dsp = #{evaluateDsp,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hcb.zzb.dto.Orders" >
+    update orders
+    set create_at = #{createAt,jdbcType=TIMESTAMP},
+      update_at = #{updateAt,jdbcType=TIMESTAMP},
+      delete_at = #{deleteAt,jdbcType=TIMESTAMP},
+      order_uuid = #{orderUuid,jdbcType=VARCHAR},
+      order_number = #{orderNumber,jdbcType=VARCHAR},
+      user_uuid = #{userUuid,jdbcType=VARCHAR},
+      car_owner_uuid = #{carOwnerUuid,jdbcType=VARCHAR},
+      car_uuid = #{carUuid,jdbcType=VARCHAR},
+      start_time = #{startTime,jdbcType=TIMESTAMP},
+      end_time = #{endTime,jdbcType=TIMESTAMP},
+      take_car_time = #{takeCarTime,jdbcType=TIMESTAMP},
+      take_car_address = #{takeCarAddress,jdbcType=VARCHAR},
+      return_car_time = #{returnCarTime,jdbcType=TIMESTAMP},
+      return_car_address = #{returnCarAddress,jdbcType=VARCHAR},
+      is_damage = #{isDamage,jdbcType=INTEGER},
+      damage_dsp = #{damageDsp,jdbcType=VARCHAR},
+      damage_picture = #{damagePicture,jdbcType=VARCHAR},
+      compensate_money = #{compensateMoney,jdbcType=REAL},
+      closing_time = #{closingTime,jdbcType=TIMESTAMP},
+      deposit = #{deposit,jdbcType=REAL},
+      deposit_status = #{depositStatus,jdbcType=INTEGER},
+      lease_price = #{leasePrice,jdbcType=REAL},
+      insurance_price = #{insurancePrice,jdbcType=REAL},
+      other_price = #{otherPrice,jdbcType=REAL},
+      total_price = #{totalPrice,jdbcType=REAL},
+      pay_time = #{payTime,jdbcType=TIMESTAMP},
+      order_status = #{orderStatus,jdbcType=INTEGER},
+      pay_type = #{payType,jdbcType=INTEGER},
+      order_remark = #{orderRemark,jdbcType=VARCHAR},
+      evaluate_score = #{evaluateScore,jdbcType=INTEGER},
+      evaluate_dsp = #{evaluateDsp,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

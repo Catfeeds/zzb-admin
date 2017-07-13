@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hcb.zzb.dao.interfaceClass.AttachmentFileInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.hcb.zzb.dto.AttachmentFileInfo" >
+    <id column="fake_id" property="fakeId" jdbcType="INTEGER" />
+    <result column="create_datetime" property="createDatetime" jdbcType="TIMESTAMP" />
+    <result column="update_datetime" property="updateDatetime" jdbcType="TIMESTAMP" />
+    <result column="delete_at" property="deleteAt" jdbcType="VARCHAR" />
+    <result column="file_uuid" property="fileUuid" jdbcType="VARCHAR" />
+    <result column="file_name" property="fileName" jdbcType="VARCHAR" />
+    <result column="bucketName" property="bucketname" jdbcType="VARCHAR" />
+    <result column="upload_uuid" property="uploadUuid" jdbcType="VARCHAR" />
+    <result column="file_url" property="fileUrl" jdbcType="VARCHAR" />
+    <result column="file_type" property="fileType" jdbcType="VARCHAR" />
+    <result column="sizes" property="sizes" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    fake_id, create_datetime, update_datetime, delete_at, file_uuid, file_name, bucketName, 
+    upload_uuid, file_url, file_type,sizes
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from attachment_file_info
+    where fake_id = #{fakeId,jdbcType=INTEGER}
+  </select>
+  <select id="selectByFileUuid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from attachment_file_info
+    where file_uuid = #{fileUuid,jdbcType=INTEGER} and delete_at is null
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from attachment_file_info
+    where fake_id = #{fakeId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.hcb.zzb.dto.AttachmentFileInfo" >
+    insert into attachment_file_info (fake_id, create_datetime, update_datetime, 
+      delete_at, file_uuid, file_name, 
+      bucketName, upload_uuid, file_url, 
+      file_type,sizes)
+    values (#{fakeId,jdbcType=INTEGER}, #{createDatetime,jdbcType=TIMESTAMP}, #{updateDatetime,jdbcType=TIMESTAMP}, 
+      #{deleteAt,jdbcType=VARCHAR}, #{fileUuid,jdbcType=VARCHAR}, #{fileName,jdbcType=VARCHAR}, 
+      #{bucketname,jdbcType=VARCHAR}, #{uploadUuid,jdbcType=VARCHAR}, #{fileUrl,jdbcType=VARCHAR}, 
+      #{fileType,jdbcType=VARCHAR},#{sizes,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.hcb.zzb.dto.AttachmentFileInfo" >
+    insert into attachment_file_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="fakeId != null" >
+        fake_id,
+      </if>
+      <if test="createDatetime != null" >
+        create_datetime,
+      </if>
+      <if test="updateDatetime != null" >
+        update_datetime,
+      </if>
+      <if test="deleteAt != null" >
+        delete_at,
+      </if>
+      <if test="fileUuid != null" >
+        file_uuid,
+      </if>
+      <if test="fileName != null" >
+        file_name,
+      </if>
+      <if test="bucketname != null" >
+        bucketName,
+      </if>
+      <if test="uploadUuid != null" >
+        upload_uuid,
+      </if>
+      <if test="fileUrl != null" >
+        file_url,
+      </if>
+      <if test="fileType != null" >
+        file_type,
+      </if>
+      <if test="sizes != null" >
+        sizes,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="fakeId != null" >
+        #{fakeId,jdbcType=INTEGER},
+      </if>
+      <if test="createDatetime != null" >
+        #{createDatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDatetime != null" >
+        #{updateDatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteAt != null" >
+        #{deleteAt,jdbcType=VARCHAR},
+      </if>
+      <if test="fileUuid != null" >
+        #{fileUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="fileName != null" >
+        #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="bucketname != null" >
+        #{bucketname,jdbcType=VARCHAR},
+      </if>
+      <if test="uploadUuid != null" >
+        #{uploadUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="fileUrl != null" >
+        #{fileUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="fileType != null" >
+        #{fileType,jdbcType=VARCHAR},
+      </if>
+      <if test="sizes != null" >
+        #{sizes,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hcb.zzb.dto.AttachmentFileInfo" >
+    update attachment_file_info
+    <set >
+      <if test="createDatetime != null" >
+        create_datetime = #{createDatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDatetime != null" >
+        update_datetime = #{updateDatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteAt != null" >
+        delete_at = #{deleteAt,jdbcType=VARCHAR},
+      </if>
+      <if test="fileUuid != null" >
+        file_uuid = #{fileUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="fileName != null" >
+        file_name = #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="bucketname != null" >
+        bucketName = #{bucketname,jdbcType=VARCHAR},
+      </if>
+      <if test="uploadUuid != null" >
+        upload_uuid = #{uploadUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="fileUrl != null" >
+        file_url = #{fileUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="fileType != null" >
+        file_type = #{fileType,jdbcType=VARCHAR},
+      </if>
+      <if test="sizes != null" >
+        sizes = #{sizes,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where fake_id = #{fakeId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hcb.zzb.dto.AttachmentFileInfo" >
+    update attachment_file_info
+    set create_datetime = #{createDatetime,jdbcType=TIMESTAMP},
+      update_datetime = #{updateDatetime,jdbcType=TIMESTAMP},
+      delete_at = #{deleteAt,jdbcType=VARCHAR},
+      file_uuid = #{fileUuid,jdbcType=VARCHAR},
+      file_name = #{fileName,jdbcType=VARCHAR},
+      bucketName = #{bucketname,jdbcType=VARCHAR},
+      upload_uuid = #{uploadUuid,jdbcType=VARCHAR},
+      file_url = #{fileUrl,jdbcType=VARCHAR},
+      file_type = #{fileType,jdbcType=VARCHAR},
+      sizes = #{sizes,jdbcType=VARCHAR}
+    where fake_id = #{fakeId,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hcb.zzb.dao.interfaceClass.UsersMapper" >
+  <resultMap id="BaseResultMap" type="com.hcb.zzb.dto.Users" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="create_at" property="createAt" jdbcType="TIMESTAMP" />
+    <result column="update_at" property="updateAt" jdbcType="TIMESTAMP" />
+    <result column="delete_at" property="deleteAt" jdbcType="TIMESTAMP" />
+    <result column="user_uuid" property="userUuid" jdbcType="VARCHAR" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="gender" property="gender" jdbcType="INTEGER" />
+    <result column="user_phone" property="userPhone" jdbcType="VARCHAR" />
+    <result column="birthday" property="birthday" jdbcType="TIMESTAMP" />
+    <result column="avater" property="avater" jdbcType="VARCHAR" />
+    <result column="id_type" property="idType" jdbcType="INTEGER" />
+    <result column="id_number" property="idNumber" jdbcType="VARCHAR" />
+    <result column="id_picture" property="idPicture" jdbcType="VARCHAR" />
+    <result column="driving" property="driving" jdbcType="INTEGER" />
+    <result column="constellation" property="constellation" jdbcType="VARCHAR" />
+    <result column="wx_open_id" property="wxOpenId" jdbcType="VARCHAR" />
+    <result column="qq_open_id" property="qqOpenId" jdbcType="VARCHAR" />
+    <result column="zm_open_id" property="zmOpenId" jdbcType="VARCHAR" />
+    <result column="balance" property="balance" jdbcType="REAL" />
+    <result column="frozen_balance" property="frozenBalance" jdbcType="REAL" />
+    <result column="authentication_status" property="authenticationStatus" jdbcType="INTEGER" />
+    <result column="credit_score" property="creditScore" jdbcType="INTEGER" />
+    <result column="pay_password" property="payPassword" jdbcType="VARCHAR" />
+    <result column="user_type" property="userType" jdbcType="INTEGER" />
+    <result column="riders_status" property="ridersStatus" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, create_at, update_at, delete_at, user_uuid, user_name, gender, user_phone, birthday, 
+    avater, id_type, id_number, id_picture, driving, constellation, wx_open_id, qq_open_id, 
+    zm_open_id, balance, frozen_balance, authentication_status, credit_score, pay_password, 
+    user_type, riders_status
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from users
+    where id = #{id,jdbcType=INTEGER} and delete_at is null
+  </select>
+  <select id="selectByUserUuid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from users
+    where user_uuid = #{userUuid,jdbcType=VARCHAR} and delete_at is null
+  </select>
+  <select id="selectByPhone" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from users
+    where user_phone = #{phone,jdbcType=VARCHAR} and delete_at is null 
+  </select>
+  <select id="selectByWxOpenId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from users
+    where wx_open_id = #{selectByWxOpenId,jdbcType=VARCHAR} and delete_at is null 
+  </select>
+  
+  <select id="selectByQqOpenId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from users
+    where qq_open_id = #{qqOpenId,jdbcType=VARCHAR} and delete_at is null 
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from users
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.hcb.zzb.dto.Users" >
+    insert into users (id, create_at, update_at, 
+      delete_at, user_uuid, user_name, 
+      gender, user_phone, birthday, 
+      avater, id_type, id_number, 
+      id_picture, driving, constellation, 
+      wx_open_id, qq_open_id, zm_open_id, 
+      balance, frozen_balance, authentication_status, 
+      credit_score, pay_password, user_type, 
+      riders_status)
+    values (#{id,jdbcType=INTEGER}, #{createAt,jdbcType=TIMESTAMP}, #{updateAt,jdbcType=TIMESTAMP}, 
+      #{deleteAt,jdbcType=TIMESTAMP}, #{userUuid,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, 
+      #{gender,jdbcType=INTEGER}, #{userPhone,jdbcType=VARCHAR}, #{birthday,jdbcType=TIMESTAMP}, 
+      #{avater,jdbcType=VARCHAR}, #{idType,jdbcType=INTEGER}, #{idNumber,jdbcType=VARCHAR}, 
+      #{idPicture,jdbcType=VARCHAR}, #{driving,jdbcType=INTEGER}, #{constellation,jdbcType=VARCHAR}, 
+      #{wxOpenId,jdbcType=VARCHAR}, #{qqOpenId,jdbcType=VARCHAR}, #{zmOpenId,jdbcType=VARCHAR}, 
+      #{balance,jdbcType=REAL}, #{frozenBalance,jdbcType=REAL}, #{authenticationStatus,jdbcType=INTEGER}, 
+      #{creditScore,jdbcType=INTEGER}, #{payPassword,jdbcType=VARCHAR}, #{userType,jdbcType=INTEGER}, 
+      #{ridersStatus,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hcb.zzb.dto.Users" >
+    insert into users
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="createAt != null" >
+        create_at,
+      </if>
+      <if test="updateAt != null" >
+        update_at,
+      </if>
+      <if test="deleteAt != null" >
+        delete_at,
+      </if>
+      <if test="userUuid != null" >
+        user_uuid,
+      </if>
+      <if test="userName != null" >
+        user_name,
+      </if>
+      <if test="gender != null" >
+        gender,
+      </if>
+      <if test="userPhone != null" >
+        user_phone,
+      </if>
+      <if test="birthday != null" >
+        birthday,
+      </if>
+      <if test="avater != null" >
+        avater,
+      </if>
+      <if test="idType != null" >
+        id_type,
+      </if>
+      <if test="idNumber != null" >
+        id_number,
+      </if>
+      <if test="idPicture != null" >
+        id_picture,
+      </if>
+      <if test="driving != null" >
+        driving,
+      </if>
+      <if test="constellation != null" >
+        constellation,
+      </if>
+      <if test="wxOpenId != null" >
+        wx_open_id,
+      </if>
+      <if test="qqOpenId != null" >
+        qq_open_id,
+      </if>
+      <if test="zmOpenId != null" >
+        zm_open_id,
+      </if>
+      <if test="balance != null" >
+        balance,
+      </if>
+      <if test="frozenBalance != null" >
+        frozen_balance,
+      </if>
+      <if test="authenticationStatus != null" >
+        authentication_status,
+      </if>
+      <if test="creditScore != null" >
+        credit_score,
+      </if>
+      <if test="payPassword != null" >
+        pay_password,
+      </if>
+      <if test="userType != null" >
+        user_type,
+      </if>
+      <if test="ridersStatus != null" >
+        riders_status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="createAt != null" >
+        #{createAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateAt != null" >
+        #{updateAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteAt != null" >
+        #{deleteAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userUuid != null" >
+        #{userUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="gender != null" >
+        #{gender,jdbcType=INTEGER},
+      </if>
+      <if test="userPhone != null" >
+        #{userPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="birthday != null" >
+        #{birthday,jdbcType=TIMESTAMP},
+      </if>
+      <if test="avater != null" >
+        #{avater,jdbcType=VARCHAR},
+      </if>
+      <if test="idType != null" >
+        #{idType,jdbcType=INTEGER},
+      </if>
+      <if test="idNumber != null" >
+        #{idNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="idPicture != null" >
+        #{idPicture,jdbcType=VARCHAR},
+      </if>
+      <if test="driving != null" >
+        #{driving,jdbcType=INTEGER},
+      </if>
+      <if test="constellation != null" >
+        #{constellation,jdbcType=VARCHAR},
+      </if>
+      <if test="wxOpenId != null" >
+        #{wxOpenId,jdbcType=VARCHAR},
+      </if>
+      <if test="qqOpenId != null" >
+        #{qqOpenId,jdbcType=VARCHAR},
+      </if>
+      <if test="zmOpenId != null" >
+        #{zmOpenId,jdbcType=VARCHAR},
+      </if>
+      <if test="balance != null" >
+        #{balance,jdbcType=REAL},
+      </if>
+      <if test="frozenBalance != null" >
+        #{frozenBalance,jdbcType=REAL},
+      </if>
+      <if test="authenticationStatus != null" >
+        #{authenticationStatus,jdbcType=INTEGER},
+      </if>
+      <if test="creditScore != null" >
+        #{creditScore,jdbcType=INTEGER},
+      </if>
+      <if test="payPassword != null" >
+        #{payPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="userType != null" >
+        #{userType,jdbcType=INTEGER},
+      </if>
+      <if test="ridersStatus != null" >
+        #{ridersStatus,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hcb.zzb.dto.Users" >
+    update users
+    <set >
+      <if test="createAt != null" >
+        create_at = #{createAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateAt != null" >
+        update_at = #{updateAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteAt != null" >
+        delete_at = #{deleteAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userUuid != null" >
+        user_uuid = #{userUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null" >
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="gender != null" >
+        gender = #{gender,jdbcType=INTEGER},
+      </if>
+      <if test="userPhone != null" >
+        user_phone = #{userPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="birthday != null" >
+        birthday = #{birthday,jdbcType=TIMESTAMP},
+      </if>
+      <if test="avater != null" >
+        avater = #{avater,jdbcType=VARCHAR},
+      </if>
+      <if test="idType != null" >
+        id_type = #{idType,jdbcType=INTEGER},
+      </if>
+      <if test="idNumber != null" >
+        id_number = #{idNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="idPicture != null" >
+        id_picture = #{idPicture,jdbcType=VARCHAR},
+      </if>
+      <if test="driving != null" >
+        driving = #{driving,jdbcType=INTEGER},
+      </if>
+      <if test="constellation != null" >
+        constellation = #{constellation,jdbcType=VARCHAR},
+      </if>
+      <if test="wxOpenId != null" >
+        wx_open_id = #{wxOpenId,jdbcType=VARCHAR},
+      </if>
+      <if test="qqOpenId != null" >
+        qq_open_id = #{qqOpenId,jdbcType=VARCHAR},
+      </if>
+      <if test="zmOpenId != null" >
+        zm_open_id = #{zmOpenId,jdbcType=VARCHAR},
+      </if>
+      <if test="balance != null" >
+        balance = #{balance,jdbcType=REAL},
+      </if>
+      <if test="frozenBalance != null" >
+        frozen_balance = #{frozenBalance,jdbcType=REAL},
+      </if>
+      <if test="authenticationStatus != null" >
+        authentication_status = #{authenticationStatus,jdbcType=INTEGER},
+      </if>
+      <if test="creditScore != null" >
+        credit_score = #{creditScore,jdbcType=INTEGER},
+      </if>
+      <if test="payPassword != null" >
+        pay_password = #{payPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="userType != null" >
+        user_type = #{userType,jdbcType=INTEGER},
+      </if>
+      <if test="ridersStatus != null" >
+        riders_status = #{ridersStatus,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hcb.zzb.dto.Users" >
+    update users
+    set create_at = #{createAt,jdbcType=TIMESTAMP},
+      update_at = #{updateAt,jdbcType=TIMESTAMP},
+      delete_at = #{deleteAt,jdbcType=TIMESTAMP},
+      user_uuid = #{userUuid,jdbcType=VARCHAR},
+      user_name = #{userName,jdbcType=VARCHAR},
+      gender = #{gender,jdbcType=INTEGER},
+      user_phone = #{userPhone,jdbcType=VARCHAR},
+      birthday = #{birthday,jdbcType=TIMESTAMP},
+      avater = #{avater,jdbcType=VARCHAR},
+      id_type = #{idType,jdbcType=INTEGER},
+      id_number = #{idNumber,jdbcType=VARCHAR},
+      id_picture = #{idPicture,jdbcType=VARCHAR},
+      driving = #{driving,jdbcType=INTEGER},
+      constellation = #{constellation,jdbcType=VARCHAR},
+      wx_open_id = #{wxOpenId,jdbcType=VARCHAR},
+      qq_open_id = #{qqOpenId,jdbcType=VARCHAR},
+      zm_open_id = #{zmOpenId,jdbcType=VARCHAR},
+      balance = #{balance,jdbcType=REAL},
+      frozen_balance = #{frozenBalance,jdbcType=REAL},
+      authentication_status = #{authenticationStatus,jdbcType=INTEGER},
+      credit_score = #{creditScore,jdbcType=INTEGER},
+      pay_password = #{payPassword,jdbcType=VARCHAR},
+      user_type = #{userType,jdbcType=INTEGER},
+      riders_status = #{ridersStatus,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

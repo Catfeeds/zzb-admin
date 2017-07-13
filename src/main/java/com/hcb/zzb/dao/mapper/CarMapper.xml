@@ -1,0 +1,607 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hcb.zzb.dao.interfaceClass.CarMapper" >
+  <resultMap id="BaseResultMap" type="com.hcb.zzb.dto.Car" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="create_at" property="createAt" jdbcType="TIMESTAMP" />
+    <result column="update_at" property="updateAt" jdbcType="TIMESTAMP" />
+    <result column="delete_at" property="deleteAt" jdbcType="TIMESTAMP" />
+    <result column="car_uuid" property="carUuid" jdbcType="VARCHAR" />
+    <result column="banner" property="banner" jdbcType="VARCHAR" />
+    <result column="car_name" property="carName" jdbcType="VARCHAR" />
+    <result column="car_type" property="carType" jdbcType="INTEGER" />
+    <result column="car_status" property="carStatus" jdbcType="INTEGER" />
+    <result column="license_plate_number" property="licensePlateNumber" jdbcType="VARCHAR" />
+    <result column="brand" property="brand" jdbcType="VARCHAR" />
+    <result column="car_series" property="carSeries" jdbcType="VARCHAR" />
+    <result column="model_character" property="modelCharacter" jdbcType="VARCHAR" />
+    <result column="model" property="model" jdbcType="VARCHAR" />
+    <result column="displacement" property="displacement" jdbcType="VARCHAR" />
+    <result column="manual_or_automatic" property="manualOrAutomatic" jdbcType="INTEGER" />
+    <result column="mileage" property="mileage" jdbcType="INTEGER" />
+    <result column="address_map" property="addressMap" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="car_dsp" property="carDsp" jdbcType="VARCHAR" />
+    <result column="car_code_url" property="carCodeUrl" jdbcType="VARCHAR" />
+    <result column="order_quantity" property="orderQuantity" jdbcType="INTEGER" />
+    <result column="collection" property="collection" jdbcType="INTEGER" />
+    <result column="working_day_price" property="workingDayPrice" jdbcType="REAL" />
+    <result column="vehicle_age" property="vehicleAge" jdbcType="INTEGER" />
+    <result column="is_navigation" property="isNavigation" jdbcType="INTEGER" />
+    <result column="is_mp3" property="isMp3" jdbcType="INTEGER" />
+    <result column="vehicle_identification_number" property="vehicleIdentificationNumber" jdbcType="VARCHAR" />
+    <result column="weekend_price" property="weekendPrice" jdbcType="REAL" />
+    <result column="shelves_start_time" property="shelvesStartTime" jdbcType="TIMESTAMP" />
+    <result column="engine_number" property="engineNumber" jdbcType="VARCHAR" />
+    <result column="seat_number" property="seatNumber" jdbcType="INTEGER" />
+    <result column="color" property="color" jdbcType="VARCHAR" />
+    <result column="register_time" property="registerTime" jdbcType="TIMESTAMP" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="driving_license_photo" property="drivingLicensePhoto" jdbcType="VARCHAR" />
+    <result column="man_car_photo" property="manCarPhoto" jdbcType="VARCHAR" />
+    <result column="vehicle_delivery_mode" property="vehicleDeliveryMode" jdbcType="INTEGER" />
+    <result column="car_owner_name" property="carOwnerName" jdbcType="VARCHAR" />
+    <result column="user_uuid" property="userUuid" jdbcType="VARCHAR" />
+    <result column="shelves_end_time" property="shelvesEndTime" jdbcType="TIMESTAMP" />
+    <result column="lease_time" property="leaseTime" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, create_at, update_at, delete_at, car_uuid, banner, car_name, car_type, car_status, 
+    license_plate_number, brand, car_series, model_character, model, displacement, manual_or_automatic, 
+    mileage, address_map, address, car_dsp, car_code_url, order_quantity, collection, 
+    working_day_price, vehicle_age, is_navigation, is_mp3, vehicle_identification_number, 
+    weekend_price, shelves_start_time, engine_number, seat_number, color, register_time, 
+    city, driving_license_photo, man_car_photo, vehicle_delivery_mode, car_owner_name, 
+    user_uuid, shelves_end_time, lease_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from car
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectByUuid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from car
+    where car_uuid = #{Caruuid,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByUserUuid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from car
+    where user_uuid = #{useruuid,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByCity" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from car
+    where city = #{city,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectAll" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from car
+  </select>
+  
+  <select id="selectCarStatusAll" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from car WHERE car_status = 2 ORDER BY create_at DESC
+  </select>
+  
+  <select id="selectByCarName" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from car
+    where car_name = #{carname,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectByBrand" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from car
+    where brand = #{brand,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectByPrice" resultMap="BaseResultMap" parameterType="java.lang.Float" >
+    select 
+    <include refid="Base_Column_List" />
+    from car
+    where working_day_price = #{price,jdbcType=REAL}
+  </select>
+
+  <select id="selectByCreateAt" resultMap="BaseResultMap" parameterType="java.util.Map">
+  	select
+  	<include refid="Base_Column_List" />
+  	from car order by create_at desc
+  	limit #{pageIndex},#{pageSize}
+  </select>
+  <select id="selectByCreateAtCount" resultType="int">
+  	select count(1)
+  	from car
+  </select>
+  <select id="selectByCarModel" resultMap="BaseResultMap" parameterType="java.util.Map">
+  	select
+  	<include refid="Base_Column_List" />
+  	from car
+  	where model_character=#{modelCharacter,jdbcType=VARCHAR} limit #{pageIndex},#{pageSize}
+  </select>
+  <select id="selectCountByCarModel" resultType="int" parameterType="java.lang.String">
+  	select count(1)
+  	from car
+  	where model_character=#{modelCharacter,jdbcType=VARCHAR}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from car
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.hcb.zzb.dto.Car" >
+    insert into car (id, create_at, update_at, 
+      delete_at, car_uuid, banner, 
+      car_name, car_type, car_status, 
+      license_plate_number, brand, car_series, 
+      model_character, model, displacement, 
+      manual_or_automatic, mileage, address_map, 
+      address, car_dsp, car_code_url, 
+      order_quantity, collection, working_day_price, 
+      vehicle_age, is_navigation, is_mp3, 
+      vehicle_identification_number, weekend_price, 
+      shelves_start_time, engine_number, seat_number, 
+      color, register_time, city, 
+      driving_license_photo, man_car_photo, vehicle_delivery_mode, 
+      car_owner_name, user_uuid, shelves_end_time, 
+      lease_time)
+    values (#{id,jdbcType=INTEGER}, #{createAt,jdbcType=TIMESTAMP}, #{updateAt,jdbcType=TIMESTAMP}, 
+      #{deleteAt,jdbcType=TIMESTAMP}, #{carUuid,jdbcType=VARCHAR}, #{banner,jdbcType=VARCHAR}, 
+      #{carName,jdbcType=VARCHAR}, #{carType,jdbcType=INTEGER}, #{carStatus,jdbcType=INTEGER}, 
+      #{licensePlateNumber,jdbcType=VARCHAR}, #{brand,jdbcType=VARCHAR}, #{carSeries,jdbcType=VARCHAR}, 
+      #{modelCharacter,jdbcType=VARCHAR}, #{model,jdbcType=VARCHAR}, #{displacement,jdbcType=VARCHAR}, 
+      #{manualOrAutomatic,jdbcType=INTEGER}, #{mileage,jdbcType=INTEGER}, #{addressMap,jdbcType=VARCHAR}, 
+      #{address,jdbcType=VARCHAR}, #{carDsp,jdbcType=VARCHAR}, #{carCodeUrl,jdbcType=VARCHAR}, 
+      #{orderQuantity,jdbcType=INTEGER}, #{collection,jdbcType=INTEGER}, #{workingDayPrice,jdbcType=REAL}, 
+      #{vehicleAge,jdbcType=INTEGER}, #{isNavigation,jdbcType=INTEGER}, #{isMp3,jdbcType=INTEGER}, 
+      #{vehicleIdentificationNumber,jdbcType=VARCHAR}, #{weekendPrice,jdbcType=REAL}, 
+      #{shelvesStartTime,jdbcType=TIMESTAMP}, #{engineNumber,jdbcType=VARCHAR}, #{seatNumber,jdbcType=INTEGER}, 
+      #{color,jdbcType=VARCHAR}, #{registerTime,jdbcType=TIMESTAMP}, #{city,jdbcType=VARCHAR}, 
+      #{drivingLicensePhoto,jdbcType=VARCHAR}, #{manCarPhoto,jdbcType=VARCHAR}, #{vehicleDeliveryMode,jdbcType=INTEGER}, 
+      #{carOwnerName,jdbcType=VARCHAR}, #{userUuid,jdbcType=VARCHAR}, #{shelvesEndTime,jdbcType=TIMESTAMP}, 
+      #{leaseTime,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hcb.zzb.dto.Car" >
+    insert into car
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="createAt != null" >
+        create_at,
+      </if>
+      <if test="updateAt != null" >
+        update_at,
+      </if>
+      <if test="deleteAt != null" >
+        delete_at,
+      </if>
+      <if test="carUuid != null" >
+        car_uuid,
+      </if>
+      <if test="banner != null" >
+        banner,
+      </if>
+      <if test="carName != null" >
+        car_name,
+      </if>
+      <if test="carType != null" >
+        car_type,
+      </if>
+      <if test="carStatus != null" >
+        car_status,
+      </if>
+      <if test="licensePlateNumber != null" >
+        license_plate_number,
+      </if>
+      <if test="brand != null" >
+        brand,
+      </if>
+      <if test="carSeries != null" >
+        car_series,
+      </if>
+      <if test="modelCharacter != null" >
+        model_character,
+      </if>
+      <if test="model != null" >
+        model,
+      </if>
+      <if test="displacement != null" >
+        displacement,
+      </if>
+      <if test="manualOrAutomatic != null" >
+        manual_or_automatic,
+      </if>
+      <if test="mileage != null" >
+        mileage,
+      </if>
+      <if test="addressMap != null" >
+        address_map,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="carDsp != null" >
+        car_dsp,
+      </if>
+      <if test="carCodeUrl != null" >
+        car_code_url,
+      </if>
+      <if test="orderQuantity != null" >
+        order_quantity,
+      </if>
+      <if test="collection != null" >
+        collection,
+      </if>
+      <if test="workingDayPrice != null" >
+        working_day_price,
+      </if>
+      <if test="vehicleAge != null" >
+        vehicle_age,
+      </if>
+      <if test="isNavigation != null" >
+        is_navigation,
+      </if>
+      <if test="isMp3 != null" >
+        is_mp3,
+      </if>
+      <if test="vehicleIdentificationNumber != null" >
+        vehicle_identification_number,
+      </if>
+      <if test="weekendPrice != null" >
+        weekend_price,
+      </if>
+      <if test="shelvesStartTime != null" >
+        shelves_start_time,
+      </if>
+      <if test="engineNumber != null" >
+        engine_number,
+      </if>
+      <if test="seatNumber != null" >
+        seat_number,
+      </if>
+      <if test="color != null" >
+        color,
+      </if>
+      <if test="registerTime != null" >
+        register_time,
+      </if>
+      <if test="city != null" >
+        city,
+      </if>
+      <if test="drivingLicensePhoto != null" >
+        driving_license_photo,
+      </if>
+      <if test="manCarPhoto != null" >
+        man_car_photo,
+      </if>
+      <if test="vehicleDeliveryMode != null" >
+        vehicle_delivery_mode,
+      </if>
+      <if test="carOwnerName != null" >
+        car_owner_name,
+      </if>
+      <if test="userUuid != null" >
+        user_uuid,
+      </if>
+      <if test="shelvesEndTime != null" >
+        shelves_end_time,
+      </if>
+      <if test="leaseTime != null" >
+        lease_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="createAt != null" >
+        #{createAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateAt != null" >
+        #{updateAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteAt != null" >
+        #{deleteAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="carUuid != null" >
+        #{carUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="banner != null" >
+        #{banner,jdbcType=VARCHAR},
+      </if>
+      <if test="carName != null" >
+        #{carName,jdbcType=VARCHAR},
+      </if>
+      <if test="carType != null" >
+        #{carType,jdbcType=INTEGER},
+      </if>
+      <if test="carStatus != null" >
+        #{carStatus,jdbcType=INTEGER},
+      </if>
+      <if test="licensePlateNumber != null" >
+        #{licensePlateNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="brand != null" >
+        #{brand,jdbcType=VARCHAR},
+      </if>
+      <if test="carSeries != null" >
+        #{carSeries,jdbcType=VARCHAR},
+      </if>
+      <if test="modelCharacter != null" >
+        #{modelCharacter,jdbcType=VARCHAR},
+      </if>
+      <if test="model != null" >
+        #{model,jdbcType=VARCHAR},
+      </if>
+      <if test="displacement != null" >
+        #{displacement,jdbcType=VARCHAR},
+      </if>
+      <if test="manualOrAutomatic != null" >
+        #{manualOrAutomatic,jdbcType=INTEGER},
+      </if>
+      <if test="mileage != null" >
+        #{mileage,jdbcType=INTEGER},
+      </if>
+      <if test="addressMap != null" >
+        #{addressMap,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="carDsp != null" >
+        #{carDsp,jdbcType=VARCHAR},
+      </if>
+      <if test="carCodeUrl != null" >
+        #{carCodeUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="orderQuantity != null" >
+        #{orderQuantity,jdbcType=INTEGER},
+      </if>
+      <if test="collection != null" >
+        #{collection,jdbcType=INTEGER},
+      </if>
+      <if test="workingDayPrice != null" >
+        #{workingDayPrice,jdbcType=REAL},
+      </if>
+      <if test="vehicleAge != null" >
+        #{vehicleAge,jdbcType=INTEGER},
+      </if>
+      <if test="isNavigation != null" >
+        #{isNavigation,jdbcType=INTEGER},
+      </if>
+      <if test="isMp3 != null" >
+        #{isMp3,jdbcType=INTEGER},
+      </if>
+      <if test="vehicleIdentificationNumber != null" >
+        #{vehicleIdentificationNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="weekendPrice != null" >
+        #{weekendPrice,jdbcType=REAL},
+      </if>
+      <if test="shelvesStartTime != null" >
+        #{shelvesStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="engineNumber != null" >
+        #{engineNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="seatNumber != null" >
+        #{seatNumber,jdbcType=INTEGER},
+      </if>
+      <if test="color != null" >
+        #{color,jdbcType=VARCHAR},
+      </if>
+      <if test="registerTime != null" >
+        #{registerTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="city != null" >
+        #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="drivingLicensePhoto != null" >
+        #{drivingLicensePhoto,jdbcType=VARCHAR},
+      </if>
+      <if test="manCarPhoto != null" >
+        #{manCarPhoto,jdbcType=VARCHAR},
+      </if>
+      <if test="vehicleDeliveryMode != null" >
+        #{vehicleDeliveryMode,jdbcType=INTEGER},
+      </if>
+      <if test="carOwnerName != null" >
+        #{carOwnerName,jdbcType=VARCHAR},
+      </if>
+      <if test="userUuid != null" >
+        #{userUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="shelvesEndTime != null" >
+        #{shelvesEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="leaseTime != null" >
+        #{leaseTime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hcb.zzb.dto.Car" >
+    update car
+    <set >
+      <if test="createAt != null" >
+        create_at = #{createAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateAt != null" >
+        update_at = #{updateAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteAt != null" >
+        delete_at = #{deleteAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="carUuid != null" >
+        car_uuid = #{carUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="banner != null" >
+        banner = #{banner,jdbcType=VARCHAR},
+      </if>
+      <if test="carName != null" >
+        car_name = #{carName,jdbcType=VARCHAR},
+      </if>
+      <if test="carType != null" >
+        car_type = #{carType,jdbcType=INTEGER},
+      </if>
+      <if test="carStatus != null" >
+        car_status = #{carStatus,jdbcType=INTEGER},
+      </if>
+      <if test="licensePlateNumber != null" >
+        license_plate_number = #{licensePlateNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="brand != null" >
+        brand = #{brand,jdbcType=VARCHAR},
+      </if>
+      <if test="carSeries != null" >
+        car_series = #{carSeries,jdbcType=VARCHAR},
+      </if>
+      <if test="modelCharacter != null" >
+        model_character = #{modelCharacter,jdbcType=VARCHAR},
+      </if>
+      <if test="model != null" >
+        model = #{model,jdbcType=VARCHAR},
+      </if>
+      <if test="displacement != null" >
+        displacement = #{displacement,jdbcType=VARCHAR},
+      </if>
+      <if test="manualOrAutomatic != null" >
+        manual_or_automatic = #{manualOrAutomatic,jdbcType=INTEGER},
+      </if>
+      <if test="mileage != null" >
+        mileage = #{mileage,jdbcType=INTEGER},
+      </if>
+      <if test="addressMap != null" >
+        address_map = #{addressMap,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="carDsp != null" >
+        car_dsp = #{carDsp,jdbcType=VARCHAR},
+      </if>
+      <if test="carCodeUrl != null" >
+        car_code_url = #{carCodeUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="orderQuantity != null" >
+        order_quantity = #{orderQuantity,jdbcType=INTEGER},
+      </if>
+      <if test="collection != null" >
+        collection = #{collection,jdbcType=INTEGER},
+      </if>
+      <if test="workingDayPrice != null" >
+        working_day_price = #{workingDayPrice,jdbcType=REAL},
+      </if>
+      <if test="vehicleAge != null" >
+        vehicle_age = #{vehicleAge,jdbcType=INTEGER},
+      </if>
+      <if test="isNavigation != null" >
+        is_navigation = #{isNavigation,jdbcType=INTEGER},
+      </if>
+      <if test="isMp3 != null" >
+        is_mp3 = #{isMp3,jdbcType=INTEGER},
+      </if>
+      <if test="vehicleIdentificationNumber != null" >
+        vehicle_identification_number = #{vehicleIdentificationNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="weekendPrice != null" >
+        weekend_price = #{weekendPrice,jdbcType=REAL},
+      </if>
+      <if test="shelvesStartTime != null" >
+        shelves_start_time = #{shelvesStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="engineNumber != null" >
+        engine_number = #{engineNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="seatNumber != null" >
+        seat_number = #{seatNumber,jdbcType=INTEGER},
+      </if>
+      <if test="color != null" >
+        color = #{color,jdbcType=VARCHAR},
+      </if>
+      <if test="registerTime != null" >
+        register_time = #{registerTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="city != null" >
+        city = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="drivingLicensePhoto != null" >
+        driving_license_photo = #{drivingLicensePhoto,jdbcType=VARCHAR},
+      </if>
+      <if test="manCarPhoto != null" >
+        man_car_photo = #{manCarPhoto,jdbcType=VARCHAR},
+      </if>
+      <if test="vehicleDeliveryMode != null" >
+        vehicle_delivery_mode = #{vehicleDeliveryMode,jdbcType=INTEGER},
+      </if>
+      <if test="carOwnerName != null" >
+        car_owner_name = #{carOwnerName,jdbcType=VARCHAR},
+      </if>
+      <if test="userUuid != null" >
+        user_uuid = #{userUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="shelvesEndTime != null" >
+        shelves_end_time = #{shelvesEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="leaseTime != null" >
+        lease_time = #{leaseTime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hcb.zzb.dto.Car" >
+    update car
+    set create_at = #{createAt,jdbcType=TIMESTAMP},
+      update_at = #{updateAt,jdbcType=TIMESTAMP},
+      delete_at = #{deleteAt,jdbcType=TIMESTAMP},
+      car_uuid = #{carUuid,jdbcType=VARCHAR},
+      banner = #{banner,jdbcType=VARCHAR},
+      car_name = #{carName,jdbcType=VARCHAR},
+      car_type = #{carType,jdbcType=INTEGER},
+      car_status = #{carStatus,jdbcType=INTEGER},
+      license_plate_number = #{licensePlateNumber,jdbcType=VARCHAR},
+      brand = #{brand,jdbcType=VARCHAR},
+      car_series = #{carSeries,jdbcType=VARCHAR},
+      model_character = #{modelCharacter,jdbcType=VARCHAR},
+      model = #{model,jdbcType=VARCHAR},
+      displacement = #{displacement,jdbcType=VARCHAR},
+      manual_or_automatic = #{manualOrAutomatic,jdbcType=INTEGER},
+      mileage = #{mileage,jdbcType=INTEGER},
+      address_map = #{addressMap,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      car_dsp = #{carDsp,jdbcType=VARCHAR},
+      car_code_url = #{carCodeUrl,jdbcType=VARCHAR},
+      order_quantity = #{orderQuantity,jdbcType=INTEGER},
+      collection = #{collection,jdbcType=INTEGER},
+      working_day_price = #{workingDayPrice,jdbcType=REAL},
+      vehicle_age = #{vehicleAge,jdbcType=INTEGER},
+      is_navigation = #{isNavigation,jdbcType=INTEGER},
+      is_mp3 = #{isMp3,jdbcType=INTEGER},
+      vehicle_identification_number = #{vehicleIdentificationNumber,jdbcType=VARCHAR},
+      weekend_price = #{weekendPrice,jdbcType=REAL},
+      shelves_start_time = #{shelvesStartTime,jdbcType=TIMESTAMP},
+      engine_number = #{engineNumber,jdbcType=VARCHAR},
+      seat_number = #{seatNumber,jdbcType=INTEGER},
+      color = #{color,jdbcType=VARCHAR},
+      register_time = #{registerTime,jdbcType=TIMESTAMP},
+      city = #{city,jdbcType=VARCHAR},
+      driving_license_photo = #{drivingLicensePhoto,jdbcType=VARCHAR},
+      man_car_photo = #{manCarPhoto,jdbcType=VARCHAR},
+      vehicle_delivery_mode = #{vehicleDeliveryMode,jdbcType=INTEGER},
+      car_owner_name = #{carOwnerName,jdbcType=VARCHAR},
+      user_uuid = #{userUuid,jdbcType=VARCHAR},
+      shelves_end_time = #{shelvesEndTime,jdbcType=TIMESTAMP},
+      lease_time = #{leaseTime,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

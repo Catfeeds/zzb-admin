@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hcb.zzb.dao.interfaceClass.MessageChildMapper" >
+  <resultMap id="BaseResultMap" type="com.hcb.zzb.dto.MessageChild" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="create_at" property="createAt" jdbcType="TIMESTAMP" />
+    <result column="update_at" property="updateAt" jdbcType="TIMESTAMP" />
+    <result column="delete_at" property="deleteAt" jdbcType="TIMESTAMP" />
+    <result column="message_child_uuid" property="messageChildUuid" jdbcType="VARCHAR" />
+    <result column="message_base_uuid" property="messageBaseUuid" jdbcType="VARCHAR" />
+    <result column="tittle" property="tittle" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="creater" property="creater" jdbcType="VARCHAR" />
+    <result column="user_uuid" property="userUuid" jdbcType="VARCHAR" />
+    <result column="is_read" property="isRead" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, create_at, update_at, delete_at, message_child_uuid, message_base_uuid, tittle, 
+    content, creater, user_uuid, is_read
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from message_child
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByUserUuidMessageChildUuid" resultMap="BaseResultMap" parameterType="java.util.Map">
+  	select
+  	<include refid="Base_Column_List" />
+  	 from message_child
+  	 where user_uuid=#{user_uuid,jdbcType=VARCHAR} and message_child_uuid=#{messageChildUuid,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAllMessageByUser" resultMap="BaseResultMap" parameterType="java.util.Map">
+  	select 
+    <include refid="Base_Column_List" />
+    from message_child
+    where user_uuid = #{user_uuid,jdbcType=VARCHAR} limit #{pageIndex},#{pageSize}
+  </select>
+  <select id="selectAllMessageByUserCount" resultType="int" parameterType="java.lang.String">
+  	select count(1)
+    from message_child
+    where user_uuid = #{user_uuid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from message_child
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.hcb.zzb.dto.MessageChild" >
+    insert into message_child (id, create_at, update_at, 
+      delete_at, message_child_uuid, message_base_uuid, 
+      tittle, content, creater, 
+      user_uuid, is_read)
+    values (#{id,jdbcType=INTEGER}, #{createAt,jdbcType=TIMESTAMP}, #{updateAt,jdbcType=TIMESTAMP}, 
+      #{deleteAt,jdbcType=TIMESTAMP}, #{messageChildUuid,jdbcType=VARCHAR}, #{messageBaseUuid,jdbcType=VARCHAR}, 
+      #{tittle,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, #{creater,jdbcType=VARCHAR}, 
+      #{userUuid,jdbcType=VARCHAR}, #{isRead,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hcb.zzb.dto.MessageChild" >
+    insert into message_child
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="createAt != null" >
+        create_at,
+      </if>
+      <if test="updateAt != null" >
+        update_at,
+      </if>
+      <if test="deleteAt != null" >
+        delete_at,
+      </if>
+      <if test="messageChildUuid != null" >
+        message_child_uuid,
+      </if>
+      <if test="messageBaseUuid != null" >
+        message_base_uuid,
+      </if>
+      <if test="tittle != null" >
+        tittle,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="creater != null" >
+        creater,
+      </if>
+      <if test="userUuid != null" >
+        user_uuid,
+      </if>
+      <if test="isRead != null" >
+        is_read,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="createAt != null" >
+        #{createAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateAt != null" >
+        #{updateAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteAt != null" >
+        #{deleteAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="messageChildUuid != null" >
+        #{messageChildUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="messageBaseUuid != null" >
+        #{messageBaseUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="tittle != null" >
+        #{tittle,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="creater != null" >
+        #{creater,jdbcType=VARCHAR},
+      </if>
+      <if test="userUuid != null" >
+        #{userUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="isRead != null" >
+        #{isRead,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hcb.zzb.dto.MessageChild" >
+    update message_child
+    <set >
+      <if test="createAt != null" >
+        create_at = #{createAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateAt != null" >
+        update_at = #{updateAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteAt != null" >
+        delete_at = #{deleteAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="messageChildUuid != null" >
+        message_child_uuid = #{messageChildUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="messageBaseUuid != null" >
+        message_base_uuid = #{messageBaseUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="tittle != null" >
+        tittle = #{tittle,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="creater != null" >
+        creater = #{creater,jdbcType=VARCHAR},
+      </if>
+      <if test="userUuid != null" >
+        user_uuid = #{userUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="isRead != null" >
+        is_read = #{isRead,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hcb.zzb.dto.MessageChild" >
+    update message_child
+    set create_at = #{createAt,jdbcType=TIMESTAMP},
+      update_at = #{updateAt,jdbcType=TIMESTAMP},
+      delete_at = #{deleteAt,jdbcType=TIMESTAMP},
+      message_child_uuid = #{messageChildUuid,jdbcType=VARCHAR},
+      message_base_uuid = #{messageBaseUuid,jdbcType=VARCHAR},
+      tittle = #{tittle,jdbcType=VARCHAR},
+      content = #{content,jdbcType=VARCHAR},
+      creater = #{creater,jdbcType=VARCHAR},
+      user_uuid = #{userUuid,jdbcType=VARCHAR},
+      is_read = #{isRead,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
