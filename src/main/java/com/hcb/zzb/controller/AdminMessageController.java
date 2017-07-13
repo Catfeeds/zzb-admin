@@ -125,6 +125,9 @@ public class AdminMessageController extends BaseControllers{
 		}
 		AdminMessage adminMessage = adminMessageService.selectByPrimaryKey(bodyInfo.getInt("message_id"));
 		if(adminMessage!=null){
+			adminMessage.setIsRead(2);
+			adminMessage.setUpdateAt(new Date());
+			adminMessageService.updateByPrimaryKeySelective(adminMessage);
 			json.put("result", 0);
 			json.put("description", "查询成功");
 			json.put("adminMessage", adminMessage);

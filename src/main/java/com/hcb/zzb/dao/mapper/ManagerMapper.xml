@@ -31,7 +31,7 @@
     select 
     <include refid="Base_Column_List" />
     from manager
-    where id = #{account,jdbcType=VARCHAR} and delete_at is null
+    where account = #{account,jdbcType=VARCHAR} and delete_at is null
   </select>
   
   <select id="searchByMap" resultMap="BaseResultMap" parameterType="java.util.HashMap" >
