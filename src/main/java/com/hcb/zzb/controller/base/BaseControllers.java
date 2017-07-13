@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import net.sf.json.JSONObject;
 import com.hcb.zzb.bean.base.OutHead;
-import com.hcb.zzb.dto.Users;
-import com.hcb.zzb.service.IUsersService;
+import com.hcb.zzb.dto.Manager;
+import com.hcb.zzb.service.IManagerService;
 import com.hcb.zzb.util.Config;
 import com.hcb.zzb.util.EmojiConvert;
 
@@ -24,7 +24,7 @@ public class BaseControllers {
 	@Autowired
 	private HttpServletRequest request;
 	@Autowired
-	IUsersService userservices;
+	IManagerService managerService;
 
 
 	protected String webPath;
@@ -32,7 +32,7 @@ public class BaseControllers {
 	protected String headString;
 	protected String bodyString;
 	protected int sign = 0; // sign等于1时表示参数错误，sign等于2时表示登录认证失败
-	protected Users eplogin;
+	protected Manager manager;
 
 	/**
 	 * 所有的子类方法执行之前都要先执行此方法，子类方法不需要在model此方法中的参数
@@ -52,7 +52,7 @@ public class BaseControllers {
 		requestUrl = null;
 		headString = null;
 		bodyString = null;
-		eplogin = null;
+		manager = null;
 		System.out.println(json_package);
 		if (json_package == null) {
 			sign = 1; // 参数错误
@@ -74,7 +74,6 @@ public class BaseControllers {
 					JSONObject json = JSONObject.fromObject(reqJson);
 					if (url.contains("captcha")) {
 						// 不做处理
-
 					}else {
 						if (url.contains("login")) {
 							JSONObject bodyInfo = (JSONObject) json.get("body");
@@ -85,15 +84,17 @@ public class BaseControllers {
 						} else {
 							JSONObject headInfo = (JSONObject) json.get("head");
 							headString = headInfo.toString();
-							String uuid = null;
+							String account = null;
+							String password = null;
 							try {
-								uuid = headInfo.getString("user_uuid");
+								account = headInfo.getString("account");
+								password = headInfo.getString("password");
 							} catch (Exception e) {
 								e.printStackTrace();
 							}
-							if(uuid!=null&&!"".equals(uuid)){
-								eplogin = userservices.selectByUserUuid(uuid);
-								if(eplogin == null){
+							if(account!=null&&!"".equals(account)){
+								manager = managerService.selectByAccount(account);
+								if(manager == null){
 									//什么都不操作
 									JSONObject bodyInfo = (JSONObject) json.get("body");
 									bodyString = bodyInfo.toString();
@@ -101,22 +102,15 @@ public class BaseControllers {
 										sign = 1;
 									}
 								}else{
-									JSONObject bodyInfo = (JSONObject) json.get("body");
-									bodyString = bodyInfo.toString();
-									if (bodyString == null) {
+									if(!password.equals(manager.getPassword())){
 										sign = 1;
-									}
-									//更新用户的clientId和deviceToken
-									/*if(headInfo.get("cid")!=null){
-									   if(headInfo.get("devicetoken")!=null){
-									        eplogin.setClientId(headInfo.getString("cid"));
-									        eplogin.setDeviceToken(headInfo.getString("devicetoken"));
-									        userservices.updateByPrimaryKeySelective(eplogin);
-										}else{
-											eplogin.setClientId(headInfo.getString("cid"));
-											userservices.updateByPrimaryKeySelective(eplogin);
+									}else{
+										JSONObject bodyInfo = (JSONObject) json.get("body");
+										bodyString = bodyInfo.toString();
+										if (bodyString == null) {
+											sign = 1;
 										}
-								     }	*/
+									}
 								}
 							}else{
 								sign = 2;

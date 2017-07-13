@@ -24,8 +24,16 @@
     select 
     <include refid="Base_Column_List" />
     from manager
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER} and delete_at is null
   </select>
+  
+  <select id="selectByAccount" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from manager
+    where id = #{account,jdbcType=VARCHAR} and delete_at is null
+  </select>
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from manager
     where id = #{id,jdbcType=INTEGER}

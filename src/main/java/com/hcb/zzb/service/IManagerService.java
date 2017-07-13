@@ -1,9 +1,10 @@
-package com.hcb.zzb.dao.interfaceClass;
+package com.hcb.zzb.service;
 
 import com.hcb.zzb.dto.Manager;
 
-public interface ManagerMapper {
-    int deleteByPrimaryKey(Integer id);
+public interface IManagerService {
+
+	int deleteByPrimaryKey(Integer id);
 
     int insert(Manager record);
 
