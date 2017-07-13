@@ -102,7 +102,7 @@ public class BaseControllers {
 										sign = 1;
 									}
 								}else{
-									if(!password.equals(manager.getPassword())){
+									if(!password.equals(manager.getPassword())||manager.getManagerStatus()==2){
 										sign = 1;
 									}else{
 										JSONObject bodyInfo = (JSONObject) json.get("body");

@@ -128,7 +128,7 @@ public class ManagerController extends BaseControllers {
 		if(managerF!=null){
 			json.put("result", 0);
 			json.put("description", "查询成功");
-			json.put("adminMessage", managerF);
+			json.put("manager", managerF);
 		}else{
 			json.put("result", 1);
 			json.put("description", "请检查参数格式是否正确或者参数是否完整");

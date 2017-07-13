@@ -42,8 +42,13 @@ public class LoginController extends BaseControllers {
 				json.put("result", 1);
 				json.put("description", "密码错误");
 			}else{
-				json.put("result", 0);
-				json.put("description", "登录成功");
+				if(managerLogin.getManagerStatus()==2){
+					json.put("result", 1);
+					json.put("description", "登录失败，账户已冻结");
+				}else{
+					json.put("result", 0);
+					json.put("description", "登录成功");
+				}
 			}
 		}
 		return buildReqJsonObject(json);
