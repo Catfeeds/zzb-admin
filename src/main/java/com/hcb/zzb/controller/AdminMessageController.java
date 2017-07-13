@@ -97,7 +97,7 @@ public class AdminMessageController extends BaseControllers{
 		
 		model.put("description", "查询成功");
 		model.put("result",0);
-		model.put("bannerList", list);
+		model.put("list", list);
 		String a = buildReqJsonObject(model);
 		a = a.replace("\"[", "[");
 		a = a.replace("]\"", "]");
@@ -152,7 +152,7 @@ public class AdminMessageController extends BaseControllers{
 		}
 		AdminMessage adminMessage = adminMessageService.selectByPrimaryKey(bodyInfo.getInt("message_id"));
 		if(adminMessage!=null){
-			adminMessage.setUpdateAt(new Date());
+			adminMessage.setDeleteAt(new Date());
 			int rs =0;
 			rs = adminMessageService.updateByPrimaryKeySelective(adminMessage);
 			if(rs == 1){
@@ -165,7 +165,6 @@ public class AdminMessageController extends BaseControllers{
 		}else{
 			json.put("result", 1);
 			json.put("description", "删除失败，未查询到相关消息");
-			json.put("adminMessage", adminMessage);
 		}
 		return buildReqJsonObject(json);
 	}

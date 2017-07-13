@@ -1,5 +1,8 @@
 package com.hcb.zzb.service.impl;
 
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,5 +48,15 @@ public class ManagerServiceImpl implements IManagerService {
 	@Override
 	public Manager selectByAccount(String account) {
 		return managerMapper.selectByAccount(account);
+	}
+
+	@Override
+	public List<Manager> searchByMap(Map<String, Object> map) {
+		return managerMapper.searchByMap(map);
+	}
+
+	@Override
+	public int countByMap(Map<String, Object> map) {
+		return managerMapper.countByMap(map);
 	}
 }
