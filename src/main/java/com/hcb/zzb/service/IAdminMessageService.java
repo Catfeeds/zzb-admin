@@ -17,4 +17,8 @@ public interface IAdminMessageService {
     int updateByPrimaryKeySelective(AdminMessage record);
 
     int updateByPrimaryKey(AdminMessage record);
+    
+    List<AdminMessage> searchByMap(Map<String,Object> map);
+    
+    int countByMap(Map<String,Object> map);
 }

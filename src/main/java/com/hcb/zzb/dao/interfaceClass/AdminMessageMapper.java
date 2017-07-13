@@ -1,5 +1,8 @@
 package com.hcb.zzb.dao.interfaceClass;
 
+import java.util.List;
+import java.util.Map;
+
 import com.hcb.zzb.dto.AdminMessage;
 
 public interface AdminMessageMapper {
@@ -14,4 +17,8 @@ public interface AdminMessageMapper {
     int updateByPrimaryKeySelective(AdminMessage record);
 
     int updateByPrimaryKey(AdminMessage record);
+    
+    List<AdminMessage> searchByMap(Map<String,Object> map);
+    
+    int countByMap(Map<String,Object> map);
 }

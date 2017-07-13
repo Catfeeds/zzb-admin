@@ -21,8 +21,28 @@
     select 
     <include refid="Base_Column_List" />
     from admin_message
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER} and delete_at is null
   </select>
+  
+  <select id="searchByMap" resultMap="BaseResultMap" parameterType="java.util.HashMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from admin_message
+    where delete_at is null
+    <if test="messageContent !='' and messageContent != null">
+		message_content like CONCAT(CONCAT('%', #{messageContent,jdbcType=VARCHAR}), '%')
+	</if>
+	order by create_at desc LIMIT #{start},#{end}
+  </select>
+  
+  <select id="countByMap" resultType="java.lang.Integer" parameterType="java.util.HashMap" >
+   select count(1) from admin_message
+    where delete_at is null
+    <if test="messageContent !='' and messageContent != null">
+		message_content like CONCAT(CONCAT('%', #{messageContent,jdbcType=VARCHAR}), '%')
+	</if>
+  </select>
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from admin_message
     where id = #{id,jdbcType=INTEGER}

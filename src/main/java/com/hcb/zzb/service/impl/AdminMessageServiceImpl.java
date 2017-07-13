@@ -43,4 +43,14 @@ public class AdminMessageServiceImpl implements IAdminMessageService{
 	public int updateByPrimaryKey(AdminMessage record) {
 		return adminMessageMapper.updateByPrimaryKey(record);
 	}
+
+	@Override
+	public List<AdminMessage> searchByMap(Map<String, Object> map) {
+		return adminMessageMapper.searchByMap(map);
+	}
+
+	@Override
+	public int countByMap(Map<String, Object> map) {
+		return adminMessageMapper.countByMap(map);
+	}
 }
