@@ -22,6 +22,7 @@ import com.hcb.zzb.util.MD5Util;
 import net.sf.json.JSONObject;
 
 @Controller
+@RequestMapping("manager")
 public class ManagerController extends BaseControllers {
 	
 	@Autowired
