@@ -62,10 +62,10 @@ public class ManagerController extends BaseControllers {
 			int start = (pageIndex - 1) * pageSize;
 			map.put("start", start);
 			map.put("end", pageSize);
-			if(bodyInfo.get("contacts") == null){
+			if(bodyInfo.get("contacts") != null){
 				map.put("contacts", bodyInfo.getString("contacts"));
 			}
-			if(bodyInfo.get("account") == null){
+			if(bodyInfo.get("account") != null){
 				map.put("account", bodyInfo.getString("account"));
 			}
 			
