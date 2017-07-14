@@ -50,6 +50,36 @@
     where apply_user_uuid = #{userUuid,jdbcType=VARCHAR}
   </select>
   
+  <select id="selectByMapLimit" resultMap="BaseResultMap" parameterType="java.util.Map">
+  	select 
+    <include refid="Base_Column_List" />
+    from car_model
+    <where>
+    	delete_at is null
+    	<if test="brand !='' and brand !=null">
+    		brand like CONCAT(CONCAT('%', #{brand,jdbcType=VARCHAR}), '%')
+    	</if>
+    </where>
+    limit #{start},#{end}
+  </select>
+  
+  <select id="countByMap" resultType="java.lang.Integer" parameterType="java.util.HashMap">
+  	select count(1) from car_model
+  	<where>
+  		delete_at is null
+  		<if test="brand !='' and brand !=null">
+  			brand like CONCAT(CONCAT('%', #{brand,jdbcType=VARCHAR}), '%')
+  		</if>
+  	</where>
+  </select>
+  
+  <select id="selectByUuid" resultMap="BaseResultMap" parameterType="java.lang.String">
+  	select 
+  	<include refid="Base_Column_List" />
+  	from car_model
+  	where car_model_uuid=#{car_model_uuid,jdbcType=VARCHAR}
+  </select>
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from car_model
     where id = #{id,jdbcType=INTEGER}

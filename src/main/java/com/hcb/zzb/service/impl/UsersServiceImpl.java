@@ -1,6 +1,8 @@
 package com.hcb.zzb.service.impl;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,6 +89,18 @@ public class UsersServiceImpl implements IUsersService {
 	public int updateByPrimaryKeySelective(Users record) {
 		// TODO Auto-generated method stub
 		return usersMapper.updateByPrimaryKeySelective(record);
+	}
+
+	@Override
+	public List<Users> selectUsersByMap(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return usersMapper.selectUsersByMap(map);
+	}
+
+	@Override
+	public int countUsersByMap(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return usersMapper.countUsersByMap(map);
 	}
 	
 

@@ -52,6 +52,8 @@ public class Users {
     private Integer userType;
 
     private Integer ridersStatus;
+    
+    private Integer userStatus;
 
     public Integer getId() {
         return id;
@@ -252,4 +254,13 @@ public class Users {
     public void setRidersStatus(Integer ridersStatus) {
         this.ridersStatus = ridersStatus;
     }
+
+	public Integer getUserStatus() {
+		return userStatus;
+	}
+
+	public void setUserStatus(Integer userStatus) {
+		this.userStatus = userStatus;
+	}
+    
 }

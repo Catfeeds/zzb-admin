@@ -92,7 +92,7 @@ public class BaseControllers {
 							} catch (Exception e) {
 								e.printStackTrace();
 							}
-							if(account!=null&&!"".equals(account)){
+							if(account!=null&&!"".equals(account)&&password!=null&&!"".equals(password)){
 								manager = managerService.selectByAccount(account);
 								if(manager == null){
 									//什么都不操作
