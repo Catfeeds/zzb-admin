@@ -30,7 +30,7 @@
     from admin_message
     where delete_at is null
     <if test="messageContent !='' and messageContent != null">
-		message_content like CONCAT(CONCAT('%', #{messageContent,jdbcType=VARCHAR}), '%')
+		and  message_content like CONCAT(CONCAT('%', #{messageContent,jdbcType=VARCHAR}), '%')
 	</if>
 	order by create_at desc LIMIT #{start},#{end}
   </select>
@@ -39,7 +39,7 @@
    select count(1) from admin_message
     where delete_at is null
     <if test="messageContent !='' and messageContent != null">
-		message_content like CONCAT(CONCAT('%', #{messageContent,jdbcType=VARCHAR}), '%')
+		and message_content like CONCAT(CONCAT('%', #{messageContent,jdbcType=VARCHAR}), '%')
 	</if>
   </select>
   
