@@ -28,10 +28,10 @@ public class XjxTest {
         map.put("head", head);	
         
         HashMap<String, Object> body = new HashMap<String, Object>();
-        body.put("user_uuid", "8741951256ce34f7eb575c438b06ae65");
+       // body.put("user_uuid", "8741951256ce34f7eb575c438b06ae65");
        // body.put("car_model_uuid", "123");
-        //body.put("pageIndex", 1);
-       // body.put("pageSize", 5);
+        body.put("pageIndex", 1);
+        body.put("pageSize", 5);
         //body.put("price", "222");
        // body.put("car_uuid", "5741951256ce34f7eb575c438b06ae69");
         //body.put("return_car_time", "2017-07-30 20:40:15");
@@ -76,7 +76,7 @@ public class XjxTest {
    	    //新建审批条目 在审批信息表 approval_inner_base_infos中0558
    	    //返回审批uuid
    	  // String url = "http://120.26.120.57:8080/apparel/special/list";
-   	    String url = "http://localhost:8080/zzb-admin-api/user/detail";
+   	    String url = "http://localhost:8080/zzb-admin-api/user/userList";
    	 //String url = "http://192.168.73.1:8080/user/phone/login";
       // String url = "http://test.appring.cn:8080/fastask/question/show"; /* * * * * * root wget http://test.appring.cn:8080/fastask/energy/timing -q -O /usr/local/time/timelog
  	    HttpPost httpPost = new HttpPost(url);

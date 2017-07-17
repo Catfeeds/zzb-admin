@@ -47,6 +47,7 @@
   	<include refid="Base_Column_List" />
   	from ticket
   	<where>
+  		delete_at is null
   		<if test="">
   			
   		</if>
@@ -57,6 +58,7 @@
   	select count(1)
   	from ticket
   	<where>
+  		delete_at is null
   		<if test="">
   			
   		</if>
