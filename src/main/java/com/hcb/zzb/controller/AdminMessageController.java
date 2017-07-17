@@ -64,7 +64,7 @@ public class AdminMessageController extends BaseControllers{
 			int start = (pageIndex - 1) * pageSize;
 			map.put("start", start);
 			map.put("end", pageSize);
-			if(bodyInfo.get("messageContent") == null){
+			if(bodyInfo.get("messageContent") != null){
 				map.put("messageContent", bodyInfo.getString("messageContent"));
 			}
 			
