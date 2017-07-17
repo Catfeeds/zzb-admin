@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -76,6 +77,8 @@ public class UsersController extends BaseControllers{
 			if(!list.isEmpty()) {
 				json.put("result", "0");
 				json.put("description", "查询成功");
+				json.put("total", total);
+				json.put("page", pageIndex);
 				json.put("userList", list);
 			}else {
 				json.put("result", "1");

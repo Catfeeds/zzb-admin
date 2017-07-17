@@ -66,5 +66,17 @@ public class TicketServiceImpl implements ITicketService{
 		// TODO Auto-generated method stub
 		return ticketMapper.selectByTicketUuid(ticketUuid);
 	}
+
+	@Override
+	public List<Ticket> selectTicketsLimit(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return ticketMapper.selectTicketsLimit(map);
+	}
+
+	@Override
+	public int countSelectTickets(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return ticketMapper.countSelectTickets(map);
+	}
 	
 }

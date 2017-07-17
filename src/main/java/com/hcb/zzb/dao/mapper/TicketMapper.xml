@@ -30,17 +30,37 @@
   	select
   	<include refid="Base_Column_List" />
   	from ticket
-  	where user_uuid=#{user_uuid,jdbcType=VARCHAR} and ticket_status=#{ticketStatus,jdbcType=INTEGER} limit #{pageIndex},#{pageSize}
+  	where delete_at is null and user_uuid=#{user_uuid,jdbcType=VARCHAR} and ticket_status=#{ticketStatus,jdbcType=INTEGER} limit #{pageIndex},#{pageSize}
   </select>
   <select id="selectAllTickeByStstusCount" resultType="int" parameterType="java.util.Map">
   	select count(1)
-	from ticket where user_uuid=#{user_uuid,jdbcType=VARCHAR} and ticket_status=#{ticketStatus,jdbcType=INTEGER}
+	from ticket where delete_at is null and user_uuid=#{user_uuid,jdbcType=VARCHAR} and ticket_status=#{ticketStatus,jdbcType=INTEGER}
   </select>
   <select id="selectByTicketUuid" parameterType="java.lang.String" resultMap="BaseResultMap">
   	select 
     <include refid="Base_Column_List" />
     from ticket
-    where ticket_uuid=#{ticket_uuid,jdbcType=VARCHAR}
+    where  ticket_uuid=#{ticket_uuid,jdbcType=VARCHAR}
+  </select>
+  <select id="selectTicketsLimit" resultMap="BaseResultMap" parameterType="java.util.HashMap">
+  	select 
+  	<include refid="Base_Column_List" />
+  	from ticket
+  	<where>
+  		<if test="">
+  			
+  		</if>
+  	</where>
+  	limit #{start},#{end}
+  </select>
+  <select id="countSelectTickets" resultType="java.lang.Integer" parameterType="java.util.HashMap">
+  	select count(1)
+  	from ticket
+  	<where>
+  		<if test="">
+  			
+  		</if>
+  	</where>
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from ticket
