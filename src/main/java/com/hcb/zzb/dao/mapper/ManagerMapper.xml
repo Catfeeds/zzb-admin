@@ -27,6 +27,13 @@
     where id = #{id,jdbcType=INTEGER} and delete_at is null
   </select>
   
+  <select id="selectByAccountUuid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from manager
+    where manager_uuid = #{uuid,jdbcType=VARCHAR} and delete_at is null
+  </select>
+  
   <select id="selectByAccount" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />

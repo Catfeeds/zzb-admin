@@ -1,11 +1,13 @@
 package com.hcb.zzb.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hcb.zzb.dao.interfaceClass.HomepageBannerMapper;
+import com.hcb.zzb.dto.AdminMessage;
 import com.hcb.zzb.dto.HomepageBanner;
 import com.hcb.zzb.service.IhomePageBanner;
 
@@ -54,6 +56,18 @@ public class HomePageBannerImpl implements IhomePageBanner {
 	public List<HomepageBanner> selectAll() {
 		// TODO Auto-generated method stub
 		return homepageBannerMapper.selectAll();
+	}
+
+	@Override
+	public List<HomepageBanner> searchByMap(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return homepageBannerMapper.searchByMap(map);
+	}
+
+	@Override
+	public Integer countByMap(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return homepageBannerMapper.countByMap(map);
 	}
 
 }

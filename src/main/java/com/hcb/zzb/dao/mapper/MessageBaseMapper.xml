@@ -27,6 +27,30 @@
     from message_base
     where id = #{id,jdbcType=INTEGER}
   </select>
+  
+  <select id="searchByMap" resultMap="BaseResultMap" parameterType="java.util.HashMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from manager
+    where delete_at is null
+    <if test="tittle !='' and tittle != null">
+		tittle like CONCAT(CONCAT('%', #{tittle,jdbcType=VARCHAR}), '%')
+	</if>
+	order by create_at desc LIMIT #{start},#{end}
+  </select>
+  
+  <select id="countByMap" resultType="java.lang.Integer" parameterType="java.util.HashMap" >
+   select count(1) from manager
+    where delete_at is null
+    <if test="contacts !='' and contacts != null">
+		contacts like CONCAT(CONCAT('%', #{contacts,jdbcType=VARCHAR}), '%')
+	</if>
+	<if test="account !='' and account != null">
+		account like CONCAT(CONCAT('%', #{account,jdbcType=VARCHAR}), '%')
+	</if>
+  </select>
+  
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from message_base
     where id = #{id,jdbcType=INTEGER}

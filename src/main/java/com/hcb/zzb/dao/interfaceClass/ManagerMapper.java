@@ -23,4 +23,6 @@ public interface ManagerMapper {
     List<Manager> searchByMap(Map<String,Object> map);
     
     int countByMap(Map<String,Object> map);
+
+	Manager selectByAccountUuid(String uuid);
 }

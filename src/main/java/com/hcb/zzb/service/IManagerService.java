@@ -24,4 +24,6 @@ public interface IManagerService {
     List<Manager> searchByMap(Map<String,Object> map);
     
     int countByMap(Map<String,Object> map);
+
+	Manager selectByAccountUuid(String string);
 }

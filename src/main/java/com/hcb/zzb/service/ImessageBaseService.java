@@ -1,12 +1,12 @@
-package com.hcb.zzb.dao.interfaceClass;
+package com.hcb.zzb.service;
 
 import java.util.List;
 import java.util.Map;
 
 import com.hcb.zzb.dto.MessageBase;
 
-public interface MessageBaseMapper {
-    int deleteByPrimaryKey(Integer id);
+public interface ImessageBaseService {
+	int deleteByPrimaryKey(Integer id);
 
     int insert(MessageBase record);
 
