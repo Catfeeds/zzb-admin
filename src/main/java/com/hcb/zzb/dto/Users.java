@@ -54,7 +54,8 @@ public class Users {
     private Integer ridersStatus;
     
     private Integer userStatus;
-
+    
+    private Integer vehicleBehavior;
     public Integer getId() {
         return id;
     }
@@ -261,6 +262,14 @@ public class Users {
 
 	public void setUserStatus(Integer userStatus) {
 		this.userStatus = userStatus;
+	}
+
+	public Integer getVehicleBehavior() {
+		return vehicleBehavior;
+	}
+
+	public void setVehicleBehavior(Integer vehicleBehavior) {
+		this.vehicleBehavior = vehicleBehavior;
 	}
     
 }

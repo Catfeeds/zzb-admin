@@ -28,12 +28,13 @@
     <result column="user_type" property="userType" jdbcType="INTEGER" />
     <result column="riders_status" property="ridersStatus" jdbcType="INTEGER" />
     <result column="user_status" property="userStatus" jdbcType="INTEGER"/>
+  	<result column="vehicle_behavior" property="vehicleBehavior" jdbcType="INTEGER"/>
   </resultMap>
   <sql id="Base_Column_List" >
     id, create_at, update_at, delete_at, user_uuid, user_name, gender, user_phone, birthday, 
     avater, id_type, id_number, id_picture, driving, constellation, wx_open_id, qq_open_id, 
     zm_open_id, balance, frozen_balance, authentication_status, credit_score, pay_password, 
-    user_type, riders_status,user_status
+    user_type, riders_status,user_status,vehicle_behavior
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -103,7 +104,7 @@
       wx_open_id, qq_open_id, zm_open_id, 
       balance, frozen_balance, authentication_status, 
       credit_score, pay_password, user_type, 
-      riders_status,user_status)
+      riders_status,user_status,vehicle_behavior)
     values (#{id,jdbcType=INTEGER}, #{createAt,jdbcType=TIMESTAMP}, #{updateAt,jdbcType=TIMESTAMP}, 
       #{deleteAt,jdbcType=TIMESTAMP}, #{userUuid,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, 
       #{gender,jdbcType=INTEGER}, #{userPhone,jdbcType=VARCHAR}, #{birthday,jdbcType=TIMESTAMP}, 
@@ -112,7 +113,7 @@
       #{wxOpenId,jdbcType=VARCHAR}, #{qqOpenId,jdbcType=VARCHAR}, #{zmOpenId,jdbcType=VARCHAR}, 
       #{balance,jdbcType=REAL}, #{frozenBalance,jdbcType=REAL}, #{authenticationStatus,jdbcType=INTEGER}, 
       #{creditScore,jdbcType=INTEGER}, #{payPassword,jdbcType=VARCHAR}, #{userType,jdbcType=INTEGER}, 
-      #{ridersStatus,jdbcType=INTEGER},#{userStatus,jdbcType=INTEGER})
+      #{ridersStatus,jdbcType=INTEGER},#{userStatus,jdbcType=INTEGER},#{vehicleBehavior,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.hcb.zzb.dto.Users" >
     insert into users
@@ -195,6 +196,9 @@
       <if test="userStatus != null">
 	     user_status,
       </if>
+      <if test="vehicleBehavior != null">
+      	vehicle_behavior,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -274,6 +278,9 @@
       </if>
       <if test="userStatus != null">
 	     #{userStatus,jdbcType=INTEGER},
+      </if>
+      <if test="vehicleBehavior != null">
+      	#{vehicleBehavior,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -355,6 +362,9 @@
       <if test="userStatus != null">
       	user_status = #{userStatus,jdbcType=INTEGER},
       </if>
+      <if test="vehicleBehavior != null">
+      	vehicle_behavior = #{vehicleBehavior,jdbcType=INTEGER}
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -384,7 +394,8 @@
       pay_password = #{payPassword,jdbcType=VARCHAR},
       user_type = #{userType,jdbcType=INTEGER},
       riders_status = #{ridersStatus,jdbcType=INTEGER},
-      user_status =#{userStatus,jdbcType=INTEGER}
+      user_status =#{userStatus,jdbcType=INTEGER},
+      vehicle_behavior=#{vehicleBehavior,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>
