@@ -2,6 +2,7 @@ package com.hcb.zzb.service;
 
 
 import java.util.List;
+import java.util.Map;
 
 import com.hcb.zzb.dto.Orders;
 
@@ -36,6 +37,10 @@ public interface IOrderService {
 	List<Orders> selectByOwnerUuid2(String string);
 
 	List<Orders> selectByOwnerUuid3(String string);
-
+	
+	List<Orders> selectByMapLimit(Map<String, Object> map);
+	
+	int countselectByMapLimit(Map<String, Object> map);
+	
 	//Orders selectByUserUuidAndOrderUUid(String orderuuid);
 }

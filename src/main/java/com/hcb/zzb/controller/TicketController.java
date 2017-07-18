@@ -60,7 +60,7 @@ public class TicketController extends BaseControllers{
 		Map<String, Object> map=new HashMap<>();
 		map.put("start", start);
 		map.put("end", pageSize);
-		if(bodyInfo.getString("address")!=null&&!"".equals(bodyInfo.getString("address"))) {
+		if(bodyInfo.get("address")!=null&&!"".equals(bodyInfo.get("address"))) {
 			map.put("address", bodyInfo.getString("address"));
 		}
 		int count = ticketService.countSelectTickets(map);
@@ -113,6 +113,12 @@ public class TicketController extends BaseControllers{
 		   bodyInfo.get("illegalCode")==null|| bodyInfo.get("user_uuid")==null) {
 			json.put("result", "1");
 			json.put("description", "请检查参数是否完整");
+			return buildReqJsonObject(json);
+		}
+		Users user=usersService.selectByUserUuid(bodyInfo.getString("user_uuid"));
+		if(user==null) {
+			json.put("result", "1");
+			json.put("description", "操作失败,user_uuid没有查询到有这个用户");
 			return buildReqJsonObject(json);
 		}
 		if("".equals(bodyInfo.get("orderNumber"))||"".equals(bodyInfo.get("illegalTime"))
@@ -178,18 +184,20 @@ public class TicketController extends BaseControllers{
 			return buildReqJsonObject(json);
 		}
 		ModelMap model=new ModelMap();
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Ticket ticket=ticketService.selectByTicketUuid(bodyInfo.getString("ticketUuid"));	
 		if(ticket!=null) {
 			Users user=usersService.selectByUserUuid(ticket.getUserUuid());	
 			model.put("result", "0");
 			model.put("description", "查询成功");
 			model.put("userId", user.getId());
+			model.put("userUuid", ticket.getUserUuid());
 			model.put("userType", user.getUserType());
 			model.put("userName", user.getUserName());
 			model.put("userPhone", user.getUserPhone());
 			model.put("orderNumber", ticket.getOrderNumber());
 			model.put("address", ticket.getAddress());
-			model.put("illegalTime", ticket.getIllegalTime());
+			model.put("illegalTime", sdf.format(ticket.getIllegalTime()));
 			model.put("moeny", ticket.getMoney());
 			model.put("points", ticket.getPoints());
 			model.put("illegalCode", ticket.getIllegalCode());

@@ -1,6 +1,7 @@
 package com.hcb.zzb.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -106,6 +107,18 @@ private OrdersMapper ordersMapper;
 	public List<Orders> selectByOwnerUuid3(String useruuid) {
 		// TODO Auto-generated method stub
 		return ordersMapper.selectByOwnerUuid3(useruuid);
+	}
+
+	@Override
+	public List<Orders> selectByMapLimit(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return ordersMapper.selectByMapLimit(map);
+	}
+
+	@Override
+	public int countselectByMapLimit(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return ordersMapper.countselectByMapLimit(map);
 	}
 
 	/*@Override

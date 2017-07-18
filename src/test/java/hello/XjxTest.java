@@ -28,42 +28,11 @@ public class XjxTest {
         map.put("head", head);	
         
         HashMap<String, Object> body = new HashMap<String, Object>();
-       // body.put("user_uuid", "8741951256ce34f7eb575c438b06ae65");
-       // body.put("car_model_uuid", "123");
-        body.put("pageIndex", 1);
-        body.put("pageSize", 5);
-        //body.put("price", "222");
-       // body.put("car_uuid", "5741951256ce34f7eb575c438b06ae69");
-        //body.put("return_car_time", "2017-07-30 20:40:15");
-        //body.put("return_car_address", "西湖区康乐新村xxx");
-        //body.put("return_car_address_map", "1233,90.11");
-        //body.put("order_uuid", "675cd2063021e7a100d8536196dcb7f0");
-       // body.put("shelves_end_time", "2017-02-03");
-        //body.put("lease_time", "[2017-01-05,2017-01-07]");
-        //body.put("car_uuid", "5741951256ce34f7eb575c438b06ae69");
-        //body.put("brand_model", "嘻嘻123");
-        //body.put("brand", "凯迪拉克");
-        //body.put("car_series", "s90");
-        //body.put("model_year", "1993");
-        //body.put("transmission_case", "cxs");
-        //body.put("displacement", "100");
-        //body.put("car_model", "国产100");
-        /*body.put("car_owner_name", "11.11");
-        body.put("license_plate_number", "10.21");
-        body.put("vehicle_identification_number", "1");
-        body.put("engine_number", "22");
-        body.put("color", "12");
-        body.put("brand", "5");
-        body.put("register_time", "1");
-        body.put("car_name", "1");
-        body.put("city", "111");
-        body.put("model_character", "33");
-        body.put("manual_or_automatic", "1");
-        body.put("seat_number", "5");
-        body.put("displacement", "4");
-        body.put("model", "3");
-        body.put("driving_license_photo", "2");
-        body.put("order_uuid", "675cd2063021e7a100d8536196dcb7f0");*/
+         
+        body.put("user_uuid", "1a318f190bb889eec5ba528d5691dfce");
+        body.put("user_status", 3);
+        
+
         
         map.put("body",body);
   
@@ -76,7 +45,7 @@ public class XjxTest {
    	    //新建审批条目 在审批信息表 approval_inner_base_infos中0558
    	    //返回审批uuid
    	  // String url = "http://120.26.120.57:8080/apparel/special/list";
-   	    String url = "http://localhost:8080/zzb-admin-api/ticket/list";
+   	    String url = "http://localhost:8080/zzb-admin-api/user/operationStatus";
    	 //String url = "http://192.168.73.1:8080/user/phone/login";
       // String url = "http://test.appring.cn:8080/fastask/question/show"; /* * * * * * root wget http://test.appring.cn:8080/fastask/energy/timing -q -O /usr/local/time/timelog
  	    HttpPost httpPost = new HttpPost(url);
@@ -91,7 +60,8 @@ public class XjxTest {
 			//获取服务器返回页面的值
 			HttpEntity entity2=response.getEntity();
 			String xmlContent=EntityUtils.toString(entity2);
-			System.out.println(java.net.URLDecoder.decode(xmlContent, "utf-8"));
+			String afterXmlContent=xmlContent.replaceAll("%(?![0-9a-fA-F]{2})", "%25");
+			System.out.println(java.net.URLDecoder.decode(afterXmlContent, "utf-8"));
 			System.out.println(response.toString());
 
 		} catch (ClientProtocolException e) {

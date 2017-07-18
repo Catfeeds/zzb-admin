@@ -198,5 +198,80 @@ public class UsersController extends BaseControllers{
 		}
 		return buildReqJsonObject(json);
 	}
-
+	
+	/**
+	 * 用户信用列表
+	 * @return
+	 */
+	@RequestMapping(value="creditList",method=RequestMethod.POST)
+	@ResponseBody
+	public String findUserCreditList() {
+		
+		return "";
+	}
+	
+	/**
+	 * 用户信用详情
+	 * @return
+	 */
+	@RequestMapping(value="creditDetail",method=RequestMethod.POST)
+	@ResponseBody
+	public String findUserCreditDetail() {
+		
+		return "";
+	}
+	
+	@RequestMapping(value="blackAndActivate",method=RequestMethod.POST)
+	@ResponseBody
+	public String userStatus() {
+		JSONObject json=new JSONObject();
+		if(sign==1||sign==2) {
+			json.put("result", "1");
+			json.put("description", "请检查参数格式是否正确或者参数是否完整");
+			return buildReqJsonInteger(1, json);
+		}
+		JSONObject bodyInfo=JSONObject.fromObject(bodyString);
+		if(bodyInfo.get("user_uuid")==null||bodyInfo.get("user_status")==null) {
+			json.put("result", "1");
+			json.put("description", "请检查参数是否完整");
+			return buildReqJsonObject(json);
+		}
+		if ("".equals(bodyInfo.get("user_uuid"))||"".equals(bodyInfo.get("user_status"))) {
+			json.put("result", "1");
+			json.put("description", "操作失败，请检查输入的参数是否正确");
+			return buildReqJsonObject(json);
+		}
+		Users user=usersService.selectByUserUuid(bodyInfo.getString("user_uuid"));
+		if(user!=null) {
+			if(user.getUserStatus()!=null) {
+				if(user.getUserStatus()==2&&bodyInfo.getInt("user_status")==2) {
+					json.put("result", "1");
+					json.put("description", "用户已拉黑,请不要重复拉黑");
+					return buildReqJsonObject(json);
+				}
+				if(user.getUserStatus()==1&&bodyInfo.getInt("user_status")==1) {
+					json.put("result", "1");
+					json.put("description", "用户已激活,请不要重复激活");
+					return buildReqJsonObject(json);
+				}
+			}
+			user.setUserStatus(bodyInfo.getInt("user_status"));
+			int rs=0;
+			rs=usersService.updateByPrimaryKeySelective(user);
+			if(rs==1&&bodyInfo.getInt("user_status")==2) {
+				json.put("result", "0");
+				json.put("description", "拉黑成功");
+			}else if(rs==1&&bodyInfo.getInt("user_status")==1){
+				json.put("result", "0");
+				json.put("description", "激活成功");
+			}else {
+				json.put("result", "1");
+				json.put("description", "操作失败");
+			}
+		}else {
+			json.put("result", "1");
+			json.put("description", "未查询到用户信息");
+		}
+		return buildReqJsonObject(json);
+	}
 }

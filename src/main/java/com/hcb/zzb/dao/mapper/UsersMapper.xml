@@ -33,7 +33,7 @@
     id, create_at, update_at, delete_at, user_uuid, user_name, gender, user_phone, birthday, 
     avater, id_type, id_number, id_picture, driving, constellation, wx_open_id, qq_open_id, 
     zm_open_id, balance, frozen_balance, authentication_status, credit_score, pay_password, 
-    user_type, riders_status user_status
+    user_type, riders_status,user_status
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -74,7 +74,7 @@
   	<where>
   		delete_at is null
   		<if test="userName != null and userName !=''">
-  			user_name like CONCAT(CONCAT('%', #{userName,jdbcType=VARCHAR}), '%')
+  			and user_name like CONCAT('%', #{userName,jdbcType=VARCHAR}, '%')
   		</if>
   	</where>
   	limit #{start},#{end}
@@ -85,7 +85,7 @@
   	<where>
   		delete_at is null
   		<if test="userName != null and userName !=''">
-  			user_name like CONCAT(CONCAT('%', #{userName,jdbcType=VARCHAR}), '%')
+  			and user_name like CONCAT('%', #{userName,jdbcType=VARCHAR}, '%')
   		</if>
   	</where>
   </select>

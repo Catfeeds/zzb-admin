@@ -49,7 +49,7 @@
   	<where>
   		delete_at is null
   		<if test="address != null and address !=''">
-  			address like CONCAT(CONCAT('%', #{address,jdbcType=VARCHAR}), '%')
+  			and address like CONCAT('%', #{address,jdbcType=VARCHAR}, '%')
   		</if>
   	</where>
   	limit #{start},#{end}
@@ -60,7 +60,7 @@
   	<where>
   		delete_at is null
   		<if test="address != null and address !=''">
-  			address like CONCAT(CONCAT('%', #{address,jdbcType=VARCHAR}), '%')
+  			and address like CONCAT('%', #{address,jdbcType=VARCHAR}, '%')
   		</if>
   	</where>
   </select>

@@ -1,6 +1,7 @@
 package com.hcb.zzb.dao.interfaceClass;
 
 import java.util.List;
+import java.util.Map;
 
 import com.hcb.zzb.dto.Orders;
 
@@ -35,6 +36,9 @@ public interface OrdersMapper {
 	List<Orders> selectByOwnerUuid2(String useruuid);
 
 	List<Orders> selectByOwnerUuid3(String useruuid);
-
+	
+	List<Orders> selectByMapLimit(Map<String, Object> map);
+	
+	int countselectByMapLimit(Map<String, Object> map);
 	//Orders selectByUserUuidAndOrderUUid( String orderuuid);
 }
