@@ -60,8 +60,8 @@ public class TicketController extends BaseControllers{
 		Map<String, Object> map=new HashMap<>();
 		map.put("start", start);
 		map.put("end", pageSize);
-		if(bodyInfo.getString("")!=null&&!"".equals(bodyInfo.getString(""))) {
-			map.put("", bodyInfo.getString(""));
+		if(bodyInfo.getString("address")!=null&&!"".equals(bodyInfo.getString("address"))) {
+			map.put("address", bodyInfo.getString("address"));
 		}
 		int count = ticketService.countSelectTickets(map);
 		if(count==0) {

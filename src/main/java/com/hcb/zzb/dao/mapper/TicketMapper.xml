@@ -48,8 +48,8 @@
   	from ticket
   	<where>
   		delete_at is null
-  		<if test="">
-  			
+  		<if test="address != null and address !=''">
+  			address like CONCAT(CONCAT('%', #{address,jdbcType=VARCHAR}), '%')
   		</if>
   	</where>
   	limit #{start},#{end}
@@ -59,8 +59,8 @@
   	from ticket
   	<where>
   		delete_at is null
-  		<if test="">
-  			
+  		<if test="address != null and address !=''">
+  			address like CONCAT(CONCAT('%', #{address,jdbcType=VARCHAR}), '%')
   		</if>
   	</where>
   </select>
