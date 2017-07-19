@@ -43,4 +43,6 @@ public interface IOrderService {
 	int countselectByMapLimit(Map<String, Object> map);
 	
 	//Orders selectByUserUuidAndOrderUUid(String orderuuid);
+	
+	Orders selectByOrderNumber(String orderNumber);
 }

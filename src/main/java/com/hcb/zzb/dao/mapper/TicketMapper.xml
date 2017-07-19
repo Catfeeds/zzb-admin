@@ -24,7 +24,7 @@
     select 
     <include refid="Base_Column_List" />
     from ticket
-    where id = #{id,jdbcType=INTEGER}
+    where delete_at is null and id = #{id,jdbcType=INTEGER}
   </select>
   <select id="selectAllTickeByStstus" resultMap="BaseResultMap" parameterType="java.util.Map">
   	select
@@ -40,7 +40,7 @@
   	select 
     <include refid="Base_Column_List" />
     from ticket
-    where  ticket_uuid=#{ticket_uuid,jdbcType=VARCHAR}
+    where delete_at is null and ticket_uuid=#{ticket_uuid,jdbcType=VARCHAR}
   </select>
   <select id="selectTicketsLimit" resultMap="BaseResultMap" parameterType="java.util.HashMap">
   	select 

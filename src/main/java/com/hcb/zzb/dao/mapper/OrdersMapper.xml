@@ -55,56 +55,61 @@
     select 
     <include refid="Base_Column_List" />
     from orders
-    where order_uuid = #{ordersUuid,jdbcType=VARCHAR}
+    where delete_at is null and order_uuid = #{ordersUuid,jdbcType=VARCHAR}
   </select>
-  
+  <select id="selectByOrderNumber" resultMap="BaseResultMap" parameterType="java.lang.String">
+  	select 
+    <include refid="Base_Column_List" />
+    from orders
+    where delete_at is null and order_number=#{orderNumber,jdbcType=VARCHAR}
+  </select>
   <select id="selectByOrderStatus" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
     from orders
-    where order_status = #{orderStatus,jdbcType=INTEGER}
+    where delete_at is null and order_status = #{orderStatus,jdbcType=INTEGER}
   </select>
   <select id="selectByUserUuid" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
     from orders
-    where user_uuid = #{useruuid,jdbcType=VARCHAR} and order_status=2
+    where delete_at is null and user_uuid = #{useruuid,jdbcType=VARCHAR} and order_status=2
   </select>
   
   <select id="selectByUserUuid1" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
     from orders
-    where user_uuid = #{useruuid,jdbcType=VARCHAR} and order_status=3
+    where delete_at is null and user_uuid = #{useruuid,jdbcType=VARCHAR} and order_status=3
   </select>
   <select id="selectByUserUuid2" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
     from orders
-    where user_uuid = #{useruuid,jdbcType=VARCHAR} and order_status=4
+    where delete_at is null and user_uuid = #{useruuid,jdbcType=VARCHAR} and order_status=4
   </select>
   <select id="selectByOwnerUuid" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
     from orders
-    where car_owner_uuid = #{useruuid,jdbcType=VARCHAR} and order_status=2
+    where delete_at is null and car_owner_uuid = #{useruuid,jdbcType=VARCHAR} and order_status=2
   </select>
   <select id="selectByOwnerUuid2" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
     from orders
-    where car_owner_uuid = #{useruuid,jdbcType=VARCHAR} and order_status=3
+    where delete_at is null and car_owner_uuid = #{useruuid,jdbcType=VARCHAR} and order_status=3
   </select>
   <select id="selectByOwnerUuid3" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
     from orders
-    where car_owner_uuid = #{useruuid,jdbcType=VARCHAR} and order_status=4
+    where delete_at is null and car_owner_uuid = #{useruuid,jdbcType=VARCHAR} and order_status=4
   </select>
   
   
   <select id="selectCountByUserUuid" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select count(1) from orders where car_owner_uuid = #{useruuid,jdbcType=VARCHAR} and order_status=3
+    select count(1) from orders where delete_at is null and car_owner_uuid = #{useruuid,jdbcType=VARCHAR} and order_status=3
   </select>
   
   

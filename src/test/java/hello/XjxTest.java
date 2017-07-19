@@ -31,10 +31,14 @@ public class XjxTest {
          
         //body.put("user_uuid", "1a318f190bb889eec5ba528d5691dfce");
        // body.put("user_status", 3);
-        body.put("pageIndex", 2);
-        body.put("pageSize", 5);
-
-        
+      //  body.put("pageIndex", 2);
+       // body.put("pageSize", 5);
+        body.put("orderNumber", "03E30D9774504DD9B81AC8CA86191653D5788D75AF4A4AB9ADBEBCB06FF332D5");
+        body.put("illegalTime", "2017-7-18 10:29:30");
+        body.put("address", "天目山交叉路口");
+        body.put("money", 200.00);
+        body.put("points", 6);
+        body.put("illegalCode", "00001");
         map.put("body",body);
   
    	    String jsonString = JSON.toJSONString(map); 
@@ -46,7 +50,7 @@ public class XjxTest {
    	    //新建审批条目 在审批信息表 approval_inner_base_infos中0558
    	    //返回审批uuid
    	  // String url = "http://120.26.120.57:8080/apparel/special/list";
-   	    String url = "http://localhost:8080/zzb-admin-api/order/list";
+   	    String url = "http://localhost:8080/zzb-admin-api/ticket/insert";
    	 //String url = "http://192.168.73.1:8080/user/phone/login";
       // String url = "http://test.appring.cn:8080/fastask/question/show"; /* * * * * * root wget http://test.appring.cn:8080/fastask/energy/timing -q -O /usr/local/time/timelog
  	    HttpPost httpPost = new HttpPost(url);

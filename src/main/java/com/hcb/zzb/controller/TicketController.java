@@ -17,8 +17,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.hcb.zzb.controller.base.BaseControllers;
+import com.hcb.zzb.dto.Orders;
 import com.hcb.zzb.dto.Ticket;
 import com.hcb.zzb.dto.Users;
+import com.hcb.zzb.service.IOrderService;
 import com.hcb.zzb.service.ITicketService;
 import com.hcb.zzb.service.IUsersService;
 
@@ -30,6 +32,8 @@ public class TicketController extends BaseControllers{
 	ITicketService ticketService;
 	@Autowired
 	IUsersService usersService;
+	@Autowired
+	IOrderService orderService;
 	/**
 	 * 罚单信息列表
 	 * @return
@@ -110,23 +114,35 @@ public class TicketController extends BaseControllers{
 		JSONObject bodyInfo=JSONObject.fromObject(bodyString);
 		if(bodyInfo.get("orderNumber")==null||bodyInfo.get("illegalTime")==null||bodyInfo.get("address")==null||
 		   bodyInfo.get("money")==null||bodyInfo.get("points")==null||
-		   bodyInfo.get("illegalCode")==null|| bodyInfo.get("user_uuid")==null) {
+		   bodyInfo.get("illegalCode")==null) {
 			json.put("result", "1");
 			json.put("description", "请检查参数是否完整");
 			return buildReqJsonObject(json);
 		}
-		Users user=usersService.selectByUserUuid(bodyInfo.getString("user_uuid"));
-		if(user==null) {
-			json.put("result", "1");
-			json.put("description", "操作失败,user_uuid没有查询到有这个用户");
-			return buildReqJsonObject(json);
-		}
-		if("".equals(bodyInfo.get("orderNumber"))||"".equals(bodyInfo.get("illegalTime"))
-				||"".equals(bodyInfo.get("address"))||"".equals(bodyInfo.get("money"))
-				||"".equals(bodyInfo.get("points"))||"".equals(bodyInfo.get("illegalCode"))
-				||"".equals(bodyInfo.get("user_uuid"))) {
+		if("".equals(bodyInfo.get("orderNumber"))||"".equals(bodyInfo.get("illegalTime"))||
+			"".equals(bodyInfo.get("address"))||
+			"".equals(bodyInfo.get("money"))||
+			"".equals(bodyInfo.get("points"))||
+			"".equals(bodyInfo.get("illegalCode"))) {
 			json.put("result", "1");
 			json.put("description", "请检查参数是否正确");
+			return buildReqJsonObject(json);
+		}
+		Orders order=orderService.selectByOrderNumber(bodyInfo.getString("orderNumber"));
+		if(order==null) {
+			json.put("result", "1");
+			json.put("description", "操作失败,订单号不存在");
+			return buildReqJsonObject(json);
+		}
+		if(order.getUserUuid()==null) {
+			json.put("result", "1");
+			json.put("description", "操作失败,没有查询到订单的用户");
+			return buildReqJsonObject(json);
+		}
+		Users user=usersService.selectByUserUuid(order.getUserUuid());
+		if(user==null) {
+			json.put("result", "1");
+			json.put("description", "操作失败,没有查询到订单的用户");
 			return buildReqJsonObject(json);
 		}
 		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -147,7 +163,7 @@ public class TicketController extends BaseControllers{
 		ticket.setPoints(bodyInfo.getInt("points"));
 		ticket.setTicketStatus(1);
 		ticket.setTicketUuid(UUID.randomUUID().toString().replaceAll("-", ""));
-		ticket.setUserUuid(bodyInfo.getString("user_uuid"));
+		ticket.setUserUuid(order.getUserUuid());
 		int rs=ticketService.insertSelective(ticket);
 		if(rs==1) {
 			json.put("result", "0");

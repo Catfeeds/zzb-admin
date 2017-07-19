@@ -41,4 +41,5 @@ public interface OrdersMapper {
 	
 	int countselectByMapLimit(Map<String, Object> map);
 	//Orders selectByUserUuidAndOrderUUid( String orderuuid);
+	Orders selectByOrderNumber(String orderNumber);
 }

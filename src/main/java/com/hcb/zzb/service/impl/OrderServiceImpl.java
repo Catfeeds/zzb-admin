@@ -121,6 +121,12 @@ private OrdersMapper ordersMapper;
 		return ordersMapper.countselectByMapLimit(map);
 	}
 
+	@Override
+	public Orders selectByOrderNumber(String orderNumber) {
+		// TODO Auto-generated method stub
+		return ordersMapper.selectByOrderNumber(orderNumber);
+	}
+
 	/*@Override
 	public Orders selectByUserUuidAndOrderUUid(String orderuuid) {
 		// TODO Auto-generated method stub
