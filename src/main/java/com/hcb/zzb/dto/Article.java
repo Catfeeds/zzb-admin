@@ -34,7 +34,11 @@ public class Article {
     private Date activityEndTime;
 
     private String articleContent;
-
+    
+    private Integer browseTime;
+    
+    private Integer forwardTime;
+    
     public Integer getId() {
         return id;
     }
@@ -162,4 +166,20 @@ public class Article {
     public void setArticleContent(String articleContent) {
         this.articleContent = articleContent == null ? null : articleContent.trim();
     }
+
+	public Integer getBrowseTime() {
+		return browseTime;
+	}
+
+	public void setBrowseTime(Integer browseTime) {
+		this.browseTime = browseTime;
+	}
+
+	public Integer getForwardTime() {
+		return forwardTime;
+	}
+
+	public void setForwardTime(Integer forwardTime) {
+		this.forwardTime = forwardTime;
+	}
 }
