@@ -68,7 +68,11 @@ public class Orders {
 	private String evaluateDsp;
 	private String takeCarAddressMap;
 	private String returnCarAddressMap;
-
+	
+	//用于后台显示
+	private String userName;//用户名
+	private String useCarTime;//用车时长
+	
 	public String getTakeCarAddressMap() {
 		return takeCarAddressMap;
 	}
@@ -340,4 +344,21 @@ public class Orders {
 	public void setEvaluateDsp(String evaluateDsp) {
 		this.evaluateDsp = evaluateDsp == null ? null : evaluateDsp.trim();
 	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getUseCarTime() {
+		return useCarTime;
+	}
+
+	public void setUseCarTime(String useCarTime) {
+		this.useCarTime = useCarTime;
+	}
+	
 }

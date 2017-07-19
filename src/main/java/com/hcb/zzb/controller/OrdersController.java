@@ -1,5 +1,6 @@
 package com.hcb.zzb.controller;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -77,12 +78,34 @@ public class OrdersController extends BaseControllers{
 		}
 		int total=count%pageSize==0?count/pageSize:count/pageSize+1;
 		List<Orders> list=orderService.selectByMapLimit(map);
+		List<Orders> orderList=new ArrayList<Orders>();
 		if(!list.isEmpty()) {
 			json.put("result", "0");
 			json.put("description", "查询成功");
 			json.put("total", total);
 			json.put("page", pageIndex);
-			json.put("orderList", list);
+			
+			for (Orders orders : list) {	
+				if(orders.getUserUuid()==null) {
+					json.put("result", "1");
+					json.put("description", "错误,没有查询到该订单的用户");
+					return buildReqJsonObject(json);
+				}
+				Users user=userService.selectByUserUuid(orders.getUserUuid());
+				if(user==null) {
+					json.put("result", "1");
+					json.put("description", "错误,没有查询到该订单的用户");
+					return buildReqJsonObject(json);
+				}
+				orders.setUserName(user.getUserName());
+				if(orders.getReturnCarTime()!=null&&orders.getTakeCarTime()!=null) {
+					orders.setUseCarTime(getDatePoor(orders.getReturnCarTime(),orders.getTakeCarTime()));
+				}else {
+					orders.setUseCarTime(null);
+				}	
+				orderList.add(orders);
+			}
+			json.put("orderList", orderList);
 		}else {
 			json.put("result", "1");
 			json.put("description", "没有查询到数据记录");
