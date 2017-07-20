@@ -479,12 +479,9 @@ public class UsersController extends BaseControllers{
 			user.setUserStatus(bodyInfo.getInt("user_status"));
 			int rs=0;
 			rs=usersService.updateByPrimaryKeySelective(user);
-			if(rs==1&&bodyInfo.getInt("user_status")==2) {
+			if(rs==1) {
 				json.put("result", "0");
-				json.put("description", "拉黑成功");
-			}else if(rs==1&&bodyInfo.getInt("user_status")==1){
-				json.put("result", "0");
-				json.put("description", "激活成功");
+				json.put("description", "操作成功");
 			}else {
 				json.put("result", "1");
 				json.put("description", "操作失败");

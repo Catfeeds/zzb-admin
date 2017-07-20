@@ -93,7 +93,7 @@ public class CarModelLibraryController extends BaseControllers{
 			
 		}
 		model.put("description", "查询成功");
-		model.put("result",0);
+		model.put("result","0");
 		model.put("list", list);
 		return buildReqJsonObject(model);
 	}
@@ -146,6 +146,7 @@ public class CarModelLibraryController extends BaseControllers{
 			model.put("carSeries", carModel.getCarSeries());
 			model.put("modelYear", carModel.getModelYear());
 			model.put("carModel", carModel.getCarModel());
+			model.put("color", carModel.getColor());
 		}
 		return buildReqJsonObject(model);
 	}
@@ -164,12 +165,14 @@ public class CarModelLibraryController extends BaseControllers{
 			return buildReqJsonInteger(1, json);
 		}
 		JSONObject bodyInfo=JSONObject.fromObject(bodyString);
-		if(bodyInfo.get("car_model_uuid")==null) {
+		if(bodyInfo.get("car_model_uuid")==null||bodyInfo.get("brand")==null||bodyInfo.get("carSeries")==null||bodyInfo.get("modelYear")==null
+				||bodyInfo.get("carModel")==null||bodyInfo.get("color")==null) {
 			json.put("result", "1");
 			json.put("description", "请检查参数是否完整");
 			return buildReqJsonObject(json);
 		}
-		if("".equals(bodyInfo.get("car_model_uuid"))) {
+		if("".equals(bodyInfo.get("car_model_uuid"))||bodyInfo.get("brand").equals("")||bodyInfo.get("carSeries").equals("")||bodyInfo.get("modelYear").equals("")
+				||bodyInfo.get("carModel").equals("")||bodyInfo.get("color").equals("")) {
 			json.put("result", "1");
 			json.put("description", "请检查参数是否正确");
 			return buildReqJsonObject(json);
@@ -180,39 +183,22 @@ public class CarModelLibraryController extends BaseControllers{
 			json.put("result", "1");
 			json.put("description", "未查询到,uuid不正确");
 			return buildReqJsonObject(json);
-		}else {
-			boolean b=false;
-			if(bodyInfo.get("brand")!=null) {
-				b=true;
-				carModel.setBrand(bodyInfo.getString("brand"));
-			}
-			if(bodyInfo.get("carSeries")!=null) {
-				b=true;
-				carModel.setCarSeries(bodyInfo.getString("carSeries"));
-			}
-			if(bodyInfo.get("modelYear")!=null) {
-				b=true;
-				carModel.setModelYear(bodyInfo.getString("modelYear"));
-			}
-			if(bodyInfo.get("carModel")!=null) {
-				b=true;
-				carModel.setCarModel(bodyInfo.getString("carModel"));
-			}
-			if(b) {
-				int i=carModelService.updateByPrimaryKeySelective(carModel);
-				if(i>0) {
-					model.put("result", "0");
-					model.put("description", "保存成功");
-				}else {
-					model.put("result", "0");
-					model.put("description", "保存失败");
-				}
-			}else {
-				model.put("result", "0");
-				model.put("description", "未编辑（参数为空）,不保存");
-			}	
-		}	
+		}else {	
+			carModel.setBrand(bodyInfo.getString("brand"));	
+			carModel.setCarSeries(bodyInfo.getString("carSeries"));
+			carModel.setModelYear(bodyInfo.getString("modelYear"));
+			carModel.setCarModel(bodyInfo.getString("carModel"));
+			carModel.setColor(bodyInfo.getString("color"));
 		
+			int i=carModelService.updateByPrimaryKeySelective(carModel);
+			if(i>0) {
+				model.put("result", "0");
+				model.put("description", "保存成功");
+			}else {
+				model.put("result", "1");
+				model.put("description", "保存失败");
+			}
+		}			
 		return buildReqJsonObject(model);
 	}
 	

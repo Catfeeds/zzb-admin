@@ -214,7 +214,7 @@ public class TicketController extends BaseControllers{
 			model.put("orderNumber", ticket.getOrderNumber());
 			model.put("address", ticket.getAddress());
 			model.put("illegalTime", sdf.format(ticket.getIllegalTime()));
-			model.put("moeny", ticket.getMoney());
+			model.put("money", ticket.getMoney());
 			model.put("points", ticket.getPoints());
 			model.put("illegalCode", ticket.getIllegalCode());
 			model.put("ticketStatus", ticket.getTicketStatus());

@@ -1,5 +1,6 @@
 package com.hcb.zzb.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -101,7 +102,7 @@ public class OrdersController extends BaseControllers{
 				if(orders.getReturnCarTime()!=null&&orders.getTakeCarTime()!=null) {
 					orders.setUseCarTime(getDatePoor(orders.getReturnCarTime(),orders.getTakeCarTime()));
 				}else {
-					orders.setUseCarTime(null);
+					orders.setUseCarTime("");
 				}	
 				orderList.add(orders);
 			}
@@ -138,6 +139,7 @@ public class OrdersController extends BaseControllers{
 			json.put("description", "请检查参数格式是否正确");
 			return buildReqJsonObject(json);
 		}
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		ModelMap model=new ModelMap();
 		Orders order=orderService.selectByOrdersUuid(bodyInfo.getString("order_uuid"));
 		if(order!=null) {
@@ -155,16 +157,35 @@ public class OrdersController extends BaseControllers{
 			
 			model.put("result", "0");
 			model.put("description", "查询成功");
-			model.put("orderNumber", order.getOrderNumber());
-			model.put("userName", user.getUserName());
+			if(order.getOrderNumber()!=null) {
+				model.put("orderNumber", order.getOrderNumber());
+			}else {
+				model.put("orderNumber", "");
+			}
+			if(user.getUserName()!=null) {
+				model.put("userName", user.getUserName());
+			}else {
+				model.put("userName", "");
+			}
+			
 			model.put("totalPrice", order.getTotalPrice());
-			model.put("takeCarTime", order.getTakeCarTime());
-			model.put("returnCarTime", order.getReturnCarTime());
+			if(order.getTakeCarTime()!=null) {	
+				model.put("takeCarTime",sdf.format(order.getTakeCarTime()));
+			}else {
+				model.put("takeCarTime","");
+			}
+			if(order.getReturnCarTime()!=null) {
+				model.put("returnCarTime", sdf.format(order.getReturnCarTime()));
+			}else {
+				model.put("returnCarTime", "");
+			}
+			
 			if(order.getReturnCarTime()!=null&&order.getTakeCarTime()!=null) {
 				model.put("userCarTime", getDatePoor(order.getReturnCarTime(),order.getTakeCarTime()));
+				
 			}else {
-				model.put("userCarTime",null);
-			}
+				model.put("userCarTime","");
+			}			
 			model.put("takeCarAddress", order.getTakeCarAddress());
 			model.put("returnCarAddress", order.getReturnCarAddress());
 			model.put("orderStatus", order.getOrderStatus());
@@ -172,8 +193,17 @@ public class OrdersController extends BaseControllers{
 			model.put("insurancePrice", order.getInsurancePrice());
 			model.put("otherPrice", order.getOtherPrice());
 			model.put("isDamage", order.getIsDamage());
-			model.put("damagePicture", order.getDamagePicture());
-			model.put("damageDsp", order.getDamageDsp());
+			if(order.getDamagePicture()!=null) {
+				model.put("damagePicture", order.getDamagePicture());
+			}else {
+				model.put("damagePicture", "");
+			}
+			if(order.getDamageDsp()!=null) {
+				model.put("damageDsp", order.getDamageDsp());
+			}else {
+				model.put("damageDsp", "");
+			}
+			
 			model.put("compensateMoney", order.getCompensateMoney());
 		}else {
 			model.put("result", "1");
