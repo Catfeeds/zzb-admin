@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.hcb.zzb.controller.base.BaseControllers;
 import com.hcb.zzb.dto.Article;
+import com.hcb.zzb.dto.Car;
 import com.hcb.zzb.dto.Manager;
 import com.hcb.zzb.service.IArticleService;
+import com.hcb.zzb.service.ICarSevice;
 import com.hcb.zzb.service.IManagerService;
 
 import net.sf.json.JSONObject;
@@ -26,6 +28,8 @@ public class ArticleController extends BaseControllers{
 	IArticleService articleService;
 	@Autowired
 	IManagerService managerService;
+	@Autowired
+	ICarSevice carService;
 	
 	/**
 	 * 运营文章列表（分页）
@@ -108,14 +112,14 @@ public class ArticleController extends BaseControllers{
 		JSONObject bodyInfo=JSONObject.fromObject(bodyString);
 		if(bodyInfo.get("tittle")==null||bodyInfo.get("articleType")==null||
 			bodyInfo.get("articleContent")==null||bodyInfo.get("articlePicture")==null
-			||bodyInfo.get("carIdList")==null) {
+			||bodyInfo.get("carID1")==null||bodyInfo.get("carID2")==null||bodyInfo.get("carID3")==null) {
 			json.put("result", "1");
 			json.put("description", "请检查参数是否完整");
 			return buildReqJsonObject(json);
 		}
 		if("".equals(bodyInfo.get("tittle"))||"".equals(bodyInfo.get("articleType"))||
 				"".equals(bodyInfo.get("articleContent"))||"".equals(bodyInfo.get("articlePicture"))
-				||"".equals(bodyInfo.get("carIdList"))) {
+				||"".equals(bodyInfo.get("carID1"))||"".equals(bodyInfo.get("carID2"))||"".equals(bodyInfo.get("carID3"))) {
 			json.put("result", "1");
 			json.put("description", "请检查参数是否正确");
 			return buildReqJsonObject(json);
@@ -126,13 +130,25 @@ public class ArticleController extends BaseControllers{
 			json.put("description", "登录账号错误,没有查询到");
 			return buildReqJsonObject(json);
 		}
+		String carID1=bodyInfo.getString("carID1");
+		String carID2=bodyInfo.getString("carID2");
+		String carID3=bodyInfo.getString("carID3");
+		Car car1=carService.selectByPrimaryKey(Integer.parseInt(carID1));
+		Car car2=carService.selectByPrimaryKey(Integer.parseInt(carID2));
+		Car car3=carService.selectByPrimaryKey(Integer.parseInt(carID3));
+		if(car1==null||car2==null||car3==null) {
+			json.put("result", "1");
+			json.put("description", "推荐车辆ID错误,车辆不存在");
+			return buildReqJsonObject(json);
+		}
 		Article article=new Article();
 		article.setCreateAt(new Date());
 		article.setTittle(bodyInfo.getString("tittle"));
 		article.setArticleType(bodyInfo.getInt("articleType"));
 		article.setArticleContent(bodyInfo.getString("articleContent"));
 		article.setArticlePicture(bodyInfo.getString("articlePicture"));
-		article.setCarIdList(bodyInfo.getString("carIdList"));
+		String carIdList=carID1+","+carID2+","+carID3;
+		article.setCarIdList(carIdList);
 		article.setArticleUuid(UUID.randomUUID().toString().replaceAll("-", ""));	
 		article.setCreater(manager.getManagerUuid());
 		
@@ -181,7 +197,26 @@ public class ArticleController extends BaseControllers{
 			json.put("articleType", article.getArticleType());
 			json.put("articleContent", article.getArticleContent());
 			json.put("articlePicture", article.getArticlePicture());
-			json.put("carIdList", article.getCarIdList());
+			if(article.getCarIdList()==null) {
+				json.put("carID1", "");
+				json.put("carID2", "");
+				json.put("carID3", "");
+			}else {
+				String[] strs=article.getCarIdList().split(",");
+				if(strs.length==1) {
+					json.put("carID1", strs[0]);
+					json.put("carID2", "");
+					json.put("carID3", "");
+				}else if(strs.length==2) {
+					json.put("carID1", strs[0]);
+					json.put("carID2", strs[1]);
+					json.put("carID3", "");
+				}else if(strs.length==3) {
+					json.put("carID1", strs[0]);
+					json.put("carID2", strs[1]);
+					json.put("carID3", strs[2]);
+				}			
+			}
 		}else {
 			json.put("result", "1");
 			json.put("description", "articleUuid不正确,没有查询到,文章不存在");
@@ -213,6 +248,31 @@ public class ArticleController extends BaseControllers{
 			json.put("description", "请检查参数是否正确");
 			return buildReqJsonObject(json);
 		}
+		if(bodyInfo.get("tittle")==null||bodyInfo.get("articleType")==null||
+				bodyInfo.get("articleContent")==null||bodyInfo.get("articlePicture")==null
+				||bodyInfo.get("carID1")==null||bodyInfo.get("carID2")==null||bodyInfo.get("carID3")==null) {
+				json.put("result", "1");
+				json.put("description", "请检查参数是否完整");
+				return buildReqJsonObject(json);
+		}
+		if("".equals(bodyInfo.get("tittle"))||"".equals(bodyInfo.get("articleType"))||
+			"".equals(bodyInfo.get("articleContent"))||"".equals(bodyInfo.get("articlePicture"))
+			||"".equals(bodyInfo.get("carID1"))||"".equals(bodyInfo.get("carID2"))||"".equals(bodyInfo.get("carID3"))) {
+			json.put("result", "1");
+			json.put("description", "请检查参数是否正确");
+			return buildReqJsonObject(json);
+		}
+		String carID1=bodyInfo.getString("carID1");
+		String carID2=bodyInfo.getString("carID2");
+		String carID3=bodyInfo.getString("carID3");
+		Car car1=carService.selectByPrimaryKey(Integer.parseInt(carID1));
+		Car car2=carService.selectByPrimaryKey(Integer.parseInt(carID2));
+		Car car3=carService.selectByPrimaryKey(Integer.parseInt(carID3));
+		if(car1==null||car2==null||car3==null) {
+			json.put("result", "1");
+			json.put("description", "推荐车辆ID错误,车辆不存在");
+			return buildReqJsonObject(json);
+		}
 		Article article=articleService.selectByArticleUuid(bodyInfo.getString("articleUuid"));
 		if(article==null) {
 			json.put("result", "1");
@@ -221,26 +281,18 @@ public class ArticleController extends BaseControllers{
 		}
 		if(bodyInfo.get("tittle")==null&&bodyInfo.get("articleType")==null&&
 				bodyInfo.get("articleContent")==null&&bodyInfo.get("articlePicture")==null
-				&&bodyInfo.get("carIdList")==null) {
+				&&bodyInfo.get("carID1")==null&&bodyInfo.get("carID2")==null&&bodyInfo.get("carID3")==null) {
 				json.put("result", "1");
-				json.put("description", "未编辑,不保存");
+				json.put("description", "参数为空，不保存");
 				return buildReqJsonObject(json);
 		}
-		if(bodyInfo.get("tittle")!=null) {
-			article.setTittle(bodyInfo.getString("tittle"));
-		}
-		if(bodyInfo.get("articleType")!=null) {
-			article.setArticleType(bodyInfo.getInt("articleType"));
-		}
-		if(bodyInfo.get("articleContent")!=null) {
-			article.setArticleContent(bodyInfo.getString("articleContent"));
-		}
-		if(bodyInfo.get("articlePicture")!=null) {
-			article.setArticlePicture(bodyInfo.getString("articlePicture"));
-		}
-		if(bodyInfo.get("carIdList")!=null) {
-			article.setCarIdList(bodyInfo.getString("carIdList"));
-		}
+		
+		article.setTittle(bodyInfo.getString("tittle"));
+		article.setArticleType(bodyInfo.getInt("articleType"));
+		article.setArticleContent(bodyInfo.getString("articleContent"));
+		article.setArticlePicture(bodyInfo.getString("articlePicture"));
+		article.setCarIdList(carID1+","+carID2+","+carID3);
+		
 		int rs = articleService.updateByPrimaryKeySelective(article);
 		if(rs==1) {
 			json.put("result", "0");
