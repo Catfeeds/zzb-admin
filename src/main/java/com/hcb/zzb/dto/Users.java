@@ -56,6 +56,8 @@ public class Users {
     private Integer userStatus;
     
     private Integer vehicleBehavior;
+    
+    private Float deposit;
     public Integer getId() {
         return id;
     }
@@ -270,6 +272,14 @@ public class Users {
 
 	public void setVehicleBehavior(Integer vehicleBehavior) {
 		this.vehicleBehavior = vehicleBehavior;
+	}
+
+	public Float getDeposit() {
+		return deposit;
+	}
+
+	public void setDeposit(Float deposit) {
+		this.deposit = deposit;
 	}
     
 }

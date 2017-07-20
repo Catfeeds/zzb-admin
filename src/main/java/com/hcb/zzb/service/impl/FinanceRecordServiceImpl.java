@@ -61,4 +61,16 @@ public class FinanceRecordServiceImpl implements IFinanceRecordService{
 		return financeRecordMapper.selectCountByUserUuid(userUuid);
 	}
 
+	@Override
+	public List<FinanceRecord> selectIncomeAndExpenditureByToday(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return financeRecordMapper.selectIncomeAndExpenditureByToday(map);
+	}
+
+	@Override
+	public FinanceRecord selectByUuid(String uuid) {
+		// TODO Auto-generated method stub
+		return financeRecordMapper.selectByUuid(uuid);
+	}
+
 }
