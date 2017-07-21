@@ -59,4 +59,10 @@ public class ManagerServiceImpl implements IManagerService {
 	public int countByMap(Map<String, Object> map) {
 		return managerMapper.countByMap(map);
 	}
+
+	@Override
+	public Manager selectByAccountUuid(String string) {
+		// TODO Auto-generated method stub
+		return managerMapper.selectByAccountUuid(string);
+	}
 }

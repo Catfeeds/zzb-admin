@@ -27,6 +27,13 @@
     where id = #{id,jdbcType=INTEGER} and delete_at is null
   </select>
   
+  <select id="selectByAccountUuid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from manager
+    where manager_uuid = #{uuid,jdbcType=VARCHAR} and delete_at is null
+  </select>
+  
   <select id="selectByAccount" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
@@ -40,10 +47,10 @@
     from manager
     where delete_at is null
     <if test="contacts !='' and contacts != null">
-		and contacts like CONCAT(CONCAT('%', #{contacts,jdbcType=VARCHAR}), '%')
+		contacts like CONCAT(CONCAT('%', #{contacts,jdbcType=VARCHAR}), '%')
 	</if>
 	<if test="account !='' and account != null">
-		and account like CONCAT(CONCAT('%', #{account,jdbcType=VARCHAR}), '%')
+		account like CONCAT(CONCAT('%', #{account,jdbcType=VARCHAR}), '%')
 	</if>
 	order by create_at desc LIMIT #{start},#{end}
   </select>
@@ -52,10 +59,10 @@
    select count(1) from manager
     where delete_at is null
     <if test="contacts !='' and contacts != null">
-		and contacts like CONCAT(CONCAT('%', #{contacts,jdbcType=VARCHAR}), '%')
+		contacts like CONCAT(CONCAT('%', #{contacts,jdbcType=VARCHAR}), '%')
 	</if>
 	<if test="account !='' and account != null">
-		and account like CONCAT(CONCAT('%', #{account,jdbcType=VARCHAR}), '%')
+		account like CONCAT(CONCAT('%', #{account,jdbcType=VARCHAR}), '%')
 	</if>
   </select>
   
