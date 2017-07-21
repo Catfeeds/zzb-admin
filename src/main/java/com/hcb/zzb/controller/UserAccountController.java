@@ -91,7 +91,7 @@ public class UserAccountController extends BaseControllers{
 	}
 	
 	/**
-	 * 用户交易记录（余额，今日收入，今日支出，交易记录列表）	 
+	 * 用户交易记录（余额，今日收入，今日支出，交易记录列表）	 ---单个用户的记录列表
 	 * @return
 	 */
 	@RequestMapping(value="userTradingRecord",method=RequestMethod.POST)
@@ -228,6 +228,70 @@ public class UserAccountController extends BaseControllers{
 			json.put("result", "1");
 			json.put("description", "操作失败,未查询到该交易记录");
 		}
+		return buildReqJsonObject(json);
+	}
+	
+	
+	/**
+	 * 用户账户收支明细（用户交易记录列表）  ---所有用户的记录
+	 * @return
+	 */
+	@RequestMapping(value="financeRecord",method=RequestMethod.POST)
+	@ResponseBody
+	public String findUserFinanceRecord() {
+		JSONObject json=new JSONObject();
+		if(sign==1||sign==2) {
+			json.put("result", "1");
+			json.put("description", "请检查参数格式是否正确或者参数是否完整");
+			return buildReqJsonInteger(1, json);
+		}
+		JSONObject bodyInfo=JSONObject.fromObject(bodyString);
+		if(bodyInfo.get("pageIndex")==null||bodyInfo.get("pageSize")==null) {
+			json.put("result", "1");
+			json.put("description", "请检查参数是否完整");
+			return buildReqJsonObject(json);
+		}
+		if("".equals(bodyInfo.get("pageIndex"))||"".equals(bodyInfo.get("pageSize"))) {
+			json.put("result", "1");
+			json.put("description", "请检查参数是否正确");
+			return buildReqJsonObject(json);
+		}
+		Integer pageIndex=bodyInfo.getInt("pageIndex");
+		Integer pageSize=bodyInfo.getInt("pageSize");
+		Integer start=(pageIndex-1)*pageSize;
+		Integer end=pageSize;
+		if(pageIndex<=0) {
+			json.put("result", "1");
+			json.put("description", "请求页不能小于0");
+			return buildReqJsonObject(json);
+		}
+		Map<String, Object> map=new HashMap<>();
+		map.put("start", start);
+		map.put("end", end);
+		int count=financeRecordService.countSelectByMapLimit(map);
+		if(count==0) {
+			json.put("result", "1");
+			json.put("description", "未查询到数据");
+			return buildReqJsonObject(json);
+		}
+		int total=count % pageSize ==0 ? count/pageSize : count/pageSize + 1;
+		if(pageIndex>total) {
+			json.put("result", "1");
+			json.put("description", "操作失败,请求页数大于总页数");
+			return buildReqJsonObject(json);
+		}
+		List<FinanceRecord> list=financeRecordService.selectByMapLimit(map);
+		if(!list.isEmpty()) {
+			json.put("result", "0");
+			json.put("description", "查询成功");
+			json.put("total", total);
+			json.put("page", pageIndex);
+			json.put("financeList", list);
+		}else {
+			json.put("result", "1");
+			json.put("description", "未查询到数据");
+		}
+		
 		return buildReqJsonObject(json);
 	}
 }
