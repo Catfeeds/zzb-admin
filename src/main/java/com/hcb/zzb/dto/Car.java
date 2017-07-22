@@ -28,6 +28,8 @@ public class Car {
     private String carSeries;
 
     private String modelCharacter;
+    
+    private String modelYear;
 
     private String model;
 
@@ -422,4 +424,14 @@ public class Car {
     public void setLeaseTime(String leaseTime) {
         this.leaseTime = leaseTime == null ? null : leaseTime.trim();
     }
+
+	public String getModelYear() {
+		return modelYear;
+	}
+
+	public void setModelYear(String modelYear) {
+		this.modelYear = modelYear;
+	}
+    
+    
 }
