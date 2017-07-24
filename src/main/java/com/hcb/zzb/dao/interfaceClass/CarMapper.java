@@ -42,4 +42,8 @@ public interface CarMapper {
 	int selectCountByCarModel(String model_character);
 
 	List<Car> selectCarStatusAll();
+	
+	List<Car> selectByMapLimit(Map<String, Object> map);
+	
+	int countSelectByMapLimit(Map<String, Object> map);
 }

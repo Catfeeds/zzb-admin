@@ -10,11 +10,14 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hcb.zzb.dto.Users;
 import com.hcb.zzb.util.Config;
 import com.hcb.zzb.util.EmojiConvert;
+import com.hcb.zzb.util.HttpSessionUtil;
 @Scope("prototype")
 public class BaseController {
 
@@ -22,7 +25,7 @@ public class BaseController {
 	private HttpServletRequest request;
 
 	protected String webPath;
-	//protected User user;
+	protected Users user;
     protected StringBuffer requestUrl;
     protected String headString;
     protected String bodyString;
@@ -40,8 +43,16 @@ public class BaseController {
 	 * @param code
 	 */
 	@ModelAttribute
-	public void init(HttpServletRequest req,HttpServletResponse res) {
-		//TODO
+	public void init(HttpServletRequest req,HttpServletResponse res,ModelMap model) {
+		requestUrl = null;
+		requestUrl =req.getRequestURL();
+		String url = requestUrl.toString();
+		model.put("requestUrl", url);
+		Users user=HttpSessionUtil.getSessionUser(req);
+		this.user=user;
+		model.put("user", user);
+		webPath=getWebPath();
+		model.addAttribute("webPath",getWebPath());
 	}
 
 	public String getBasePath() {

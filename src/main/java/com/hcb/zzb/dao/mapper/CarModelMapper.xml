@@ -17,11 +17,12 @@
     <result column="apply_user_uuid" property="applyUserUuid" jdbcType="VARCHAR" />
     <result column="apply_status" property="applyStatus" jdbcType="INTEGER" />
     <result column="operator_uuid" property="operatorUuid" jdbcType="VARCHAR" />
+  	<result column="color" property="color" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, create_at, update_at, delete_at, car_model_uuid, brand_model, brand, car_series, 
     model_year, transmission_case, displacement, car_model, apply_user_uuid, apply_status, 
-    operator_uuid
+    operator_uuid,color
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -50,6 +51,36 @@
     where apply_user_uuid = #{userUuid,jdbcType=VARCHAR}
   </select>
   
+  <select id="selectByMapLimit" resultMap="BaseResultMap" parameterType="java.util.Map">
+  	select 
+    <include refid="Base_Column_List" />
+    from car_model
+    <where>
+    	delete_at is null
+    	<if test="brand !='' and brand !=null">
+    		and brand like CONCAT('%', #{brand,jdbcType=VARCHAR}, '%')
+    	</if>
+    </where>
+    limit #{start},#{end}
+  </select>
+  
+  <select id="countByMap" resultType="java.lang.Integer" parameterType="java.util.HashMap">
+  	select count(1) from car_model
+  	<where>
+  		delete_at is null
+  		<if test="brand !='' and brand !=null">
+  			and brand like CONCAT('%', #{brand,jdbcType=VARCHAR}, '%')
+  		</if>
+  	</where>
+  </select>
+  
+  <select id="selectByUuid" resultMap="BaseResultMap" parameterType="java.lang.String">
+  	select 
+  	<include refid="Base_Column_List" />
+  	from car_model
+  	where car_model_uuid=#{car_model_uuid,jdbcType=VARCHAR}
+  </select>
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from car_model
     where id = #{id,jdbcType=INTEGER}
@@ -59,14 +90,14 @@
       delete_at, car_model_uuid, brand_model, 
       brand, car_series, model_year, 
       transmission_case, displacement, car_model, 
-      apply_user_uuid, apply_status, operator_uuid
+      apply_user_uuid, apply_status, operator_uuid,color
       )
     values (#{id,jdbcType=INTEGER}, #{createAt,jdbcType=TIMESTAMP}, #{updateAt,jdbcType=TIMESTAMP}, 
       #{deleteAt,jdbcType=TIMESTAMP}, #{carModelUuid,jdbcType=VARCHAR}, #{brandModel,jdbcType=VARCHAR}, 
       #{brand,jdbcType=VARCHAR}, #{carSeries,jdbcType=VARCHAR}, #{modelYear,jdbcType=VARCHAR}, 
       #{transmissionCase,jdbcType=VARCHAR}, #{displacement,jdbcType=VARCHAR}, #{carModel,jdbcType=VARCHAR}, 
-      #{applyUserUuid,jdbcType=VARCHAR}, #{applyStatus,jdbcType=INTEGER}, #{operatorUuid,jdbcType=VARCHAR}
-      )
+      #{applyUserUuid,jdbcType=VARCHAR}, #{applyStatus,jdbcType=INTEGER}, #{operatorUuid,jdbcType=VARCHAR},
+      #{color,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.hcb.zzb.dto.CarModel" >
     insert into car_model
@@ -116,6 +147,9 @@
       <if test="operatorUuid != null" >
         operator_uuid,
       </if>
+      <if test="color != null">
+      	color,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -162,6 +196,9 @@
       </if>
       <if test="operatorUuid != null" >
         #{operatorUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="color != null" >
+        #{color,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -210,6 +247,9 @@
       <if test="operatorUuid != null" >
         operator_uuid = #{operatorUuid,jdbcType=VARCHAR},
       </if>
+      <if test="color != null" >
+        color = #{color,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -228,7 +268,8 @@
       car_model = #{carModel,jdbcType=VARCHAR},
       apply_user_uuid = #{applyUserUuid,jdbcType=VARCHAR},
       apply_status = #{applyStatus,jdbcType=INTEGER},
-      operator_uuid = #{operatorUuid,jdbcType=VARCHAR}
+      operator_uuid = #{operatorUuid,jdbcType=VARCHAR},
+      color = #{color,jdbcType=VARCHAR},
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

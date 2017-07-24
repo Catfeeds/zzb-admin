@@ -1,5 +1,8 @@
 package com.hcb.zzb.dao.interfaceClass;
 
+import java.util.List;
+import java.util.Map;
+
 import com.hcb.zzb.dto.Users;
 
 public interface UsersMapper {
@@ -22,5 +25,9 @@ public interface UsersMapper {
 	int updateByPrimaryKey(Users record);
 
 	Users selectByUserUuid(String userUuid);
+	
+	List<Users> selectUsersByMap(Map<String, Object> map);
+	
+	int countUsersByMap(Map<String, Object> map);
 
 }

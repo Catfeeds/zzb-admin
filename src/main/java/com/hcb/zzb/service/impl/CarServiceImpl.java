@@ -103,4 +103,16 @@ CarMapper carMapper;
 		// TODO Auto-generated method stub
 		return carMapper.selectCarStatusAll();
 	}
+
+	@Override
+	public List<Car> selectByMapLimit(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return carMapper.selectByMapLimit(map);
+	}
+
+	@Override
+	public int countSelectByMapLimit(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return carMapper.countSelectByMapLimit(map);
+	}
 }

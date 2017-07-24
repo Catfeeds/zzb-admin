@@ -24,22 +24,54 @@
     select 
     <include refid="Base_Column_List" />
     from finance_record
-    where id = #{id,jdbcType=INTEGER}
+    where delete_at is null and id = #{id,jdbcType=INTEGER}
   </select>
   <select id="selectAllByUserUuid" resultMap="BaseResultMap" parameterType="java.util.Map">
   	select 
     <include refid="Base_Column_List" />
     from finance_record
-    where user_uuid=#{user_uuid,jdbcType=VARCHAR} limit #{pageIndex},#{pageSize}
+    where delete_at is null and user_uuid=#{user_uuid,jdbcType=VARCHAR} limit #{pageIndex},#{pageSize}
   </select>
   <select id="selectCountByUserUuid" resultType="int" parameterType="java.lang.String">
   	select count(1)
   	from finance_record
-  	where user_uuid=#{user_uuid,jdbcType=VARCHAR}
+  	where delete_at is null and user_uuid=#{user_uuid,jdbcType=VARCHAR}
   </select>
+  
+  <select id="selectIncomeAndExpenditureByToday" resultMap="BaseResultMap" parameterType="java.util.HashMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from finance_record
+    where delete_at is null 
+    and to_days(create_at) = to_days(now()) 
+    and finance_type=#{financeType,jdbcType=INTEGER} and user_uuid=#{user_uuid,jdbcType=VARCHAR};
+  </select>
+  
+  <select id="selectByUuid" resultMap="BaseResultMap" parameterType="java.lang.String">
+  	select 
+    <include refid="Base_Column_List" />
+    from finance_record
+    where delete_at is null
+    and finance_record_uuid=#{financeRecordUuid,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectByMapLimit" resultMap="BaseResultMap" parameterType="java.util.HashMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from finance_record
+    where delete_at is null
+    limit #{start},#{end}
+  </select>
+  
+  <select id="countSelectByMapLimit" resultType="java.lang.Integer" parameterType="java.util.HashMap">
+  	select count(1)
+    from finance_record
+    where delete_at is null
+  </select>
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from finance_record
-    where id = #{id,jdbcType=INTEGER}
+    where delete_at is null and id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.hcb.zzb.dto.FinanceRecord" >
     insert into finance_record (id, create_at, update_at, 

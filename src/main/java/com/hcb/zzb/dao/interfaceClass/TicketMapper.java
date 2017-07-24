@@ -23,4 +23,8 @@ public interface TicketMapper {
     int selectAllTickeByStstusCount(Map<String, Object> map);
     
     Ticket selectByTicketUuid(String ticketUuid);
+    
+    List<Ticket> selectTicketsLimit(Map<String, Object> map);
+    
+    int countSelectTickets(Map<String, Object> map);
 }

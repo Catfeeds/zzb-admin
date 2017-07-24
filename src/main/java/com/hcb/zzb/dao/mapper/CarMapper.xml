@@ -15,6 +15,7 @@
     <result column="brand" property="brand" jdbcType="VARCHAR" />
     <result column="car_series" property="carSeries" jdbcType="VARCHAR" />
     <result column="model_character" property="modelCharacter" jdbcType="VARCHAR" />
+    <result column="model_year" property="modelYear" jdbcType="VARCHAR" />
     <result column="model" property="model" jdbcType="VARCHAR" />
     <result column="displacement" property="displacement" jdbcType="VARCHAR" />
     <result column="manual_or_automatic" property="manualOrAutomatic" jdbcType="INTEGER" />
@@ -51,7 +52,7 @@
   </resultMap>
   <sql id="Base_Column_List" >
     id, create_at, update_at, delete_at, car_uuid, banner, car_name, car_type, car_status, 
-    license_plate_number, brand, car_series, model_character, model, displacement, manual_or_automatic, 
+    license_plate_number, brand, car_series, model_character,model_year,model, displacement, manual_or_automatic, 
     mileage, address_map, address, car_dsp, car_code_url, order_quantity, collection, 
     working_day_price, vehicle_age, is_navigation, is_mp3, vehicle_identification_number, 
     weekend_price, shelves_start_time, engine_number, seat_number, color, register_time, 
@@ -62,20 +63,20 @@
     select 
     <include refid="Base_Column_List" />
     from car
-    where id = #{id,jdbcType=INTEGER}
+    where delete_at is null and id = #{id,jdbcType=INTEGER}
   </select>
   
   <select id="selectByUuid" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
     from car
-    where car_uuid = #{Caruuid,jdbcType=VARCHAR}
+    where delete_at is null and car_uuid = #{Caruuid,jdbcType=VARCHAR}
   </select>
   <select id="selectByUserUuid" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
     from car
-    where user_uuid = #{useruuid,jdbcType=VARCHAR}
+    where delete_at is null and user_uuid = #{useruuid,jdbcType=VARCHAR}
   </select>
   <select id="selectByCity" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -120,12 +121,12 @@
   <select id="selectByCreateAt" resultMap="BaseResultMap" parameterType="java.util.Map">
   	select
   	<include refid="Base_Column_List" />
-  	from car order by create_at desc
+  	from car where delete_at is null order by create_at desc
   	limit #{pageIndex},#{pageSize}
   </select>
   <select id="selectByCreateAtCount" resultType="int">
   	select count(1)
-  	from car
+  	from car where delete_at is null
   </select>
   <select id="selectByCarModel" resultMap="BaseResultMap" parameterType="java.util.Map">
   	select
@@ -139,6 +140,24 @@
   	where model_character=#{modelCharacter,jdbcType=VARCHAR}
   </select>
   
+  <select id="selectByMapLimit" resultMap="BaseResultMap" parameterType="java.util.HashMap">
+  	select
+  	<include refid="Base_Column_List" />
+  	from car where delete_at is null
+  	<if test="modelCharacter !='' and modelCharacter != null">
+  		and model_character like CONCAT('%', #{modelCharacter,jdbcType=VARCHAR}, '%')
+  	</if>
+  	limit #{start},#{end}
+  </select>
+  
+  <select id="countSelectByMapLimit" resultType="java.lang.Integer" parameterType="java.util.HashMap">
+  	select count(1)
+  	from car where delete_at is null
+  	<if test="modelCharacter !='' and modelCharacter != null">
+  		and model_character like CONCAT('%', #{modelCharacter,jdbcType=VARCHAR}, '%')
+  	</if>
+  </select>
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from car
     where id = #{id,jdbcType=INTEGER}
@@ -148,7 +167,7 @@
       delete_at, car_uuid, banner, 
       car_name, car_type, car_status, 
       license_plate_number, brand, car_series, 
-      model_character, model, displacement, 
+      model_character,model_year,model, displacement, 
       manual_or_automatic, mileage, address_map, 
       address, car_dsp, car_code_url, 
       order_quantity, collection, working_day_price, 
@@ -168,7 +187,7 @@
       #{deleteAt,jdbcType=TIMESTAMP}, #{carUuid,jdbcType=VARCHAR}, #{banner,jdbcType=VARCHAR}, 
       #{carName,jdbcType=VARCHAR}, #{carType,jdbcType=INTEGER}, #{carStatus,jdbcType=INTEGER}, 
       #{licensePlateNumber,jdbcType=VARCHAR}, #{brand,jdbcType=VARCHAR}, #{carSeries,jdbcType=VARCHAR}, 
-      #{modelCharacter,jdbcType=VARCHAR}, #{model,jdbcType=VARCHAR}, #{displacement,jdbcType=VARCHAR}, 
+      #{modelCharacter,jdbcType=VARCHAR},#{modelYear,jdbcType=VARCHAR},#{model,jdbcType=VARCHAR}, #{displacement,jdbcType=VARCHAR}, 
       #{manualOrAutomatic,jdbcType=INTEGER}, #{mileage,jdbcType=INTEGER}, #{addressMap,jdbcType=VARCHAR}, 
       #{address,jdbcType=VARCHAR}, #{carDsp,jdbcType=VARCHAR}, #{carCodeUrl,jdbcType=VARCHAR}, 
       #{orderQuantity,jdbcType=INTEGER}, #{collection,jdbcType=INTEGER}, #{workingDayPrice,jdbcType=REAL}, 
@@ -222,6 +241,9 @@
       </if>
       <if test="modelCharacter != null" >
         model_character,
+      </if>
+      <if test="modelYear != null" >
+        model_year,
       </if>
       <if test="model != null" >
         model,
@@ -351,6 +373,9 @@
       <if test="modelCharacter != null" >
         #{modelCharacter,jdbcType=VARCHAR},
       </if>
+      <if test="modelYear != null" >
+        #{modelYear,jdbcType=VARCHAR},
+      </if>
       <if test="model != null" >
         #{model,jdbcType=VARCHAR},
       </if>
@@ -479,6 +504,9 @@
       <if test="modelCharacter != null" >
         model_character = #{modelCharacter,jdbcType=VARCHAR},
       </if>
+      <if test="modelYear != null" >
+        model_year = #{modelYear,jdbcType=VARCHAR},
+      </if>
       <if test="model != null" >
         model = #{model,jdbcType=VARCHAR},
       </if>
@@ -583,6 +611,7 @@
       brand = #{brand,jdbcType=VARCHAR},
       car_series = #{carSeries,jdbcType=VARCHAR},
       model_character = #{modelCharacter,jdbcType=VARCHAR},
+      model_year = #{modelYear,jdbcType=VARCHAR},
       model = #{model,jdbcType=VARCHAR},
       displacement = #{displacement,jdbcType=VARCHAR},
       manual_or_automatic = #{manualOrAutomatic,jdbcType=INTEGER},

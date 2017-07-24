@@ -28,6 +28,8 @@ public class Ticket {
     private Integer ticketStatus;
 
     private String userUuid;
+    
+    private String userName;//用户姓名，不对应数据库罚单ticket表中字段
 
     public Integer getId() {
         return id;
@@ -132,4 +134,13 @@ public class Ticket {
     public void setUserUuid(String userUuid) {
         this.userUuid = userUuid == null ? null : userUuid.trim();
     }
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+    
 }

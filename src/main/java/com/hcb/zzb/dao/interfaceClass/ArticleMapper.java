@@ -31,4 +31,8 @@ public interface ArticleMapper {
 	Article selectByArticleUuid(String articleUuid);
 
 	List<Article> selectTypeAll();
+	
+	List<Article> selectByMapLimit(Map<String, Object> map);
+	
+	int countSelectByMapLimit(Map<String, Object> map);
 }

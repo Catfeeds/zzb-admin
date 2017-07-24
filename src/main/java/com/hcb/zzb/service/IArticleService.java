@@ -9,6 +9,19 @@ import com.hcb.zzb.dto.Article;
 
 @Service("ArticleService")
 public interface IArticleService {
+	int deleteByPrimaryKey(Integer id);
+
+    int insert(Article record);
+
+    int insertSelective(Article record);
+
+    Article selectByPrimaryKey(Integer id);
+
+    int updateByPrimaryKeySelective(Article record);
+
+    int updateByPrimaryKeyWithBLOBs(Article record);
+
+    int updateByPrimaryKey(Article record);
 
 	List<Article> selectAll();
 	
@@ -38,4 +51,8 @@ public interface IArticleService {
 	int selectAllByArticleTypeCount(int articleType);
 
 	List<Article> selectTypeAll();
+	
+	List<Article> selectByMapLimit(Map<String, Object> map);
+	
+	int countSelectByMapLimit(Map<String, Object> map);
 }

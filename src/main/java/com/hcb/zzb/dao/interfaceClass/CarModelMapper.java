@@ -1,6 +1,7 @@
 package com.hcb.zzb.dao.interfaceClass;
 
 import java.util.List;
+import java.util.Map;
 
 import com.hcb.zzb.dto.CarModel;
 
@@ -22,4 +23,10 @@ public interface CarModelMapper {
 	List<CarModel> selectByCarBrand(String brand);
 
 	List<CarModel> selectByApplyId(String userUuid);
+	
+	List<CarModel> selectByMapLimit(Map<String, Object> map);
+	
+	int countByMap(Map<String, Object> map);
+	
+	CarModel selectByUuid(String uuid);
 }

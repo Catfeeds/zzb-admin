@@ -52,7 +52,12 @@ public class Users {
     private Integer userType;
 
     private Integer ridersStatus;
-
+    
+    private Integer userStatus;
+    
+    private Integer vehicleBehavior;
+    
+    private Float deposit;
     public Integer getId() {
         return id;
     }
@@ -252,4 +257,29 @@ public class Users {
     public void setRidersStatus(Integer ridersStatus) {
         this.ridersStatus = ridersStatus;
     }
+
+	public Integer getUserStatus() {
+		return userStatus;
+	}
+
+	public void setUserStatus(Integer userStatus) {
+		this.userStatus = userStatus;
+	}
+
+	public Integer getVehicleBehavior() {
+		return vehicleBehavior;
+	}
+
+	public void setVehicleBehavior(Integer vehicleBehavior) {
+		this.vehicleBehavior = vehicleBehavior;
+	}
+
+	public Float getDeposit() {
+		return deposit;
+	}
+
+	public void setDeposit(Float deposit) {
+		this.deposit = deposit;
+	}
+    
 }

@@ -21,4 +21,12 @@ public interface IFinanceRecordService {
     List<FinanceRecord> selectAllByUserUuid(Map<String, Object> map);
     
     int selectCountByUserUuid(String userUuid);
+    
+    List<FinanceRecord> selectIncomeAndExpenditureByToday(Map<String, Object> map);
+
+    FinanceRecord selectByUuid(String uuid);
+    
+    List<FinanceRecord> selectByMapLimit(Map<String, Object> map);
+    
+    int countSelectByMapLimit(Map<String, Object> map);
 }

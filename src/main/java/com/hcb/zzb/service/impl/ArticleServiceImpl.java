@@ -42,4 +42,58 @@ public class ArticleServiceImpl implements IArticleService {
 		// TODO Auto-generated method stub
 		return articleMapper.selectTypeAll();
 	}
+
+	@Override
+	public List<Article> selectByMapLimit(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return articleMapper.selectByMapLimit(map);
+	}
+
+	@Override
+	public int countSelectByMapLimit(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return articleMapper.countSelectByMapLimit(map);
+	}
+
+	@Override
+	public int deleteByPrimaryKey(Integer id) {
+		// TODO Auto-generated method stub
+		return articleMapper.deleteByPrimaryKey(id);
+	}
+
+	@Override
+	public int insert(Article record) {
+		// TODO Auto-generated method stub
+		return articleMapper.insert(record);
+	}
+
+	@Override
+	public int insertSelective(Article record) {
+		// TODO Auto-generated method stub
+		return articleMapper.insertSelective(record);
+	}
+
+	@Override
+	public Article selectByPrimaryKey(Integer id) {
+		// TODO Auto-generated method stub
+		return articleMapper.selectByPrimaryKey(id);
+	}
+
+	@Override
+	public int updateByPrimaryKeySelective(Article record) {
+		// TODO Auto-generated method stub
+		return articleMapper.updateByPrimaryKeySelective(record);
+	}
+
+	@Override
+	public int updateByPrimaryKeyWithBLOBs(Article record) {
+		// TODO Auto-generated method stub
+		return articleMapper.updateByPrimaryKeyWithBLOBs(record);
+	}
+
+	@Override
+	public int updateByPrimaryKey(Article record) {
+		// TODO Auto-generated method stub
+		return articleMapper.updateByPrimaryKey(record);
+	}
 }

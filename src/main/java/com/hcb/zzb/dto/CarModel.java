@@ -32,6 +32,8 @@ public class CarModel {
     private Integer applyStatus;
 
     private String operatorUuid;
+    
+    private String color;
 
     public Integer getId() {
         return id;
@@ -152,4 +154,13 @@ public class CarModel {
     public void setOperatorUuid(String operatorUuid) {
         this.operatorUuid = operatorUuid == null ? null : operatorUuid.trim();
     }
+
+	public String getColor() {
+		return color;
+	}
+
+	public void setColor(String color) {
+		this.color = color;
+	}
+    
 }
