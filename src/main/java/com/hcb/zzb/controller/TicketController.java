@@ -3,6 +3,7 @@ package com.hcb.zzb.controller;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -84,13 +85,30 @@ public class TicketController extends BaseControllers{
 			json.put("description", "pageIndex不能大于总页数");
 			return buildReqJsonObject(json);
 		}
+		
 		List<Ticket> list = ticketService.selectTicketsLimit(map);
-		if(!list.isEmpty()) {
+		List<Ticket> lists=new ArrayList<Ticket>();
+		if(list!=null&&!list.isEmpty()) {
 			json.put("result", "0");
 			json.put("description", "查询成功");
 			json.put("total", total);
 			json.put("page", pageIndex);
-			json.put("ticketList", list);
+			for (Ticket ticket : list) {
+				if(ticket.getUserUuid()==null) {
+					json.put("result", "1");
+					json.put("description", "错误,该罚单中没有用户关联");
+					return buildReqJsonObject(json);
+				}
+				Users user = usersService.selectByUserUuid(ticket.getUserUuid());
+				if(user==null) {
+					json.put("result", "1");
+					json.put("description", "错误,没有查询到该罚单的用户");
+					return buildReqJsonObject(json);
+				}
+				ticket.setUserName(user.getUserName()==null?"":user.getUserName());
+				lists.add(ticket);
+			}
+			json.put("ticketList", lists);
 		}else {
 			json.put("result", "1");
 			json.put("description", "没有查询到数据记录");

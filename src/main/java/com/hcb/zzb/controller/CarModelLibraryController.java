@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -63,7 +65,7 @@ public class CarModelLibraryController extends BaseControllers{
 			int start=(pageIndex - 1) * pageSize;
 			map.put("start", start);
 			map.put("end", pageSize);
-			if(bodyInfo.get("brand")!=null && bodyInfo.get("brand")!="") {
+			if(bodyInfo.get("brand")!=null && !"".equals(bodyInfo.get("brand"))) {
 				map.put("brand", bodyInfo.getString("brand"));
 			}
 			list=carModelService.selectByMapLimit(map);
@@ -102,7 +104,6 @@ public class CarModelLibraryController extends BaseControllers{
 	 * 车型库管理（导出Excel）
 	 * @return
 	 */
-	
 	public String exportExcel() {
 		
 		return "";
