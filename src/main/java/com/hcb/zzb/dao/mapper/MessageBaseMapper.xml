@@ -34,7 +34,7 @@
     from manager
     where delete_at is null
     <if test="tittle !='' and tittle != null">
-		tittle like CONCAT(CONCAT('%', #{tittle,jdbcType=VARCHAR}), '%')
+		tittle like CONCAT('%', #{tittle,jdbcType=VARCHAR}, '%')
 	</if>
 	order by create_at desc LIMIT #{start},#{end}
   </select>
@@ -43,10 +43,10 @@
    select count(1) from manager
     where delete_at is null
     <if test="contacts !='' and contacts != null">
-		contacts like CONCAT(CONCAT('%', #{contacts,jdbcType=VARCHAR}), '%')
+		contacts like CONCAT('%', #{contacts,jdbcType=VARCHAR}, '%')
 	</if>
 	<if test="account !='' and account != null">
-		account like CONCAT(CONCAT('%', #{account,jdbcType=VARCHAR}), '%')
+		account like CONCAT('%', #{account,jdbcType=VARCHAR}, '%')
 	</if>
   </select>
   

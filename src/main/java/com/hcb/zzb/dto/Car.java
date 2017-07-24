@@ -28,8 +28,6 @@ public class Car {
     private String carSeries;
 
     private String modelCharacter;
-    
-    private String modelYear;
 
     private String model;
 
@@ -89,7 +87,45 @@ public class Car {
 
     private String leaseTime;
 
-    public Integer getId() {
+    private Integer orderTotalQuantity;
+    private Float orderRate;
+    private Integer carUseType;
+    private Integer closeSubway;
+    
+    
+    public Integer getOrderTotalQuantity() {
+		return orderTotalQuantity;
+	}
+
+	public void setOrderTotalQuantity(Integer orderTotalQuantity) {
+		this.orderTotalQuantity = orderTotalQuantity;
+	}
+
+	public Float getOrderRate() {
+		return orderRate;
+	}
+
+	public void setOrderRate(Float orderRate) {
+		this.orderRate = orderRate;
+	}
+
+	public Integer getCarUseType() {
+		return carUseType;
+	}
+
+	public void setCarUseType(Integer carUseType) {
+		this.carUseType = carUseType;
+	}
+
+	public Integer getCloseSubway() {
+		return closeSubway;
+	}
+
+	public void setCloseSubway(Integer closeSubway) {
+		this.closeSubway = closeSubway;
+	}
+
+	public Integer getId() {
         return id;
     }
 
@@ -424,14 +460,4 @@ public class Car {
     public void setLeaseTime(String leaseTime) {
         this.leaseTime = leaseTime == null ? null : leaseTime.trim();
     }
-
-	public String getModelYear() {
-		return modelYear;
-	}
-
-	public void setModelYear(String modelYear) {
-		this.modelYear = modelYear;
-	}
-    
-    
 }

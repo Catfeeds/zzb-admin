@@ -124,7 +124,7 @@ public class MessageBaseController extends BaseControllers {
 		}
 		JSONObject headInfo=JSONObject.fromObject(headString);
 		JSONObject bodyInfo = JSONObject.fromObject(bodyString);
-		if (headInfo.get("manager_uuid")==null||bodyInfo.get("tittle") == null||bodyInfo.get("content") == null) {
+		if (bodyInfo.get("tittle") == null||bodyInfo.get("content") == null) {
 			json.put("result", 1);
 			json.put("description", "请检查参数格式是否正确或者参数是否完整");
 			return buildReqJsonObject(json);
@@ -141,9 +141,10 @@ public class MessageBaseController extends BaseControllers {
 		}
 		messageBase.setTittle(bodyInfo.getString("tittle"));
 		messageBase.setContent(bodyInfo.getString("content"));
-		Manager manager=  managerService.selectByAccountUuid(headInfo.getString("manager_uuid"));
+		//Manager manager=  managerService.selectByAccountUuid(headInfo.getString("manager_uuid"));
+		Manager manager=  managerService.selectByAccount(headInfo.getString("account"));
 		if(manager!=null){
-			messageBase.setCreater(manager.getCreater());
+			messageBase.setCreater(manager.getManagerUuid());
 		}
 		int rs=messageBaseService.insertSelective(messageBase);
 		if(rs == 1){
@@ -166,7 +167,7 @@ public class MessageBaseController extends BaseControllers {
 		}
 		JSONObject bodyInfo = JSONObject.fromObject(bodyString);
 		JSONObject headInfo=JSONObject.fromObject(headString);
-		if (headInfo.get("manager_uuid")==null||bodyInfo.get("id")==null) {
+		if (bodyInfo.get("id")==null) {
 			json.put("result", 1);
 			json.put("description", "请检查参数格式是否正确或者参数是否完整");
 			return buildReqJsonObject(json);

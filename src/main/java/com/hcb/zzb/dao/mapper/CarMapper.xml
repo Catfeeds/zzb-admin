@@ -45,6 +45,10 @@
     <result column="user_uuid" property="userUuid" jdbcType="VARCHAR" />
     <result column="shelves_end_time" property="shelvesEndTime" jdbcType="TIMESTAMP" />
     <result column="lease_time" property="leaseTime" jdbcType="VARCHAR" />
+    <result column="order_total_quantity" property="orderTotalQuantity" jdbcType="INTEGER" />
+    <result column="order_rate" property="orderRate" jdbcType="REAL" />
+    <result column="car_use_type" property="carUseType" jdbcType="INTEGER" />
+    <result column="close_subway" property="closeSubway" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, create_at, update_at, delete_at, car_uuid, banner, car_name, car_type, car_status, 
@@ -53,7 +57,7 @@
     working_day_price, vehicle_age, is_navigation, is_mp3, vehicle_identification_number, 
     weekend_price, shelves_start_time, engine_number, seat_number, color, register_time, 
     city, driving_license_photo, man_car_photo, vehicle_delivery_mode, car_owner_name, 
-    user_uuid, shelves_end_time, lease_time
+    user_uuid, shelves_end_time, lease_time,order_total_quantity,order_rate,car_use_type,close_subway
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -173,7 +177,12 @@
       color, register_time, city, 
       driving_license_photo, man_car_photo, vehicle_delivery_mode, 
       car_owner_name, user_uuid, shelves_end_time, 
-      lease_time)
+      lease_time,
+      order_total_quantity,
+      order_rate,
+      car_use_type,
+      close_subway
+      )
     values (#{id,jdbcType=INTEGER}, #{createAt,jdbcType=TIMESTAMP}, #{updateAt,jdbcType=TIMESTAMP}, 
       #{deleteAt,jdbcType=TIMESTAMP}, #{carUuid,jdbcType=VARCHAR}, #{banner,jdbcType=VARCHAR}, 
       #{carName,jdbcType=VARCHAR}, #{carType,jdbcType=INTEGER}, #{carStatus,jdbcType=INTEGER}, 
@@ -188,7 +197,8 @@
       #{color,jdbcType=VARCHAR}, #{registerTime,jdbcType=TIMESTAMP}, #{city,jdbcType=VARCHAR}, 
       #{drivingLicensePhoto,jdbcType=VARCHAR}, #{manCarPhoto,jdbcType=VARCHAR}, #{vehicleDeliveryMode,jdbcType=INTEGER}, 
       #{carOwnerName,jdbcType=VARCHAR}, #{userUuid,jdbcType=VARCHAR}, #{shelvesEndTime,jdbcType=TIMESTAMP}, 
-      #{leaseTime,jdbcType=VARCHAR})
+      #{leaseTime,jdbcType=VARCHAR},#{orderTotalQuantity,jdbcType=INTEGER},#{orderRate,jdbcType=REAL},
+      #{carUseType,jdbcType=INTEGER},#{closeSubway,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.hcb.zzb.dto.Car" >
     insert into car
@@ -630,7 +640,11 @@
       car_owner_name = #{carOwnerName,jdbcType=VARCHAR},
       user_uuid = #{userUuid,jdbcType=VARCHAR},
       shelves_end_time = #{shelvesEndTime,jdbcType=TIMESTAMP},
-      lease_time = #{leaseTime,jdbcType=VARCHAR}
+      lease_time = #{leaseTime,jdbcType=VARCHAR},
+      order_total_quantity=#{orderTotalQuantity,jdbcType=INTEGER},
+      order_rate=#{orderRate,jdbcType=REAL},
+      car_use_type=#{carUseType,jdbcType=INTEGER},
+      close_subway=#{closeSubway,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

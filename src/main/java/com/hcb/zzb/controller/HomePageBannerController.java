@@ -117,7 +117,7 @@ public class HomePageBannerController extends BaseControllers {
 		}
 		JSONObject headInfo=JSONObject.fromObject(headString);
 		JSONObject bodyInfo = JSONObject.fromObject(bodyString);
-		if (headInfo.get("manager_uuid")==null||bodyInfo.get("operation_info") == null||bodyInfo.get("operation_picture") == null||bodyInfo.get("is_display") == null) {
+		if (bodyInfo.get("operation_info") == null||bodyInfo.get("operation_picture") == null||bodyInfo.get("is_display") == null) {
 			json.put("result", 1);
 			json.put("description", "请检查参数格式是否正确或者参数是否完整");
 			return buildReqJsonObject(json);
@@ -127,9 +127,10 @@ public class HomePageBannerController extends BaseControllers {
 		homepageBanner.setIsDisplay(bodyInfo.getInt("is_display"));
 		homepageBanner.setOperationInfo(bodyInfo.getString("operation_info"));
 		homepageBanner.setOperationPicture(bodyInfo.getString("operation_picture"));
-		Manager manager=  managerService.selectByAccountUuid(headInfo.getString("manager_uuid"));
+		//Manager manager=  managerService.selectByAccountUuid(headInfo.getString("manager_uuid"));
+		Manager manager=  managerService.selectByAccount(headInfo.getString("account"));
 		if(manager!=null){
-			homepageBanner.setCreater(manager.getCreater());
+			homepageBanner.setCreater(manager.getManagerUuid());
 		}
 		int rs=homePageBanner.insertSelective(homepageBanner);
 		if(rs == 1){
@@ -154,20 +155,22 @@ public class HomePageBannerController extends BaseControllers {
 		}
 		JSONObject headInfo=JSONObject.fromObject(headString);
 		JSONObject bodyInfo = JSONObject.fromObject(bodyString);
-		if (headInfo.get("manager_uuid")==null||bodyInfo.get("operation_info") == null||bodyInfo.get("is_display") == null) {
+		if (bodyInfo.get("operation_info") == null||bodyInfo.get("is_display") == null) {
 			json.put("result", 1);
 			json.put("description", "请检查参数格式是否正确或者参数是否完整");
 			return buildReqJsonObject(json);
 		}
 		HomepageBanner banner = homePageBanner.selectByPrimaryKey(bodyInfo.getInt("id"));
 		banner.setUpdateAt(new Date());
-		Manager manager=  managerService.selectByAccountUuid(headInfo.getString("manager_uuid"));
+		//Manager manager=  managerService.selectByAccountUuid(headInfo.getString("manager_uuid"));
+		Manager manager=  managerService.selectByAccount(headInfo.getString("account"));
 		if(manager!=null){
 			json.put("banner", banner);
-			banner.setCreater(manager.getCreater());
+			banner.setCreater(manager.getManagerUuid());
 		}
 		banner.setIsDisplay(bodyInfo.getInt("is_display"));
 		banner.setOperationInfo(bodyInfo.getString("operationInfo"));
+		banner.setUpdateAt(new Date());
 		int rs = homePageBanner.updateByPrimaryKeySelective(banner);
 		if(rs == 1){
 			json.put("result", 0);
@@ -192,17 +195,18 @@ public class HomePageBannerController extends BaseControllers {
 		}
 		JSONObject headInfo=JSONObject.fromObject(headString);
 		JSONObject bodyInfo = JSONObject.fromObject(bodyString);
-		if (headInfo.get("manager_uuid")==null||bodyInfo.get("is_display") == null) {
+		if (bodyInfo.get("is_display") == null) {
 			json.put("result", 1);
 			json.put("description", "请检查参数格式是否正确或者参数是否完整");
 			return buildReqJsonObject(json);
 		}
 		HomepageBanner banner = homePageBanner.selectByPrimaryKey(bodyInfo.getInt("id"));
 		banner.setUpdateAt(new Date());
-		Manager manager=  managerService.selectByAccountUuid(headInfo.getString("manager_uuid"));
+		//Manager manager=  managerService.selectByAccountUuid(headInfo.getString("manager_uuid"));
+		Manager manager=  managerService.selectByAccount(headInfo.getString("account"));
 		if(manager!=null){
 			json.put("banner", banner);
-			banner.setCreater(manager.getCreater());
+			banner.setCreater(manager.getManagerUuid());
 		}
 		banner.setIsDisplay(bodyInfo.getInt("is_display"));
 		int rs = homePageBanner.updateByPrimaryKeySelective(banner);
@@ -228,11 +232,11 @@ public class HomePageBannerController extends BaseControllers {
 		}
 		JSONObject headInfo=JSONObject.fromObject(headString);
 		JSONObject bodyInfo = JSONObject.fromObject(bodyString);
-		if (headInfo.get("manager_uuid")==null) {
+		/*if (headInfo.get("manager_uuid")==null) {
 			json.put("result", 1);
 			json.put("description", "请检查参数格式是否正确或者参数是否完整");
 			return buildReqJsonObject(json);
-		}
+		}*/
 		HomepageBanner banner = homePageBanner.selectByPrimaryKey(bodyInfo.getInt("id"));
 		if(banner != null){
 			json.put("result", 0);
