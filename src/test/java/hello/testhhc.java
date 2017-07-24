@@ -38,16 +38,19 @@ public class testhhc {
    	    HashMap<String, Object> map = new HashMap<String, Object>();
      	// map集合
         HashMap<String, Object> head = new HashMap<String, Object>();
-        //head.put("user_uuid", "8741951256ce34f7eb575c438b06ae65");
-        head.put("manager_uuid", "76ef6325b002133aa32d3ea7f0be832c");
-       // head.put("password", "12345678");
+        head.put("account", "admin");
+        //head.put("manager_uuid", "76ef6325b002133aa32d3ea7f0be832c");
+        head.put("password", "123456");
         map.put("head", head);	
         
         HashMap<String, Object> body = new HashMap<String, Object>();
         //body.put("price", "222");
-        body.put("operation_info", "111");
-        body.put("operation_picture", "http://living.cto1024.com/10c7855f31113a24745cdff9213549dc.jpg");
-        body.put("is_display", 1);
+        //body.put("operation_info", "www111");
+        body.put("id", 21);
+       // body.put("operation_picture", "http://living.cto1024.com/10c7855f31113a24745cdff9213549dc.jpg");
+       // body.put("is_display", 2);
+        //body.put("pageIndex", 1);
+        //body.put("pageSize", 5);
         //body.put("return_car_time", "2017-07-30 20:40:15");
         //body.put("return_car_address", "西湖区康乐新村xxx");
         //body.put("return_car_address_map", "1233,90.11");
@@ -90,7 +93,7 @@ public class testhhc {
    	    //新建审批条目 在审批信息表 approval_inner_base_infos中0558
    	    //返回审批uuid
    	  // String url = "http://120.26.120.57:8080/apparel/special/list";
-   	    String url = "http://localhost:8080/zzb-admin-api/homePage/add";
+   	    String url = "http://localhost:8080/zzb-admin-api/homePage/detail";
    	 //String url = "http://192.168.73.1:8080/user/phone/login";
       // String url = "http://test.appring.cn:8080/fastask/question/show"; /* * * * * * root wget http://test.appring.cn:8080/fastask/energy/timing -q -O /usr/local/time/timelog
  	    HttpPost httpPost = new HttpPost(url);

@@ -30,10 +30,10 @@
   <select id="searchByMap" resultMap="BaseResultMap" parameterType="java.util.HashMap" >
     select 
     <include refid="Base_Column_List" />
-    from manager
+    from homepage_banner
     where delete_at is null
     <if test="operation_info !='' and operation_info != null ">
-		operation_info like CONCAT('%', #{operation_info,jdbcType=VARCHAR}, '%')
+		and operation_info like CONCAT('%', #{operation_info,jdbcType=VARCHAR}, '%')
 	</if>
 	<if test="is_display !='' and is_display != null">
 		is_display like CONCAT('%', #{is_display,jdbcType=INTEGER}, '%')
@@ -42,13 +42,13 @@
   </select>
   
   <select id="countByMap" resultType="java.lang.Integer" parameterType="java.util.HashMap" >
-   select count(1) from manager
+   select count(1) from homepage_banner
     where delete_at is null
     <if test="contacts !='' and contacts != null">
-		contacts like CONCAT(CONCAT('%', #{contacts,jdbcType=VARCHAR}), '%')
+		and contacts like CONCAT('%', #{contacts,jdbcType=VARCHAR}, '%')
 	</if>
 	<if test="account !='' and account != null">
-		account like CONCAT(CONCAT('%', #{account,jdbcType=VARCHAR}), '%')
+		account like CONCAT('%', #{account,jdbcType=VARCHAR}, '%')
 	</if>
   </select>
   
