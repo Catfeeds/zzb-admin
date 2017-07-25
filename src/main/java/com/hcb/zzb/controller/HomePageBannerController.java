@@ -57,8 +57,11 @@ public class HomePageBannerController extends BaseControllers {
 		Map<String, Object> map=new HashMap<>();
 		map.put("start", start);
 		map.put("end", pageSize);
-		if(bodyInfo.get("tittle")!=null&&!"".equals(bodyInfo.get("tittle"))) {
-			map.put("tittle", bodyInfo.getString("tittle"));
+		if(bodyInfo.get("operation_info")!=null&&!"".equals(bodyInfo.get("operation_info"))) {
+			map.put("operation_info", bodyInfo.getString("operation_info"));
+		}
+		if(bodyInfo.get("is_display")!=null&&!"".equals(bodyInfo.get("is_display"))) {
+			map.put("is_display", bodyInfo.getInt("is_display"));
 		}
 		int count = homePageBanner.countByMap(map);
 		if(count==0) {
