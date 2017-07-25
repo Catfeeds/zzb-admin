@@ -36,7 +36,7 @@
 		and operation_info like CONCAT('%', #{operation_info,jdbcType=VARCHAR}, '%')
 	</if>
 	<if test="is_display !='' and is_display != null">
-		is_display like CONCAT('%', #{is_display,jdbcType=INTEGER}, '%')
+		and is_display like CONCAT('%', #{is_display,jdbcType=INTEGER}, '%')
 	</if>
 	order by create_at desc LIMIT #{start},#{end}
   </select>
@@ -44,11 +44,11 @@
   <select id="countByMap" resultType="java.lang.Integer" parameterType="java.util.HashMap" >
    select count(1) from homepage_banner
     where delete_at is null
-    <if test="contacts !='' and contacts != null">
-		and contacts like CONCAT('%', #{contacts,jdbcType=VARCHAR}, '%')
+    <if test="operation_info !='' and operation_info != null">
+		and operation_info like CONCAT('%', #{operation_info,jdbcType=VARCHAR}, '%')
 	</if>
-	<if test="account !='' and account != null">
-		account like CONCAT('%', #{account,jdbcType=VARCHAR}, '%')
+	<if test="is_display !='' and is_display != null">
+		and is_display like CONCAT('%', #{is_display,jdbcType=VARCHAR}, '%')
 	</if>
   </select>
   

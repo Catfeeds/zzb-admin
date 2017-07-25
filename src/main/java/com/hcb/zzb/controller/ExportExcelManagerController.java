@@ -1,7 +1,5 @@
 package com.hcb.zzb.controller;
 
-
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -20,9 +18,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFClientAnchor;
@@ -36,7 +31,6 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -44,31 +38,25 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.model.ObjectMetadata;
 import com.hcb.zzb.controller.base.BaseControllers;
-import com.hcb.zzb.dto.Ticket;
-import com.hcb.zzb.dto.Users;
-import com.hcb.zzb.dto.export.TicketExport;
-import com.hcb.zzb.service.ITicketService;
-import com.hcb.zzb.service.IUsersService;
+import com.hcb.zzb.dto.Manager;
+import com.hcb.zzb.dto.export.ManagerExport;
+import com.hcb.zzb.service.IManagerService;
 import com.hcb.zzb.util.Config;
 
 import net.sf.json.JSONObject;
 @Controller
-public class ExportExcelTicketController<T> extends BaseControllers{
+public class ExportExcelManagerController<T> extends BaseControllers{
 	@Autowired
-	ITicketService ticketService;
-	@Autowired
-	IUsersService userService;
-	
+	IManagerService managerService;
 	
 	
 	/**
-	 * 导出罚单列表Excel
+	 * 导出后台账号列表
 	 * @return
 	 */
-	@RequestMapping(value="exportExcelTicket",method=RequestMethod.POST)
+	@RequestMapping(value="exportExcelManager",method=RequestMethod.POST)
 	@ResponseBody
-	public String exportExcelTicket(HttpServletRequest req, 
-			HttpServletResponse res,ModelMap model) {
+	public String exportExcelManager() {
 		JSONObject json=new JSONObject();
 		if(sign==1||sign==2) {
 			json.put("result", "1");
@@ -78,94 +66,95 @@ public class ExportExcelTicketController<T> extends BaseControllers{
 		
 		Integer start=0;
 		Map<String, Object> map=new HashMap<>();
-		int count = ticketService.countSelectTickets(map);
+		int count = managerService.countByMap(map);
 		if(count==0) {
 			json.put("result", "1");
 			json.put("description", "没有数据");
 			return buildReqJsonObject(json);
 		}
 		map.put("start", start);
-		map.put("end", count);	
+		map.put("end", count);
+		List<Manager> list=managerService.searchByMap(map);
+		List<ManagerExport> exportList=new ArrayList<>();
+		SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd");
 		
-		List<Ticket> list=new ArrayList<>();
-		list=ticketService.selectTicketsLimit(map);
-		List<TicketExport> exportList=new ArrayList<>();
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		int i=1;
-		for (Ticket ticket : list) {
-			TicketExport ticketExp=new TicketExport();
-			ticketExp.setSerialNumber(i);
-			ticketExp.setOrderNumber(ticket.getOrderNumber()==null?"":ticket.getOrderNumber());
-			Users user = userService.selectByUserUuid(ticket.getUserUuid());
-			if(user!=null) {
-				ticketExp.setUserName(user.getUserName()==null?"":user.getUserName());
+		for (Manager manager : list) {
+			ManagerExport me=new ManagerExport();
+			me.setSerialNumber(i);
+			me.setAccount(manager.getAccount());
+			me.setPassword(manager.getPassword());
+			me.setContacts(manager.getContacts());
+			if(manager.getManagerStatus()==1) {
+				me.setStatus("激活");
+			}else if(manager.getManagerStatus()==2){
+				me.setStatus("冻结");
 			}else {
-				ticketExp.setUserName("");
+				me.setStatus("未知");
 			}
-			ticketExp.setAddress(ticket.getAddress()==null?"":ticket.getAddress());
-			ticketExp.setMoney(ticket.getMoney()==null?0:ticket.getMoney());
-			ticketExp.setPoints(ticket.getPoints()==null?0:ticket.getPoints());
-			ticketExp.setTime(ticket.getIllegalTime()==null?"":format.format(ticket.getIllegalTime()));
+			me.setDate(manager.getCreateAt()==null?"":format.format(manager.getCreateAt()));
 		
-			exportList.add(ticketExp);
+			exportList.add(me);
 			i++;
 		}
 		
-		ExportExcelTicketController<TicketExport> ex=new ExportExcelTicketController<TicketExport>();
-		String[] headers =  { "序号", "订单号", "用户", "地点", "罚款", "扣分","时间"};  
+		ExportExcelManagerController<ManagerExport> ex=new ExportExcelManagerController<ManagerExport>();
+		String[] headers =  { "序号", "消息类型", "消息内容","状态", "时间"};
 		String avatar = "";
+		
 		try  
-	        {         
-	    		Date date = new Date();
-	    		String fileName = format.format(date);
-	    		
-	    		String path = "/opt/avater/"+fileName+".xls";
-	            OutputStream out = new FileOutputStream(path);   
-	            ex.exportExcel(headers, exportList, out);  
-	            out.close();   
-	            File file = new File(path);  
-	           
-	            OSSClient ossClient = new OSSClient(this.getEndPoint(), this.getAccessKeyId(), this.getAccessKeySecret());
-				// 上传文件
-				ObjectMetadata	metadata = new ObjectMetadata();
-				metadata.setContentType("xls");
-				ossClient.putObject(this.getBucketName(), fileName+".xls", 
-						file, metadata);
-				// 关闭client
-				ossClient.shutdown(); 
-				avatar = "http://"+this.getBucketName()+".oss-cn-hangzhou.aliyuncs.com/"+fileName+".xls";
-	       
-	        } catch (FileNotFoundException e) {  
-	        	json.put("result", "1");
-				json.put("description", e.getMessage());
-				return buildReqJsonObject(json);
-	        } catch (IOException e) {  
-	        	json.put("result", "1");
-				json.put("description", e.getMessage());
-				return buildReqJsonObject(json);
-	        }
-		 json.put("result", "0");
-		 json.put("description", "导出成功");
-		 json.put("fileUrl", avatar);
-		 return buildReqJsonObject(json);
+        {         
+    		Date date = new Date();
+    		String fileName = format.format(date);
+    		
+    		String path = "/opt/avater/"+fileName+".xls";
+    		//String path="E:/"+fileName+".xls";
+            OutputStream out = new FileOutputStream(path);   
+            ex.exportExcel(headers, exportList, out);  
+            out.close();   
+            File file = new File(path);  
+            
+            OSSClient ossClient = new OSSClient(this.getEndPoint(), this.getAccessKeyId(), this.getAccessKeySecret());
+			// 上传文件
+			ObjectMetadata	metadata = new ObjectMetadata();
+			metadata.setContentType("xls");
+			ossClient.putObject(this.getBucketName(), fileName+".xls", 
+					file, metadata);
+			// 关闭client
+			ossClient.shutdown(); 
+			avatar = "http://"+this.getBucketName()+".oss-cn-hangzhou.aliyuncs.com/"+fileName+".xls";
+           
+        } catch (FileNotFoundException e) {  
+        	json.put("result", "1");
+			json.put("description", e.getMessage());
+			return buildReqJsonObject(json);
+        } catch (IOException e) {  
+        	json.put("result", "1");
+			json.put("description", e.getMessage());
+			return buildReqJsonObject(json);
+        }
+		
+		json.put("result", "0");
+		json.put("description", "导出成功");
+		json.put("fileUrl", avatar);
+		return buildReqJsonObject(json);
 	}
-	
 	
 	public void exportExcel(Collection<T> dataset, OutputStream out)  
     {  
-        exportExcel("罚单列表", null, dataset, out, "yyyy-MM-dd");  
+        exportExcel("后台账号列表", null, dataset, out, "yyyy-MM-dd");  
     }  
   
     public void exportExcel(String[] headers, Collection<T> dataset,  
             OutputStream out)  
     {  
-        exportExcel("罚单列表", headers, dataset, out, "yyyy-MM-dd");  
+        exportExcel("后台账号列表", headers, dataset, out, "yyyy-MM-dd");  
     }  
   
     public void exportExcel(String[] headers, Collection<T> dataset,  
             OutputStream out, String pattern)  
     {  
-        exportExcel("罚单列表", headers, dataset, out, pattern);  
+        exportExcel("后台账号列表", headers, dataset, out, pattern);  
     }  
 	
 	
@@ -338,7 +327,7 @@ public class ExportExcelTicketController<T> extends BaseControllers{
         {  
             e.printStackTrace();  
         }  
-    } 
+    }  
     
     private String getEndPoint() {
 		return Config.getString("endPoint");

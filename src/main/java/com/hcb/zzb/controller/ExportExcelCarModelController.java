@@ -1,13 +1,9 @@
 package com.hcb.zzb.controller;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -43,11 +39,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.aliyun.oss.OSSClient;
+import com.aliyun.oss.model.ObjectMetadata;
 import com.hcb.zzb.controller.base.BaseControllers;
 import com.hcb.zzb.dto.CarModel;
 import com.hcb.zzb.dto.export.CarModelExport;
 import com.hcb.zzb.service.ICarModel;
 import com.hcb.zzb.service.ITicketService;
+import com.hcb.zzb.util.Config;
 
 import net.sf.json.JSONObject;
 
@@ -73,40 +72,19 @@ public class ExportExcelCarModelController<T> extends BaseControllers{
 			json.put("description", "请检查参数格式是否正确或者参数是否完整");
 			return buildReqJsonInteger(1, json);
 		}
-		JSONObject bodyInfo=JSONObject.fromObject(bodyString);
-		if(bodyInfo.get("pageIndex")==null||bodyInfo.get("pageSize")==null) {
-			json.put("result", "1");
-			json.put("description", "请检查参数是否完整");
-			return buildReqJsonObject(json);
-		}
-		if("".equals(bodyInfo.get("pageIndex"))||"".equals(bodyInfo.get("pageSize"))) {
-			json.put("result", "1");
-			json.put("description", "请检查参数是否正确");
-			return buildReqJsonObject(json);
-		}
-		Integer pageIndex=bodyInfo.getInt("pageIndex");
-		Integer pageSize=bodyInfo.getInt("pageSize");
-		Integer start=(pageIndex-1)*pageSize;
-		if (pageIndex <= 0) {
-			json.put("result", "1");
-			json.put("description", "pageIndex不能小于0");
-			return buildReqJsonObject(json);
-		}
+
+		Integer start=0;
 		
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		Map<String, Object> searchMap=new HashMap<>();
-		searchMap.put("start", start);
-		searchMap.put("end", pageSize);
-		if(bodyInfo.get("brand")!=null&&!"".equals(bodyInfo.get("brand"))) {
-			searchMap.put("brand", bodyInfo.getString("brand"));
-		}
 		int count = carmodelservice.countByMap(searchMap);
-		int total =count%pageSize==0?count/pageSize:count/pageSize+1;	
-		if(pageIndex>total) {
+		if(count==0) {
 			json.put("result", "1");
-			json.put("description", "pageIndex大于总页数");
+			json.put("description", "没有数据");
 			return buildReqJsonObject(json);
 		}
+		searchMap.put("start", start);
+		searchMap.put("end", count);
 		List<CarModel> list=new ArrayList<>();
 		List<CarModelExport> exportList=new ArrayList<>();
 		list = carmodelservice.selectByMapLimit(searchMap);
@@ -126,7 +104,8 @@ public class ExportExcelCarModelController<T> extends BaseControllers{
 		}
 		
 		ExportExcelCarModelController<CarModelExport> ex=new ExportExcelCarModelController<CarModelExport>();
-		String[] headers =  { "序号", "品牌", "车系", "年款", "款式", "添加时间"};  
+		String[] headers =  { "序号", "品牌", "车系", "年款", "款式", "添加时间"};
+		String avatar = "";
 		List<CarModelExport> dataset=new ArrayList<CarModelExport>();
 		for (CarModelExport carModelExport : exportList) {
 			dataset.add(carModelExport);
@@ -141,25 +120,18 @@ public class ExportExcelCarModelController<T> extends BaseControllers{
 	            ex.exportExcel(headers, dataset, out);  
 	            out.close();   
 	            File file = new File(path);  
-	            // 取得文件名。  
-	            String filename = file.getName();  
-	            // 以流的形式下载文件。  
-	            InputStream fis = new BufferedInputStream(new FileInputStream(path));  
-	            byte[] buffer = new byte[fis.available()];  
-	            fis.read(buffer);  
-	            fis.close();  
-	            // 清空response  
-	            res.reset();  
-	            // 设置response的Header  
-	            res.addHeader("Content-Disposition", "attachment;filename="  
-	                    + new String(filename.getBytes()));  
-	            res.addHeader("Content-Length", "" + file.length());  
-	            OutputStream toClient = new BufferedOutputStream(  
-	            		res.getOutputStream());  
-	            res.setContentType("application/vnd.ms-excel;charset=gb2312");  
-	            toClient.write(buffer);  
-	            toClient.flush();  
-	            toClient.close(); 
+	            
+	            OSSClient ossClient = new OSSClient(this.getEndPoint(), this.getAccessKeyId(), this.getAccessKeySecret());
+				// 上传文件
+				ObjectMetadata	metadata = new ObjectMetadata();
+				metadata.setContentType("xls");
+				ossClient.putObject(this.getBucketName(), fileName+".xls", 
+						file, metadata);
+				// 关闭client
+				ossClient.shutdown(); 
+				avatar = "http://"+this.getBucketName()+".oss-cn-hangzhou.aliyuncs.com/"+fileName+".xls";
+	           
+	            
 	        } catch (FileNotFoundException e) {  
 	        	json.put("result", "1");
 				json.put("description", e.getMessage());
@@ -169,7 +141,10 @@ public class ExportExcelCarModelController<T> extends BaseControllers{
 				json.put("description", e.getMessage());
 				return buildReqJsonObject(json);
 	        }
-		return "";
+		 json.put("result", "0");
+		 json.put("description", "导出成功");
+		 json.put("fileUrl", avatar);
+		 return buildReqJsonObject(json);
 	}
 		
 	
@@ -363,4 +338,20 @@ public class ExportExcelCarModelController<T> extends BaseControllers{
             e.printStackTrace();  
         }  
     }  
+    
+    private String getEndPoint() {
+		return Config.getString("endPoint");
+	}
+
+	private String getAccessKeyId() {
+		return Config.getString("accessKeyId");
+	}
+
+	private String getAccessKeySecret() {
+		return Config.getString("accessKeySecret");
+	}
+
+	private String getBucketName() {
+		return Config.getString("bucketName");
+	}
 }

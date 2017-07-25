@@ -1,7 +1,5 @@
 package com.hcb.zzb.controller;
 
-
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -44,30 +42,21 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.model.ObjectMetadata;
 import com.hcb.zzb.controller.base.BaseControllers;
-import com.hcb.zzb.dto.Ticket;
-import com.hcb.zzb.dto.Users;
-import com.hcb.zzb.dto.export.TicketExport;
-import com.hcb.zzb.service.ITicketService;
-import com.hcb.zzb.service.IUsersService;
+import com.hcb.zzb.dto.HomepageBanner;
+import com.hcb.zzb.dto.export.HomePageExport;
+import com.hcb.zzb.service.IhomePageBanner;
 import com.hcb.zzb.util.Config;
 
 import net.sf.json.JSONObject;
 @Controller
-public class ExportExcelTicketController<T> extends BaseControllers{
+public class ExportExcelHomePageBannerController<T> extends BaseControllers{
 	@Autowired
-	ITicketService ticketService;
-	@Autowired
-	IUsersService userService;
+	IhomePageBanner homePageBannerService;
 	
 	
-	
-	/**
-	 * 导出罚单列表Excel
-	 * @return
-	 */
-	@RequestMapping(value="exportExcelTicket",method=RequestMethod.POST)
+	@RequestMapping(value="exportExcelHomePageBanner",method=RequestMethod.POST)
 	@ResponseBody
-	public String exportExcelTicket(HttpServletRequest req, 
+	public String exportExcelHomePageBanner(HttpServletRequest req, 
 			HttpServletResponse res,ModelMap model) {
 		JSONObject json=new JSONObject();
 		if(sign==1||sign==2) {
@@ -78,94 +67,92 @@ public class ExportExcelTicketController<T> extends BaseControllers{
 		
 		Integer start=0;
 		Map<String, Object> map=new HashMap<>();
-		int count = ticketService.countSelectTickets(map);
+		int count=homePageBannerService.countByMap(map);
 		if(count==0) {
 			json.put("result", "1");
 			json.put("description", "没有数据");
 			return buildReqJsonObject(json);
 		}
 		map.put("start", start);
-		map.put("end", count);	
+		map.put("end", count);
 		
-		List<Ticket> list=new ArrayList<>();
-		list=ticketService.selectTicketsLimit(map);
-		List<TicketExport> exportList=new ArrayList<>();
+		List<HomepageBanner> list = new ArrayList<>();
+		list = homePageBannerService.searchByMap(map);
+		List<HomePageExport> exportList=new ArrayList<>();
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		int i=1;
-		for (Ticket ticket : list) {
-			TicketExport ticketExp=new TicketExport();
-			ticketExp.setSerialNumber(i);
-			ticketExp.setOrderNumber(ticket.getOrderNumber()==null?"":ticket.getOrderNumber());
-			Users user = userService.selectByUserUuid(ticket.getUserUuid());
-			if(user!=null) {
-				ticketExp.setUserName(user.getUserName()==null?"":user.getUserName());
-			}else {
-				ticketExp.setUserName("");
+		for (HomepageBanner homepageBanner : list) {
+			HomePageExport he=new HomePageExport();
+			he.setSerialNumber(i);
+			he.setOperationInfo(homepageBanner.getOperationInfo()==null?"":homepageBanner.getOperationInfo());
+			if(homepageBanner.getIsDisplay()==null||homepageBanner.getIsDisplay()==1) {
+				he.setIsDisplay("上架");
+			}else{
+				he.setIsDisplay("下架");
 			}
-			ticketExp.setAddress(ticket.getAddress()==null?"":ticket.getAddress());
-			ticketExp.setMoney(ticket.getMoney()==null?0:ticket.getMoney());
-			ticketExp.setPoints(ticket.getPoints()==null?0:ticket.getPoints());
-			ticketExp.setTime(ticket.getIllegalTime()==null?"":format.format(ticket.getIllegalTime()));
-		
-			exportList.add(ticketExp);
+			he.setTime(homepageBanner.getCreateAt()==null?"":format.format(homepageBanner.getCreateAt()));
+			
+			exportList.add(he);
 			i++;
 		}
-		
-		ExportExcelTicketController<TicketExport> ex=new ExportExcelTicketController<TicketExport>();
-		String[] headers =  { "序号", "订单号", "用户", "地点", "罚款", "扣分","时间"};  
+		ExportExcelHomePageBannerController<HomePageExport> ex=new ExportExcelHomePageBannerController<HomePageExport>();
+		String[] headers =  { "序号", "运营信息", "状态", "上/下架时间"};
 		String avatar = "";
 		try  
-	        {         
-	    		Date date = new Date();
-	    		String fileName = format.format(date);
-	    		
-	    		String path = "/opt/avater/"+fileName+".xls";
-	            OutputStream out = new FileOutputStream(path);   
-	            ex.exportExcel(headers, exportList, out);  
-	            out.close();   
-	            File file = new File(path);  
-	           
-	            OSSClient ossClient = new OSSClient(this.getEndPoint(), this.getAccessKeyId(), this.getAccessKeySecret());
-				// 上传文件
-				ObjectMetadata	metadata = new ObjectMetadata();
-				metadata.setContentType("xls");
-				ossClient.putObject(this.getBucketName(), fileName+".xls", 
-						file, metadata);
-				// 关闭client
-				ossClient.shutdown(); 
-				avatar = "http://"+this.getBucketName()+".oss-cn-hangzhou.aliyuncs.com/"+fileName+".xls";
-	       
-	        } catch (FileNotFoundException e) {  
-	        	json.put("result", "1");
-				json.put("description", e.getMessage());
-				return buildReqJsonObject(json);
-	        } catch (IOException e) {  
-	        	json.put("result", "1");
-				json.put("description", e.getMessage());
-				return buildReqJsonObject(json);
-	        }
-		 json.put("result", "0");
-		 json.put("description", "导出成功");
-		 json.put("fileUrl", avatar);
-		 return buildReqJsonObject(json);
+        {         
+    		Date date = new Date();
+    		String fileName = format.format(date);
+    		
+    		String path = "/opt/avater/"+fileName+".xls";
+            OutputStream out = new FileOutputStream(path);   
+            ex.exportExcel(headers, exportList, out);  
+            out.close();   
+            File file = new File(path);  
+            
+            OSSClient ossClient = new OSSClient(this.getEndPoint(), this.getAccessKeyId(), this.getAccessKeySecret());
+			// 上传文件
+			ObjectMetadata	metadata = new ObjectMetadata();
+			metadata.setContentType("xls");
+			ossClient.putObject(this.getBucketName(), fileName+".xls", 
+					file, metadata);
+			// 关闭client
+			ossClient.shutdown(); 
+			avatar = "http://"+this.getBucketName()+".oss-cn-hangzhou.aliyuncs.com/"+fileName+".xls";
+           
+        } catch (FileNotFoundException e) {  
+        	json.put("result", "1");
+			json.put("description", e.getMessage());
+			return buildReqJsonObject(json);
+        } catch (IOException e) {  
+        	json.put("result", "1");
+			json.put("description", e.getMessage());
+			return buildReqJsonObject(json);
+        }
+		
+		json.put("result", "0");
+		json.put("description", "导出成功");
+		json.put("fileUrl", avatar);
+		return buildReqJsonObject(json);
+
 	}
+	
 	
 	
 	public void exportExcel(Collection<T> dataset, OutputStream out)  
     {  
-        exportExcel("罚单列表", null, dataset, out, "yyyy-MM-dd");  
+        exportExcel("首页轮播列表", null, dataset, out, "yyyy-MM-dd");  
     }  
   
     public void exportExcel(String[] headers, Collection<T> dataset,  
             OutputStream out)  
     {  
-        exportExcel("罚单列表", headers, dataset, out, "yyyy-MM-dd");  
+        exportExcel("首页轮播列表", headers, dataset, out, "yyyy-MM-dd");  
     }  
   
     public void exportExcel(String[] headers, Collection<T> dataset,  
             OutputStream out, String pattern)  
     {  
-        exportExcel("罚单列表", headers, dataset, out, pattern);  
+        exportExcel("首页轮播列表", headers, dataset, out, pattern);  
     }  
 	
 	
@@ -338,7 +325,7 @@ public class ExportExcelTicketController<T> extends BaseControllers{
         {  
             e.printStackTrace();  
         }  
-    } 
+    }  
     
     private String getEndPoint() {
 		return Config.getString("endPoint");
