@@ -9,12 +9,13 @@
     <result column="message_base_uuid" property="messageBaseUuid" jdbcType="VARCHAR" />
     <result column="tittle" property="tittle" jdbcType="VARCHAR" />
     <result column="creater" property="creater" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="com.hcb.zzb.dto.MessageBase" extends="BaseResultMap" >
     <result column="content" property="content" jdbcType="LONGVARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, create_at, update_at, delete_at, message_base_uuid, tittle, creater
+    id, create_at, update_at, delete_at, message_base_uuid, tittle, creater, content
   </sql>
   <sql id="Blob_Column_List" >
     content
@@ -34,7 +35,7 @@
     from message_base
     where delete_at is null
     <if test="tittle !='' and tittle != null">
-		tittle like CONCAT('%', #{tittle,jdbcType=VARCHAR}, '%')
+		and tittle like CONCAT('%', #{tittle,jdbcType=VARCHAR}, '%')
 	</if>
 	order by create_at desc LIMIT #{start},#{end}
   </select>
@@ -42,11 +43,8 @@
   <select id="countByMap" resultType="java.lang.Integer" parameterType="java.util.HashMap" >
    select count(1) from message_base
     where delete_at is null
-    <if test="contacts !='' and contacts != null">
-		contacts like CONCAT('%', #{contacts,jdbcType=VARCHAR}, '%')
-	</if>
-	<if test="account !='' and account != null">
-		account like CONCAT('%', #{account,jdbcType=VARCHAR}, '%')
+    <if test="tittle !='' and tittle != null">
+		and tittle like CONCAT('%', #{tittle,jdbcType=VARCHAR}, '%')
 	</if>
   </select>
   
