@@ -31,7 +31,7 @@
   <select id="searchByMap" resultMap="BaseResultMap" parameterType="java.util.HashMap" >
     select 
     <include refid="Base_Column_List" />
-    from manager
+    from message_base
     where delete_at is null
     <if test="tittle !='' and tittle != null">
 		tittle like CONCAT('%', #{tittle,jdbcType=VARCHAR}, '%')
@@ -40,7 +40,7 @@
   </select>
   
   <select id="countByMap" resultType="java.lang.Integer" parameterType="java.util.HashMap" >
-   select count(1) from manager
+   select count(1) from message_base
     where delete_at is null
     <if test="contacts !='' and contacts != null">
 		contacts like CONCAT('%', #{contacts,jdbcType=VARCHAR}, '%')

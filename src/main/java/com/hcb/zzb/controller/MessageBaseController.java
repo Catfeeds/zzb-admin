@@ -53,7 +53,47 @@ public class MessageBaseController extends BaseControllers {
 			json.put("description", "操作失败，请检查输入的参数是否正确");
 			return buildReqJsonObject(json);
 		}
-		ModelMap model = new ModelMap();
+		Integer pageIndex=bodyInfo.getInt("pageIndex");
+		Integer pageSize=bodyInfo.getInt("pageSize");
+		Integer start=(pageIndex-1)*pageSize;
+		Map<String, Object> map=new HashMap<>();
+		map.put("start", start);
+		map.put("end", pageSize);
+		if(bodyInfo.get("tittle")!=null&&!"".equals(bodyInfo.get("tittle"))) {
+			map.put("tittle", bodyInfo.getString("tittle"));
+		}
+		int count = messageBaseService.countByMap(map);
+		if(count==0) {
+			json.put("result", "1");
+			json.put("description", "没有查询到数据信息");
+			return buildReqJsonObject(json);
+		}
+		if(pageIndex<=0) {
+			json.put("result", "1");
+			json.put("description", "pageIndex不能小于0");
+			return buildReqJsonObject(json);
+		}
+		int total = count%pageSize==0?count/pageSize:count/pageSize+1;
+		if(pageIndex>total) {
+			json.put("result", "1");
+			json.put("description", "pageIndex不能大于总页数");
+			return buildReqJsonObject(json);
+		}
+		List<MessageBase> list = new ArrayList<MessageBase>();
+		list =messageBaseService.searchByMap(map);
+		if(!list.isEmpty()) {
+			json.put("result", "0");
+			json.put("description", "查询成功");
+			json.put("total", total);
+			json.put("page", pageIndex);
+			json.put("list", list);
+		}else {
+			json.put("result", "1");
+			json.put("description", "没有查询到数据记录");
+		}
+		return buildReqJsonObject(json);
+		//List<Article> list = articleService.selectByMapLimit(map);
+		/*ModelMap model = new ModelMap();
 
 		List<MessageBase> list = new ArrayList<MessageBase>();
 		Integer pageIndex = bodyInfo.getInt("pageIndex");
@@ -70,12 +110,12 @@ public class MessageBaseController extends BaseControllers {
 			if(bodyInfo.get("tittle") != null){
 				map.put("tittle", bodyInfo.getString("tittle"));
 			}
-			/*if(bodyInfo.get("tittle") != null){
+			if(bodyInfo.get("tittle") != null){
 				map.put("operation_info", bodyInfo.getString("operation_info"));
 			}
 			if(bodyInfo.get("is_display") != null){
 				map.put("is_display", bodyInfo.getInt("is_display"));
-			}*/
+			}
 			list = messageBaseService.searchByMap(map);
 			Integer count = 0;
 			count = messageBaseService.countByMap(map);
@@ -100,6 +140,7 @@ public class MessageBaseController extends BaseControllers {
 				}
 				model.put("total", total);// 页码总数
 				model.put("page", pageIndex);
+				model.put("list", list);
 			}
 		}
 		
@@ -108,8 +149,7 @@ public class MessageBaseController extends BaseControllers {
 		model.put("list", list);
 		String a = buildReqJsonObject(model);
 		a = a.replace("\"[", "[");
-		a = a.replace("]\"", "]");
-		return a;
+		a = a.replace("]\"", "]");*/
 	} 
 	
 	@RequestMapping(value ="add", method = RequestMethod.POST)
