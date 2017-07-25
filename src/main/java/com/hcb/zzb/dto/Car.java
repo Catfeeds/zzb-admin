@@ -92,7 +92,7 @@ public class Car {
     private Integer carUseType;
     private Integer closeSubway;
     
-    
+    private String modelYear;
     public Integer getOrderTotalQuantity() {
 		return orderTotalQuantity;
 	}
@@ -460,4 +460,14 @@ public class Car {
     public void setLeaseTime(String leaseTime) {
         this.leaseTime = leaseTime == null ? null : leaseTime.trim();
     }
+
+	public String getModelYear() {
+		return modelYear;
+	}
+
+	public void setModelYear(String modelYear) {
+		this.modelYear = modelYear;
+	}
+    
+    
 }
