@@ -19,12 +19,12 @@
     select 
     <include refid="Base_Column_List" />
     from homepage_banner
-    where id = #{id,jdbcType=INTEGER}
+    where delete_at is null and id = #{id,jdbcType=INTEGER}
   </select>
   <select id="selectAll" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from homepage_banner where is_display = 1
+    from homepage_banner where delete_at is null and is_display = 1
   </select>
   
   <select id="searchByMap" resultMap="BaseResultMap" parameterType="java.util.HashMap" >

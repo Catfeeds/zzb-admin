@@ -5,8 +5,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,7 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.hcb.zzb.controller.base.BaseControllers;
 import com.hcb.zzb.dto.CarModel;
 import com.hcb.zzb.service.ICarModel;
-
+import com.hcb.zzb.service.IManagerService;
 
 import net.sf.json.JSONObject;
 @Controller
@@ -26,7 +25,6 @@ import net.sf.json.JSONObject;
 public class CarModelLibraryController extends BaseControllers{
 	@Autowired
 	ICarModel carModelService; 
-	
 	
 	/**
 	 * 车型库管理（车型列表）
@@ -242,5 +240,62 @@ public class CarModelLibraryController extends BaseControllers{
 			return buildReqJsonObject(json);
 		}
 		return buildReqJsonObject(json);
+	}
+	
+	/**
+	 * 【车型库管理】新建车型
+	 * @return
+	 */
+	@RequestMapping(value="insert",method=RequestMethod.POST)
+	@ResponseBody
+	public String newCreate() {
+		JSONObject json=new JSONObject();
+		if(sign==1||sign==2) {
+			json.put("result", "1");
+			json.put("description", "请检查参数格式是否正确或者参数是否完整");
+			return buildReqJsonInteger(1, json);
+		}
+		JSONObject bodyInfo=JSONObject.fromObject(bodyString);
+		if(bodyInfo.get("brand")==null||bodyInfo.get("carSeries")==null
+				||bodyInfo.get("color")==null||bodyInfo.get("modelYear")==null
+				||bodyInfo.get("carModel")==null) {
+			json.put("result", "1");
+			json.put("description", "请检查参数是否完整");
+			return buildReqJsonObject(json);
+		}
+		if("".equals(bodyInfo.get("brand"))||"".equals(bodyInfo.get("carSeries"))||
+				"".equals(bodyInfo.get("color"))||"".equals(bodyInfo.get("modelYear"))
+				||"".equals(bodyInfo.get("carModel"))) {
+			json.put("result", "1");
+			json.put("description", "请检查参数是否正确");
+			return buildReqJsonObject(json);
+		}
+		if(manager==null) {
+			json.put("result", "1");
+			json.put("description", "account账号错误");
+			return buildReqJsonObject(json);
+		}
+		
+		CarModel carModel=new CarModel();
+		carModel.setBrand(bodyInfo.getString("brand"));
+		carModel.setCarSeries(bodyInfo.getString("carSeries"));
+		carModel.setColor(bodyInfo.getString("color"));
+		carModel.setModelYear(bodyInfo.getString("modelYear"));
+		carModel.setCarModel(bodyInfo.getString("carModel"));
+		carModel.setCarModelUuid(UUID.randomUUID().toString().replaceAll("-", ""));
+		carModel.setCreateAt(new Date());
+		carModel.setApplyStatus(1);
+		carModel.setOperatorUuid(manager.getManagerUuid()==null?"":manager.getManagerUuid());
+		
+		int rs = carModelService.insertSelective(carModel);
+		if(rs==1) {
+			json.put("result", "0");
+			json.put("description", "新建成功");
+		}else {
+			json.put("result", "1");
+			json.put("description", "新建失败");
+		}
+		return buildReqJsonObject(json);
+		
 	}
 }

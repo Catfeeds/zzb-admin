@@ -293,4 +293,46 @@ public class HomePageBannerController extends BaseControllers {
 		return buildReqJsonObject(json);
 	}
 	
+	/**
+	 * 删除首页轮播
+	 * @return
+	 */
+	@RequestMapping(value="delete",method=RequestMethod.POST)
+	@ResponseBody
+	public String delete() {
+		JSONObject json = new JSONObject();
+		if (sign == 1||sign == 2) {
+			json.put("result", "1");
+			json.put("description", "请检查参数格式是否正确或者参数是否完整");
+			return buildReqJsonInteger(1, json);
+		}
+		JSONObject bodyInfo = JSONObject.fromObject(bodyString);
+		if(bodyInfo.get("id")==null) {
+			json.put("result", "1");
+			json.put("description", "请检查参数是否完整");
+			return buildReqJsonObject(json);
+		}
+		if("".equals(bodyInfo.get("id"))) {
+			json.put("result", "1");
+			json.put("description", "请检查参数是否正确");
+			return buildReqJsonObject(json);
+		}
+		Integer id=bodyInfo.getInt("id");
+		HomepageBanner hb= homePageBanner.selectByPrimaryKey(id);
+		if(hb!=null) {
+			hb.setDeleteAt(new Date());
+			int rs = homePageBanner.updateByPrimaryKeySelective(hb);
+			if(rs==1) {
+				json.put("result", "0");
+				json.put("description", "删除成功");
+			}else {
+				json.put("result", "1");
+				json.put("description", "删除失败");
+			}
+		}else {
+			json.put("result", "1");
+			json.put("description", "操作失败,id不正确,没有查询到该记录");
+		}
+		return buildReqJsonObject(json);
+	}
 }
