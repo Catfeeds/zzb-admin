@@ -15,10 +15,13 @@
     <result column="money" property="money" jdbcType="REAL" />
     <result column="finance_type" property="financeType" jdbcType="INTEGER" />
     <result column="user_uuid" property="userUuid" jdbcType="VARCHAR" />
+    <result column="pay_type" property="payType" jdbcType="INTEGER" />
+    <result column="pay_way" property="payWay" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, create_at, update_at, delete_at, finance_record_uuid, record_type, order_record_type, 
-    order_uuid, recharge_record_uuid, withdrawals_record_uuid, money, finance_type, user_uuid
+    order_uuid, recharge_record_uuid, withdrawals_record_uuid, money, finance_type, user_uuid,
+    pay_type,pay_way
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -44,7 +47,14 @@
     from finance_record
     where delete_at is null 
     and to_days(create_at) = to_days(now()) 
-    and finance_type=#{financeType,jdbcType=INTEGER} and user_uuid=#{user_uuid,jdbcType=VARCHAR};
+    and finance_type=#{financeType,jdbcType=INTEGER} 
+    
+    <if test="user_uuid !='' and user_uuid != null">
+    	and user_uuid=#{user_uuid,jdbcType=VARCHAR}
+    </if>
+    <if test="recordType !='' and recordType != null">
+    	and record_type=#{recordType,jdbcType=VARCHAR}
+    </if>
   </select>
   
   <select id="selectByUuid" resultMap="BaseResultMap" parameterType="java.lang.String">
@@ -69,6 +79,22 @@
     where delete_at is null
   </select>
   
+  <select id="selectByRecordType" resultMap="BaseResultMap" parameterType="java.util.HashMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from finance_record
+    where delete_at is null
+    and record_type=#{recordType,jdbcType=INTEGER}
+    limit #{start},#{end}
+  </select>
+  
+  <select id="countSelectByRecordType" resultType="java.lang.Integer" parameterType="java.util.HashMap">
+  	select count(1)
+    from finance_record
+    where delete_at is null
+    and record_type=#{recordType,jdbcType=INTEGER}
+  </select>
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from finance_record
     where delete_at is null and id = #{id,jdbcType=INTEGER}
@@ -78,12 +104,12 @@
       delete_at, finance_record_uuid, record_type, 
       order_record_type, order_uuid, recharge_record_uuid, 
       withdrawals_record_uuid, money, finance_type, 
-      user_uuid)
+      user_uuid,pay_type,pay_way)
     values (#{id,jdbcType=INTEGER}, #{createAt,jdbcType=TIMESTAMP}, #{updateAt,jdbcType=TIMESTAMP}, 
       #{deleteAt,jdbcType=TIMESTAMP}, #{financeRecordUuid,jdbcType=VARCHAR}, #{recordType,jdbcType=INTEGER}, 
       #{orderRecordType,jdbcType=INTEGER}, #{orderUuid,jdbcType=VARCHAR}, #{rechargeRecordUuid,jdbcType=VARCHAR}, 
       #{withdrawalsRecordUuid,jdbcType=VARCHAR}, #{money,jdbcType=REAL}, #{financeType,jdbcType=INTEGER}, 
-      #{userUuid,jdbcType=VARCHAR})
+      #{userUuid,jdbcType=VARCHAR},#{payType,jdbcType=INTEGER},#{payWay,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.hcb.zzb.dto.FinanceRecord" >
     insert into finance_record
@@ -127,6 +153,12 @@
       <if test="userUuid != null" >
         user_uuid,
       </if>
+      <if test="payType != null" >
+        pay_type,
+      </if>
+      <if test="payWay != null" >
+        pay_way,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -167,6 +199,12 @@
       </if>
       <if test="userUuid != null" >
         #{userUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="payType != null" >
+        #{payType,jdbcType=INTEGER},
+      </if>
+       <if test="payWay != null" >
+        #{payWay,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -209,6 +247,12 @@
       <if test="userUuid != null" >
         user_uuid = #{userUuid,jdbcType=VARCHAR},
       </if>
+       <if test="payType != null" >
+        pay_type = #{payType,jdbcType=INTEGER},
+      </if>
+      <if test="payWay != null" >
+        pay_way = #{payWay,jdbcType=INTEGER},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -225,7 +269,9 @@
       withdrawals_record_uuid = #{withdrawalsRecordUuid,jdbcType=VARCHAR},
       money = #{money,jdbcType=REAL},
       finance_type = #{financeType,jdbcType=INTEGER},
-      user_uuid = #{userUuid,jdbcType=VARCHAR}
+      user_uuid = #{userUuid,jdbcType=VARCHAR},
+      pay_type =#{payType,jdbcType=INTEGER},
+      pay_way =#{payWay,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

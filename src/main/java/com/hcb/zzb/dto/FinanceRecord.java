@@ -28,6 +28,10 @@ public class FinanceRecord {
     private Integer financeType;
 
     private String userUuid;
+    
+    private Integer payType;
+    
+    private Integer payWay;
 
     public Integer getId() {
         return id;
@@ -132,4 +136,21 @@ public class FinanceRecord {
     public void setUserUuid(String userUuid) {
         this.userUuid = userUuid == null ? null : userUuid.trim();
     }
+
+	public Integer getPayType() {
+		return payType;
+	}
+
+	public void setPayType(Integer payType) {
+		this.payType = payType;
+	}
+
+	public Integer getPayWay() {
+		return payWay;
+	}
+
+	public void setPayWay(Integer payWay) {
+		this.payWay = payWay;
+	}
+    
 }

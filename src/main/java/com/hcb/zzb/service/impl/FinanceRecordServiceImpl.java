@@ -85,4 +85,16 @@ public class FinanceRecordServiceImpl implements IFinanceRecordService{
 		return financeRecordMapper.countSelectByMapLimit(map);
 	}
 
+	@Override
+	public List<FinanceRecord> selectByRecordType(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return financeRecordMapper.selectByRecordType(map);
+	}
+
+	@Override
+	public int countSelectByRecordType(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return financeRecordMapper.countSelectByRecordType(map);
+	}
+
 }

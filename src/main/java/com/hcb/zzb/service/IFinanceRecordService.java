@@ -29,4 +29,8 @@ public interface IFinanceRecordService {
     List<FinanceRecord> selectByMapLimit(Map<String, Object> map);
     
     int countSelectByMapLimit(Map<String, Object> map);
+    
+    List<FinanceRecord> selectByRecordType(Map<String, Object> map);
+    
+    int countSelectByRecordType(Map<String, Object> map);
 }

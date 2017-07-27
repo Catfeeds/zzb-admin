@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hcb.zzb.dao.interfaceClass.PlatformConfigMapper" >
+  <resultMap id="BaseResultMap" type="com.hcb.zzb.dto.PlatformConfig" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="create_at" property="createAt" jdbcType="TIMESTAMP" />
+    <result column="detele_at" property="deteleAt" jdbcType="TIMESTAMP" />
+    <result column="platform_uuid" property="platformUuid" jdbcType="VARCHAR" />
+    <result column="platform_name" property="platformName" jdbcType="VARCHAR" />
+    <result column="frozen_amount" property="frozenAmount" jdbcType="REAL" />
+    <result column="balance" property="balance" jdbcType="REAL" />
+    <result column="royalty_ratio" property="royaltyRatio" jdbcType="REAL" />
+    <result column="wx_open_platform_account" property="wxOpenPlatformAccount" jdbcType="VARCHAR" />
+    <result column="wx_public_platform_account" property="wxPublicPlatformAccount" jdbcType="VARCHAR" />
+    <result column="alipay_open_platform_account" property="alipayOpenPlatformAccount" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, create_at, detele_at, platform_uuid, platform_name, frozen_amount, balance, royalty_ratio, 
+    wx_open_platform_account, wx_public_platform_account, alipay_open_platform_account
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from platform_config
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from platform_config
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.hcb.zzb.dto.PlatformConfig" >
+    insert into platform_config (id, create_at, detele_at, 
+      platform_uuid, platform_name, frozen_amount, 
+      balance, royalty_ratio, wx_open_platform_account, 
+      wx_public_platform_account, alipay_open_platform_account
+      )
+    values (#{id,jdbcType=INTEGER}, #{createAt,jdbcType=TIMESTAMP}, #{deteleAt,jdbcType=TIMESTAMP}, 
+      #{platformUuid,jdbcType=VARCHAR}, #{platformName,jdbcType=VARCHAR}, #{frozenAmount,jdbcType=REAL}, 
+      #{balance,jdbcType=REAL}, #{royaltyRatio,jdbcType=REAL}, #{wxOpenPlatformAccount,jdbcType=VARCHAR}, 
+      #{wxPublicPlatformAccount,jdbcType=VARCHAR}, #{alipayOpenPlatformAccount,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.hcb.zzb.dto.PlatformConfig" >
+    insert into platform_config
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="createAt != null" >
+        create_at,
+      </if>
+      <if test="deteleAt != null" >
+        detele_at,
+      </if>
+      <if test="platformUuid != null" >
+        platform_uuid,
+      </if>
+      <if test="platformName != null" >
+        platform_name,
+      </if>
+      <if test="frozenAmount != null" >
+        frozen_amount,
+      </if>
+      <if test="balance != null" >
+        balance,
+      </if>
+      <if test="royaltyRatio != null" >
+        royalty_ratio,
+      </if>
+      <if test="wxOpenPlatformAccount != null" >
+        wx_open_platform_account,
+      </if>
+      <if test="wxPublicPlatformAccount != null" >
+        wx_public_platform_account,
+      </if>
+      <if test="alipayOpenPlatformAccount != null" >
+        alipay_open_platform_account,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="createAt != null" >
+        #{createAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deteleAt != null" >
+        #{deteleAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="platformUuid != null" >
+        #{platformUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="platformName != null" >
+        #{platformName,jdbcType=VARCHAR},
+      </if>
+      <if test="frozenAmount != null" >
+        #{frozenAmount,jdbcType=REAL},
+      </if>
+      <if test="balance != null" >
+        #{balance,jdbcType=REAL},
+      </if>
+      <if test="royaltyRatio != null" >
+        #{royaltyRatio,jdbcType=REAL},
+      </if>
+      <if test="wxOpenPlatformAccount != null" >
+        #{wxOpenPlatformAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="wxPublicPlatformAccount != null" >
+        #{wxPublicPlatformAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="alipayOpenPlatformAccount != null" >
+        #{alipayOpenPlatformAccount,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hcb.zzb.dto.PlatformConfig" >
+    update platform_config
+    <set >
+      <if test="createAt != null" >
+        create_at = #{createAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deteleAt != null" >
+        detele_at = #{deteleAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="platformUuid != null" >
+        platform_uuid = #{platformUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="platformName != null" >
+        platform_name = #{platformName,jdbcType=VARCHAR},
+      </if>
+      <if test="frozenAmount != null" >
+        frozen_amount = #{frozenAmount,jdbcType=REAL},
+      </if>
+      <if test="balance != null" >
+        balance = #{balance,jdbcType=REAL},
+      </if>
+      <if test="royaltyRatio != null" >
+        royalty_ratio = #{royaltyRatio,jdbcType=REAL},
+      </if>
+      <if test="wxOpenPlatformAccount != null" >
+        wx_open_platform_account = #{wxOpenPlatformAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="wxPublicPlatformAccount != null" >
+        wx_public_platform_account = #{wxPublicPlatformAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="alipayOpenPlatformAccount != null" >
+        alipay_open_platform_account = #{alipayOpenPlatformAccount,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hcb.zzb.dto.PlatformConfig" >
+    update platform_config
+    set create_at = #{createAt,jdbcType=TIMESTAMP},
+      detele_at = #{deteleAt,jdbcType=TIMESTAMP},
+      platform_uuid = #{platformUuid,jdbcType=VARCHAR},
+      platform_name = #{platformName,jdbcType=VARCHAR},
+      frozen_amount = #{frozenAmount,jdbcType=REAL},
+      balance = #{balance,jdbcType=REAL},
+      royalty_ratio = #{royaltyRatio,jdbcType=REAL},
+      wx_open_platform_account = #{wxOpenPlatformAccount,jdbcType=VARCHAR},
+      wx_public_platform_account = #{wxPublicPlatformAccount,jdbcType=VARCHAR},
+      alipay_open_platform_account = #{alipayOpenPlatformAccount,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
