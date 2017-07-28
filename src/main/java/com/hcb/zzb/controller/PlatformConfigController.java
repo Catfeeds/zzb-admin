@@ -119,7 +119,7 @@ public class PlatformConfigController extends BaseControllers{
 				model.put("expenditure", 0);
 			}
 			
-			PlatformConfig platform = platformConfigService.selectByPrimaryKey(1);
+			PlatformConfig platform = platformConfigService.selectByPrimaryKey(39);
 			if(platform==null) {
 				json.put("result", "1");
 				json.put("description", "没有平台账号");
