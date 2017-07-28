@@ -112,14 +112,14 @@ public class ArticleController extends BaseControllers{
 		JSONObject bodyInfo=JSONObject.fromObject(bodyString);
 		if(bodyInfo.get("tittle")==null||bodyInfo.get("articleType")==null||
 			bodyInfo.get("articleContent")==null||bodyInfo.get("articlePicture")==null
-			||bodyInfo.get("carID1")==null||bodyInfo.get("carID2")==null||bodyInfo.get("carID3")==null) {
+			||bodyInfo.get("carID1")==null||bodyInfo.get("carID2")==null||bodyInfo.get("activityCarID")==null) {
 			json.put("result", "1");
 			json.put("description", "请检查参数是否完整");
 			return buildReqJsonObject(json);
 		}
 		if("".equals(bodyInfo.get("tittle"))||"".equals(bodyInfo.get("articleType"))||
 				"".equals(bodyInfo.get("articleContent"))||"".equals(bodyInfo.get("articlePicture"))
-				||"".equals(bodyInfo.get("carID1"))||"".equals(bodyInfo.get("carID2"))||"".equals(bodyInfo.get("carID3"))) {
+				||"".equals(bodyInfo.get("carID1"))||"".equals(bodyInfo.get("carID2"))||"".equals(bodyInfo.get("activityCarID"))) {
 			json.put("result", "1");
 			json.put("description", "请检查参数是否正确");
 			return buildReqJsonObject(json);
@@ -130,15 +130,20 @@ public class ArticleController extends BaseControllers{
 			json.put("description", "登录账号错误,没有查询到");
 			return buildReqJsonObject(json);
 		}
-		String carID1=bodyInfo.getString("carID1");
-		String carID2=bodyInfo.getString("carID2");
-		String carID3=bodyInfo.getString("carID3");
-		Car car1=carService.selectByPrimaryKey(Integer.parseInt(carID1));
-		Car car2=carService.selectByPrimaryKey(Integer.parseInt(carID2));
-		Car car3=carService.selectByPrimaryKey(Integer.parseInt(carID3));
-		if(car1==null||car2==null||car3==null) {
+		int carID1=bodyInfo.getInt("carID1");
+		int carID2=bodyInfo.getInt("carID2");
+		int activityCarID=bodyInfo.getInt("activityCarID");
+		Car car1=carService.selectByPrimaryKey(carID1);
+		Car car2=carService.selectByPrimaryKey(carID2);
+		Car car3=carService.selectByPrimaryKey(activityCarID);
+		if(car1==null||car2==null) {
 			json.put("result", "1");
 			json.put("description", "推荐车辆ID错误,车辆不存在");
+			return buildReqJsonObject(json);
+		}
+		if(car3==null) {
+			json.put("result", "1");
+			json.put("description", "活动车辆ID错误,车辆不存在");
 			return buildReqJsonObject(json);
 		}
 		Article article=new Article();
@@ -147,7 +152,7 @@ public class ArticleController extends BaseControllers{
 		article.setArticleType(bodyInfo.getInt("articleType"));
 		article.setArticleContent(bodyInfo.getString("articleContent"));
 		article.setArticlePicture(bodyInfo.getString("articlePicture"));
-		String carIdList=carID1+","+carID2+","+carID3;
+		String carIdList=carID1+","+carID2;
 		article.setCarIdList(carIdList);
 		article.setArticleUuid(UUID.randomUUID().toString().replaceAll("-", ""));	
 		article.setCreater(manager.getManagerUuid());
@@ -193,29 +198,29 @@ public class ArticleController extends BaseControllers{
 		if(article!=null) {
 			json.put("result", "0");
 			json.put("description", "查询成功");
-			json.put("tittle", article.getTittle());
-			json.put("articleType", article.getArticleType());
-			json.put("articleContent", article.getArticleContent());
-			json.put("articlePicture", article.getArticlePicture());
+			json.put("tittle", article.getTittle()==null?"":article.getTittle());
+			json.put("articleType", article.getArticleType()==null?"":article.getArticleType());
+			json.put("articleContent", article.getArticleContent()==null?"":article.getArticleContent());
+			json.put("articlePicture", article.getArticlePicture()==null?"":article.getArticlePicture());
+			json.put("activityCarID", article.getActivityCat()==null?"":article.getActivityCat()+"");
 			if(article.getCarIdList()==null) {
 				json.put("carID1", "");
 				json.put("carID2", "");
-				json.put("carID3", "");
 			}else {
 				String[] strs=article.getCarIdList().split(",");
-				if(strs.length==1) {
+				if(strs.length==0) {
+					json.put("carID1", "");
+					json.put("carID2", "");
+				}else if(strs.length==1) {
 					json.put("carID1", strs[0]);
 					json.put("carID2", "");
-					json.put("carID3", "");
 				}else if(strs.length==2) {
 					json.put("carID1", strs[0]);
-					json.put("carID2", strs[1]);
-					json.put("carID3", "");
-				}else if(strs.length==3) {
+					json.put("carID2", strs[1]);		
+				}else{
 					json.put("carID1", strs[0]);
-					json.put("carID2", strs[1]);
-					json.put("carID3", strs[2]);
-				}			
+					json.put("carID2", strs[1]);	
+				}		
 			}
 		}else {
 			json.put("result", "1");
@@ -250,27 +255,32 @@ public class ArticleController extends BaseControllers{
 		}
 		if(bodyInfo.get("tittle")==null||bodyInfo.get("articleType")==null||
 				bodyInfo.get("articleContent")==null||bodyInfo.get("articlePicture")==null
-				||bodyInfo.get("carID1")==null||bodyInfo.get("carID2")==null||bodyInfo.get("carID3")==null) {
+				||bodyInfo.get("carID1")==null||bodyInfo.get("carID2")==null||bodyInfo.get("activityCarID")==null) {
 				json.put("result", "1");
 				json.put("description", "请检查参数是否完整");
 				return buildReqJsonObject(json);
 		}
 		if("".equals(bodyInfo.get("tittle"))||"".equals(bodyInfo.get("articleType"))||
 			"".equals(bodyInfo.get("articleContent"))||"".equals(bodyInfo.get("articlePicture"))
-			||"".equals(bodyInfo.get("carID1"))||"".equals(bodyInfo.get("carID2"))||"".equals(bodyInfo.get("carID3"))) {
+			||"".equals(bodyInfo.get("carID1"))||"".equals(bodyInfo.get("carID2"))||"".equals(bodyInfo.get("activityCarID"))) {
 			json.put("result", "1");
 			json.put("description", "请检查参数是否正确");
 			return buildReqJsonObject(json);
 		}
-		String carID1=bodyInfo.getString("carID1");
-		String carID2=bodyInfo.getString("carID2");
-		String carID3=bodyInfo.getString("carID3");
-		Car car1=carService.selectByPrimaryKey(Integer.parseInt(carID1));
-		Car car2=carService.selectByPrimaryKey(Integer.parseInt(carID2));
-		Car car3=carService.selectByPrimaryKey(Integer.parseInt(carID3));
-		if(car1==null||car2==null||car3==null) {
+		int carID1=bodyInfo.getInt("carID1");
+		int carID2=bodyInfo.getInt("carID2");
+		int activityCarID=bodyInfo.getInt("activityCarID");
+		Car car1=carService.selectByPrimaryKey(carID1);
+		Car car2=carService.selectByPrimaryKey(carID2);
+		Car car3=carService.selectByPrimaryKey(activityCarID);
+		if(car1==null||car2==null) {
 			json.put("result", "1");
 			json.put("description", "推荐车辆ID错误,车辆不存在");
+			return buildReqJsonObject(json);
+		}
+		if(car3==null) {
+			json.put("result", "1");
+			json.put("description", "活动车辆ID错误,车辆不存在");
 			return buildReqJsonObject(json);
 		}
 		Article article=articleService.selectByArticleUuid(bodyInfo.getString("articleUuid"));
@@ -281,7 +291,7 @@ public class ArticleController extends BaseControllers{
 		}
 		if(bodyInfo.get("tittle")==null&&bodyInfo.get("articleType")==null&&
 				bodyInfo.get("articleContent")==null&&bodyInfo.get("articlePicture")==null
-				&&bodyInfo.get("carID1")==null&&bodyInfo.get("carID2")==null&&bodyInfo.get("carID3")==null) {
+				&&bodyInfo.get("carID1")==null&&bodyInfo.get("carID2")==null&&bodyInfo.get("activityCarID")==null) {
 				json.put("result", "1");
 				json.put("description", "参数为空，不保存");
 				return buildReqJsonObject(json);
@@ -291,8 +301,8 @@ public class ArticleController extends BaseControllers{
 		article.setArticleType(bodyInfo.getInt("articleType"));
 		article.setArticleContent(bodyInfo.getString("articleContent"));
 		article.setArticlePicture(bodyInfo.getString("articlePicture"));
-		article.setCarIdList(carID1+","+carID2+","+carID3);
-		
+		article.setCarIdList(carID1+","+carID2);
+		article.setActivityCat(bodyInfo.getInt("activityCarID"));
 		int rs = articleService.updateByPrimaryKeySelective(article);
 		if(rs==1) {
 			json.put("result", "0");
