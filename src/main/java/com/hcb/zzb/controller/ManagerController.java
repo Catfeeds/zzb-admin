@@ -97,7 +97,7 @@ public class ManagerController extends BaseControllers {
 		}
 		
 		model.put("description", "查询成功");
-		model.put("result",0);
+		model.put("result","0");
 		model.put("list", list);
 		String a = buildReqJsonObject(model);
 		a = a.replace("\"[", "[");
