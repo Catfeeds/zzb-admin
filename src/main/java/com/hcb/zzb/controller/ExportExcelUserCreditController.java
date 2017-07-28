@@ -114,7 +114,7 @@ public class ExportExcelUserCreditController<T> extends BaseControllers{
 			if(users.getUserStatus()==2) {
 				userCre.setCreditStatus("拉黑");
 			}else {
-				if(users.getCreditScore()<60) {
+				if(users.getCreditScore()==null||users.getCreditScore()<60) {
 					userCre.setCreditStatus("较差");
 				}else if(users.getCreditScore()>=60&&users.getCreditScore()<70) {
 					userCre.setCreditStatus("一般");
