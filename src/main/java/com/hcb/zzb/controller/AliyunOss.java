@@ -67,20 +67,9 @@ public class AliyunOss {
 	
 	//上传文件
 	@RequestMapping(value ="media/file_upload", method = RequestMethod.POST)
-	public String fileUpload(HttpServletRequest request, @RequestParam("user_uuid") String user_uuid,@RequestParam("file") MultipartFile file) {
+	public String fileUpload(HttpServletRequest request,@RequestParam("file") MultipartFile file) {
 		
 		JSONObject json = new JSONObject();
-		if(user_uuid==null){
-			json.put("result", "1");
-			json.put("description", "请检查参数是否完整");
-			return buildReqJsonObject(json);
-		}
-		Users user = UsersService.selectByUserUuid(user_uuid);
-		if(user==null){
-			json.put("result", "1");
-			json.put("description", "上传失败，");
-			return buildReqJsonObject(json);
-		}
 		// 判断文件是否为空
 		if (!file.isEmpty()) {
 			try {
@@ -129,12 +118,12 @@ public class AliyunOss {
 				attachment.setFileName(fileName);
 				attachment.setFileType("图片");
 				attachment.setFileUuid(attachmentUuid);
-				attachment.setUploadUuid(user.getUserUuid());
+				attachment.setUploadUuid("");
 				attachment.setFileUrl("http://living.cto1024.com/"+attachmentUuid+"."+type);
 				attachments.insertSelective(attachment);
 				
 				
-			   Image img = null;
+			   /*Image img = null;
 			   try {
 					img = Image.getInstance(new URL("http://living.cto1024.com/"+attachmentUuid+"."+type));
 				} catch (BadElementException e) {
@@ -147,13 +136,13 @@ public class AliyunOss {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}  
-		        	  System.out.println("img.width="+img.width()+" img.hight="+img.height());  
+		        	  System.out.println("img.width="+img.width()+" img.hight="+img.height());  */
 				json.put("result", "0");
 				json.put("description", "上传成功");
 				json.put("attachment_uuid", attachmentUuid);
 				json.put("attachment_url", "http://living.cto1024.com/"+attachmentUuid+"."+type);
-				json.put("width", img.width());
-				json.put("hight", img.height());
+				/*json.put("width", img.width());
+				json.put("hight", img.height());*/
 				return buildReqJsonObject(json);
 			} catch (Exception e) {
 				e.printStackTrace();
