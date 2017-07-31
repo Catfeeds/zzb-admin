@@ -85,6 +85,7 @@
     from finance_record
     where delete_at is null
     and record_type=#{recordType,jdbcType=INTEGER}
+    order by create_at desc
     limit #{start},#{end}
   </select>
   
