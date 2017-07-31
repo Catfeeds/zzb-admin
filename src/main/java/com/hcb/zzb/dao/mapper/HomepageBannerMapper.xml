@@ -52,6 +52,13 @@
 	</if>
   </select>
   
+  <select id="countDisplay" resultType="java.lang.Integer"> 
+  	 select count(1) from homepage_banner
+  	 where delete_at is null
+  	 and is_display=1
+  </select>
+  
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from homepage_banner
     where id = #{id,jdbcType=INTEGER}

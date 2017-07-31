@@ -24,4 +24,6 @@ public interface HomepageBannerMapper {
 	List<HomepageBanner> searchByMap(Map<String, Object> map);
 
 	Integer countByMap(Map<String, Object> map);
+	
+	Integer countDisplay();
 }

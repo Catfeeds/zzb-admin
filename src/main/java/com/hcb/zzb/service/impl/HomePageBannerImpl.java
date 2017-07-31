@@ -70,4 +70,10 @@ public class HomePageBannerImpl implements IhomePageBanner {
 		return homepageBannerMapper.countByMap(map);
 	}
 
+	@Override
+	public Integer countDisplay() {
+		// TODO Auto-generated method stub
+		return homepageBannerMapper.countDisplay();
+	}
+
 }

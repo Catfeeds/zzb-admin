@@ -149,6 +149,10 @@ public class HomePageBannerController extends BaseControllers {
 		a = a.replace("]\"", "]");*/
 		
 	}
+	/**
+	 * 新建首页轮播图
+	 * @return
+	 */
 	@RequestMapping(value = "add", method = RequestMethod.POST)
 	@ResponseBody
 	public String addBanner(){
@@ -165,6 +169,14 @@ public class HomePageBannerController extends BaseControllers {
 			json.put("description", "请检查参数格式是否正确或者参数是否完整");
 			return buildReqJsonObject(json);
 		}
+		
+		int countDisplay = homePageBanner.countDisplay();
+		if(bodyInfo.getInt("is_display")==1 && countDisplay>=4) {
+			json.put("result", 1);
+			json.put("description", "轮播图上架数量不能大于4张");
+			return buildReqJsonObject(json);
+		}
+		
 		HomepageBanner homepageBanner=new HomepageBanner();
 		homepageBanner.setCreateAt(new Date());
 		homepageBanner.setIsDisplay(bodyInfo.getInt("is_display"));
@@ -186,6 +198,10 @@ public class HomePageBannerController extends BaseControllers {
 		return buildReqJsonObject(json);
 	}
 	
+	/**
+	 * 编辑保存 
+	 * @return
+	 */
 	@RequestMapping(value ="edit", method = RequestMethod.POST)
 	@ResponseBody
 	public String edit(){
@@ -203,9 +219,21 @@ public class HomePageBannerController extends BaseControllers {
 			json.put("description", "请检查参数格式是否正确或者参数是否完整");
 			return buildReqJsonObject(json);
 		}
+		
+		int countDisplay = homePageBanner.countDisplay();
+		if(bodyInfo.getInt("is_display")==1 && countDisplay>=4) {
+			json.put("result", 1);
+			json.put("description", "轮播图上架数量不能大于4张");
+			return buildReqJsonObject(json);
+		}
+		
 		HomepageBanner banner = homePageBanner.selectByPrimaryKey(bodyInfo.getInt("id"));
 		banner.setUpdateAt(new Date());
+		
+		
 		//Manager manager=  managerService.selectByAccountUuid(headInfo.getString("manager_uuid"));
+		
+		
 		Manager manager=  managerService.selectByAccount(headInfo.getString("account"));
 		if(manager!=null){
 			json.put("banner", banner);
@@ -226,6 +254,10 @@ public class HomePageBannerController extends BaseControllers {
 		return buildReqJsonObject(json);
 	}
 	
+	/**
+	 * 上架/下架轮播图
+	 * @return
+	 */
 	@RequestMapping(value ="editceil", method = RequestMethod.POST)
 	@ResponseBody
 	public String editceil(){
@@ -243,6 +275,14 @@ public class HomePageBannerController extends BaseControllers {
 			json.put("description", "请检查参数格式是否正确或者参数是否完整");
 			return buildReqJsonObject(json);
 		}
+		
+		int countDisplay = homePageBanner.countDisplay();
+		if(bodyInfo.getInt("is_display")==1 && countDisplay>=4) {
+			json.put("result", 1);
+			json.put("description", "轮播图上架数量不能大于4张");
+			return buildReqJsonObject(json);
+		}
+		
 		HomepageBanner banner = homePageBanner.selectByPrimaryKey(bodyInfo.getInt("id"));
 		banner.setUpdateAt(new Date());
 		//Manager manager=  managerService.selectByAccountUuid(headInfo.getString("manager_uuid"));
