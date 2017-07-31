@@ -95,6 +95,7 @@ public class ExportExcelCarModelController<T> extends BaseControllers{
 			carmodelExp.setSerialNumber(i);
 			carmodelExp.setBrand(carModel.getBrand()==null?"":carModel.getBrand());
 			carmodelExp.setCarSeries(carModel.getCarSeries()==null?"":carModel.getCarSeries());
+			carmodelExp.setColor(carModel.getColor()==null?"":carModel.getColor());
 			carmodelExp.setModelYear(carModel.getModelYear()==null?"":carModel.getModelYear());
 			carmodelExp.setModel(carModel.getCarModel()==null?"":carModel.getCarModel());
 			carmodelExp.setCreateAt(carModel.getCreateAt()==null?"":format.format(carModel.getCreateAt()));
@@ -104,7 +105,7 @@ public class ExportExcelCarModelController<T> extends BaseControllers{
 		}
 		
 		ExportExcelCarModelController<CarModelExport> ex=new ExportExcelCarModelController<CarModelExport>();
-		String[] headers =  { "序号", "品牌", "车系", "年款", "款式", "添加时间"};
+		String[] headers =  { "序号", "品牌", "车系","颜色", "年款", "款式", "添加时间"};
 		String avatar = "";
 		List<CarModelExport> dataset=new ArrayList<CarModelExport>();
 		for (CarModelExport carModelExport : exportList) {

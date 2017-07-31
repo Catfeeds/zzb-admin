@@ -2,9 +2,10 @@ package com.hcb.zzb.dto.export;
 
 public class CarModelExport {
 	private int serialNumber;//序号
-	private String brand;
+	private String brand;//品牌	
 	private String carSeries;//车系
 	private String modelYear;//年款
+	private String color;//颜色
 	private String model;//款式
 	private String createAt;//添加时间
 	
@@ -44,5 +45,10 @@ public class CarModelExport {
 	public void setCreateAt(String createAt) {
 		this.createAt = createAt;
 	}
-	
+	public String getColor() {
+		return color;
+	}
+	public void setColor(String color) {
+		this.color = color;
+	}
 }
