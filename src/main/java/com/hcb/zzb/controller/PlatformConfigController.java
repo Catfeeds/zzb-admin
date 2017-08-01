@@ -99,7 +99,7 @@ public class PlatformConfigController extends BaseControllers{
 					todayIncomeTotal= todayIncomeTotal + financeRecord.getMoney();
 				}
 				
-				model.put("income", todayIncomeTotal);
+				model.put("income", (float)(Math.round(todayIncomeTotal*100))/100);
 			}else {
 				model.put("income", 0);
 			}	
@@ -114,7 +114,7 @@ public class PlatformConfigController extends BaseControllers{
 				for (FinanceRecord financeRecord : todayExpenditureList) {
 					todayExpenditureTotal = todayExpenditureTotal + financeRecord.getMoney();
 				}
-				model.put("expenditure", todayExpenditureTotal);
+				model.put("expenditure", (float)(Math.round(todayExpenditureTotal*100))/100);
 			}else {
 				model.put("expenditure", 0);
 			}

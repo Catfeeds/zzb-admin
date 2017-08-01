@@ -170,7 +170,7 @@ public class UserAccountController extends BaseControllers{
 				for (FinanceRecord financeRecord : income) {
 					totalIncome = totalIncome + financeRecord.getMoney();
 				}
-				json.put("income", totalIncome);
+				json.put("income", (float)(Math.round(totalIncome*100))/100);
 			}else {
 				json.put("income", 0);
 			}
@@ -179,7 +179,7 @@ public class UserAccountController extends BaseControllers{
 				for (FinanceRecord financeRecord : expenditure) {
 					totalexp = totalexp + financeRecord.getMoney();
 				}
-				json.put("expenditure", totalexp);
+				json.put("expenditure", (float)(Math.round(totalexp*100))/100);
 			}else {
 				json.put("expenditure", 0);
 			}
