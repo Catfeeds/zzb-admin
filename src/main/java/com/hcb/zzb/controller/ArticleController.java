@@ -156,6 +156,7 @@ public class ArticleController extends BaseControllers{
 		article.setCarIdList(carIdList);
 		article.setArticleUuid(UUID.randomUUID().toString().replaceAll("-", ""));	
 		article.setCreater(manager.getManagerUuid());
+		article.setActivityCat(activityCarID);
 		
 		int rs = articleService.insertSelective(article);
 		if(rs==1) {
