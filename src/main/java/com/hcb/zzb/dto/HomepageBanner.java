@@ -16,6 +16,8 @@ public class HomepageBanner {
     private String operationPicture;
 
     private Integer isDisplay;
+    
+    private String link;
 
     private String creater;
 
@@ -74,8 +76,16 @@ public class HomepageBanner {
     public void setIsDisplay(Integer isDisplay) {
         this.isDisplay = isDisplay;
     }
+    
+    public String getLink() {
+		return link;
+	}
 
-    public String getCreater() {
+	public void setLink(String link) {
+		this.link = link;
+	}
+
+	public String getCreater() {
         return creater;
     }
 

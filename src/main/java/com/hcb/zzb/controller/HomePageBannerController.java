@@ -164,9 +164,17 @@ public class HomePageBannerController extends BaseControllers {
 		}
 		JSONObject headInfo=JSONObject.fromObject(headString);
 		JSONObject bodyInfo = JSONObject.fromObject(bodyString);
-		if (bodyInfo.get("operation_info") == null||bodyInfo.get("operation_picture") == null||bodyInfo.get("is_display") == null) {
+		if (bodyInfo.get("operation_info") == null||bodyInfo.get("operation_picture") == null||bodyInfo.get("is_display") == null
+				||bodyInfo.get("link")==null) {
 			json.put("result", 1);
-			json.put("description", "请检查参数格式是否正确或者参数是否完整");
+			json.put("description", "请检查参数是否完整");
+			return buildReqJsonObject(json);
+		}
+		
+		if("".equals(bodyInfo.get("operation_info"))||"".equals(bodyInfo.get("operation_picture"))
+				||"".equals(bodyInfo.get("is_display"))||"".equals(bodyInfo.get("link"))) {
+			json.put("result", 1);
+			json.put("description", "请检查参数是否正确");
 			return buildReqJsonObject(json);
 		}
 		
@@ -182,6 +190,7 @@ public class HomePageBannerController extends BaseControllers {
 		homepageBanner.setIsDisplay(bodyInfo.getInt("is_display"));
 		homepageBanner.setOperationInfo(bodyInfo.getString("operation_info"));
 		homepageBanner.setOperationPicture(bodyInfo.getString("operation_picture"));
+		homepageBanner.setLink(bodyInfo.getString("link"));
 		//Manager manager=  managerService.selectByAccountUuid(headInfo.getString("manager_uuid"));
 		Manager manager=  managerService.selectByAccount(headInfo.getString("account"));
 		if(manager!=null){
@@ -214,9 +223,18 @@ public class HomePageBannerController extends BaseControllers {
 		}
 		JSONObject headInfo=JSONObject.fromObject(headString);
 		JSONObject bodyInfo = JSONObject.fromObject(bodyString);
-		if (bodyInfo.get("operation_info") == null||bodyInfo.get("is_display") == null) {
+		if (bodyInfo.get("operation_info") == null||bodyInfo.get("operation_picture") == null||bodyInfo.get("is_display") == null
+				||bodyInfo.get("link")==null||bodyInfo.get("id")==null) {
 			json.put("result", 1);
-			json.put("description", "请检查参数格式是否正确或者参数是否完整");
+			json.put("description", "请检查参数是否完整");
+			return buildReqJsonObject(json);
+		}
+		
+		if("".equals(bodyInfo.get("operation_info"))||"".equals(bodyInfo.get("operation_picture"))
+				||"".equals(bodyInfo.get("is_display"))||"".equals(bodyInfo.get("link"))
+				||"".equals(bodyInfo.get("id"))) {
+			json.put("result", 1);
+			json.put("description", "请检查参数是否正确");
 			return buildReqJsonObject(json);
 		}
 		
@@ -228,7 +246,7 @@ public class HomePageBannerController extends BaseControllers {
 		}
 		
 		HomepageBanner banner = homePageBanner.selectByPrimaryKey(bodyInfo.getInt("id"));
-		banner.setUpdateAt(new Date());
+		
 		
 		
 		//Manager manager=  managerService.selectByAccountUuid(headInfo.getString("manager_uuid"));
@@ -236,12 +254,13 @@ public class HomePageBannerController extends BaseControllers {
 		
 		Manager manager=  managerService.selectByAccount(headInfo.getString("account"));
 		if(manager!=null){
-			json.put("banner", banner);
+			//json.put("banner", banner);
 			banner.setCreater(manager.getManagerUuid());
 		}
 		banner.setIsDisplay(bodyInfo.getInt("is_display"));
 		banner.setOperationInfo(bodyInfo.getString("operation_info"));
 		banner.setUpdateAt(new Date());
+		banner.setLink(bodyInfo.getString("link"));
 		int rs = homePageBanner.updateByPrimaryKeySelective(banner);
 		if(rs == 1){
 			json.put("result", 0);
@@ -270,9 +289,15 @@ public class HomePageBannerController extends BaseControllers {
 		}
 		JSONObject headInfo=JSONObject.fromObject(headString);
 		JSONObject bodyInfo = JSONObject.fromObject(bodyString);
-		if (bodyInfo.get("is_display") == null) {
+		if (bodyInfo.get("is_display") == null||bodyInfo.get("id") == null) {
 			json.put("result", 1);
-			json.put("description", "请检查参数格式是否正确或者参数是否完整");
+			json.put("description", "请检查参数是否完整");
+			return buildReqJsonObject(json);
+		}
+		
+		if ("".equals(bodyInfo.get("is_display"))||"".equals(bodyInfo.get("id"))) {
+			json.put("result", 1);
+			json.put("description", "请检查参数是否正确");
 			return buildReqJsonObject(json);
 		}
 		

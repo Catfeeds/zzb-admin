@@ -9,10 +9,11 @@
     <result column="operation_info" property="operationInfo" jdbcType="VARCHAR" />
     <result column="operation_picture" property="operationPicture" jdbcType="VARCHAR" />
     <result column="is_display" property="isDisplay" jdbcType="INTEGER" />
+    <result column="link" property="link" jdbcType="VARCHAR" />
     <result column="creater" property="creater" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, create_at, update_at, delete_at, operation_info, operation_picture, is_display, 
+    id, create_at, update_at, delete_at, operation_info, operation_picture, is_display, link,
     creater
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
@@ -66,10 +67,10 @@
   <insert id="insert" parameterType="com.hcb.zzb.dto.HomepageBanner" >
     insert into homepage_banner (id, create_at, update_at, 
       delete_at, operation_info, operation_picture, 
-      is_display, creater)
+      is_display, link, creater)
     values (#{id,jdbcType=INTEGER}, #{createAt,jdbcType=TIMESTAMP}, #{updateAt,jdbcType=TIMESTAMP}, 
       #{deleteAt,jdbcType=TIMESTAMP}, #{operationInfo,jdbcType=VARCHAR}, #{operationPicture,jdbcType=VARCHAR}, 
-      #{isDisplay,jdbcType=INTEGER}, #{creater,jdbcType=VARCHAR})
+      #{isDisplay,jdbcType=INTEGER}, #{link,jdbcType=VARCHAR}, #{creater,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.hcb.zzb.dto.HomepageBanner" >
     insert into homepage_banner
@@ -94,6 +95,9 @@
       </if>
       <if test="isDisplay != null" >
         is_display,
+      </if>
+      <if test="link != null" >
+        link,
       </if>
       <if test="creater != null" >
         creater,
@@ -121,6 +125,9 @@
       <if test="isDisplay != null" >
         #{isDisplay,jdbcType=INTEGER},
       </if>
+      <if test="link != null" >
+        #{link,jdbcType=VARCHAR},
+      </if>
       <if test="creater != null" >
         #{creater,jdbcType=VARCHAR},
       </if>
@@ -147,6 +154,9 @@
       <if test="isDisplay != null" >
         is_display = #{isDisplay,jdbcType=INTEGER},
       </if>
+      <if test="link != null" >
+        link = #{link,jdbcType=VARCHAR},
+      </if>
       <if test="creater != null" >
         creater = #{creater,jdbcType=VARCHAR},
       </if>
@@ -161,6 +171,7 @@
       operation_info = #{operationInfo,jdbcType=VARCHAR},
       operation_picture = #{operationPicture,jdbcType=VARCHAR},
       is_display = #{isDisplay,jdbcType=INTEGER},
+      link = #{link,jdbcType=VARCHAR},
       creater = #{creater,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
