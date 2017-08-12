@@ -3,199 +3,256 @@
 <mapper namespace="com.hcb.zzb.dao.interfaceClass.WithdrawalsRecordMapper" >
   <resultMap id="BaseResultMap" type="com.hcb.zzb.dto.WithdrawalsRecord" >
     <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="create_at" property="createAt" jdbcType="TIMESTAMP" />
-    <result column="update_at" property="updateAt" jdbcType="TIMESTAMP" />
-    <result column="delete_at" property="deleteAt" jdbcType="TIMESTAMP" />
-    <result column="withdrawals_record_uuid" property="withdrawalsRecordUuid" jdbcType="VARCHAR" />
-    <result column="money" property="money" jdbcType="REAL" />
-    <result column="apply_uuid" property="applyUuid" jdbcType="VARCHAR" />
-    <result column="apply_status" property="applyStatus" jdbcType="INTEGER" />
-    <result column="account_type" property="accountType" jdbcType="INTEGER" />
-    <result column="account_number" property="accountNumber" jdbcType="VARCHAR" />
-    <result column="handle_uuid" property="handleUuid" jdbcType="VARCHAR" />
-    <result column="handle_time" property="handleTime" jdbcType="TIMESTAMP" />
-    <result column="handle_dsp" property="handleDsp" jdbcType="VARCHAR" />
-  </resultMap>
-  <sql id="Base_Column_List" >
-    id, create_at, update_at, delete_at, withdrawals_record_uuid, money, apply_uuid, 
-    apply_status, account_type, account_number, handle_uuid, handle_time, handle_dsp
-  </sql>
-  
-  <select id="selectByUserUuid" resultMap="BaseResultMap" parameterType="java.util.Map">
-  	select 
-    <include refid="Base_Column_List" />
-    from withdrawals_record
-    where apply_uuid=#{userUuid,jdbcType=VARCHAR} limit #{pageIndex},#{pageSize}
-  </select>
-  <select id="selectByUserUuidCount" resultType="int" parameterType="java.lang.String">
-  	select count(1) 
-  	from withdrawals_record 
-  	where apply_uuid=#{userUuid,jdbcType=VARCHAR}
-  </select>
-  
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
-    <include refid="Base_Column_List" />
-    from withdrawals_record
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from withdrawals_record
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
-  <insert id="insert" parameterType="com.hcb.zzb.dto.WithdrawalsRecord" >
-    insert into withdrawals_record (id, create_at, update_at, 
-      delete_at, withdrawals_record_uuid, money, 
-      apply_uuid, apply_status, account_type, 
-      account_number, handle_uuid, handle_time, 
-      handle_dsp)
-    values (#{id,jdbcType=INTEGER}, #{createAt,jdbcType=TIMESTAMP}, #{updateAt,jdbcType=TIMESTAMP}, 
-      #{deleteAt,jdbcType=TIMESTAMP}, #{withdrawalsRecordUuid,jdbcType=VARCHAR}, #{money,jdbcType=REAL}, 
-      #{applyUuid,jdbcType=VARCHAR}, #{applyStatus,jdbcType=INTEGER}, #{accountType,jdbcType=INTEGER}, 
-      #{accountNumber,jdbcType=VARCHAR}, #{handleUuid,jdbcType=VARCHAR}, #{handleTime,jdbcType=TIMESTAMP}, 
-      #{handleDsp,jdbcType=VARCHAR})
-  </insert>
-  <insert id="insertSelective" parameterType="com.hcb.zzb.dto.WithdrawalsRecord" >
-    insert into withdrawals_record
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
-      <if test="createAt != null" >
-        create_at,
-      </if>
-      <if test="updateAt != null" >
-        update_at,
-      </if>
-      <if test="deleteAt != null" >
-        delete_at,
-      </if>
-      <if test="withdrawalsRecordUuid != null" >
-        withdrawals_record_uuid,
-      </if>
-      <if test="money != null" >
-        money,
-      </if>
-      <if test="applyUuid != null" >
-        apply_uuid,
-      </if>
-      <if test="applyStatus != null" >
-        apply_status,
-      </if>
-      <if test="accountType != null" >
-        account_type,
-      </if>
-      <if test="accountNumber != null" >
-        account_number,
-      </if>
-      <if test="handleUuid != null" >
-        handle_uuid,
-      </if>
-      <if test="handleTime != null" >
-        handle_time,
-      </if>
-      <if test="handleDsp != null" >
-        handle_dsp,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="createAt != null" >
-        #{createAt,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateAt != null" >
-        #{updateAt,jdbcType=TIMESTAMP},
-      </if>
-      <if test="deleteAt != null" >
-        #{deleteAt,jdbcType=TIMESTAMP},
-      </if>
-      <if test="withdrawalsRecordUuid != null" >
-        #{withdrawalsRecordUuid,jdbcType=VARCHAR},
-      </if>
-      <if test="money != null" >
-        #{money,jdbcType=REAL},
-      </if>
-      <if test="applyUuid != null" >
-        #{applyUuid,jdbcType=VARCHAR},
-      </if>
-      <if test="applyStatus != null" >
-        #{applyStatus,jdbcType=INTEGER},
-      </if>
-      <if test="accountType != null" >
-        #{accountType,jdbcType=INTEGER},
-      </if>
-      <if test="accountNumber != null" >
-        #{accountNumber,jdbcType=VARCHAR},
-      </if>
-      <if test="handleUuid != null" >
-        #{handleUuid,jdbcType=VARCHAR},
-      </if>
-      <if test="handleTime != null" >
-        #{handleTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="handleDsp != null" >
-        #{handleDsp,jdbcType=VARCHAR},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.hcb.zzb.dto.WithdrawalsRecord" >
-    update withdrawals_record
-    <set >
-      <if test="createAt != null" >
-        create_at = #{createAt,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateAt != null" >
-        update_at = #{updateAt,jdbcType=TIMESTAMP},
-      </if>
-      <if test="deleteAt != null" >
-        delete_at = #{deleteAt,jdbcType=TIMESTAMP},
-      </if>
-      <if test="withdrawalsRecordUuid != null" >
-        withdrawals_record_uuid = #{withdrawalsRecordUuid,jdbcType=VARCHAR},
-      </if>
-      <if test="money != null" >
-        money = #{money,jdbcType=REAL},
-      </if>
-      <if test="applyUuid != null" >
-        apply_uuid = #{applyUuid,jdbcType=VARCHAR},
-      </if>
-      <if test="applyStatus != null" >
-        apply_status = #{applyStatus,jdbcType=INTEGER},
-      </if>
-      <if test="accountType != null" >
-        account_type = #{accountType,jdbcType=INTEGER},
-      </if>
-      <if test="accountNumber != null" >
-        account_number = #{accountNumber,jdbcType=VARCHAR},
-      </if>
-      <if test="handleUuid != null" >
-        handle_uuid = #{handleUuid,jdbcType=VARCHAR},
-      </if>
-      <if test="handleTime != null" >
-        handle_time = #{handleTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="handleDsp != null" >
-        handle_dsp = #{handleDsp,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.hcb.zzb.dto.WithdrawalsRecord" >
-    update withdrawals_record
-    set create_at = #{createAt,jdbcType=TIMESTAMP},
-      update_at = #{updateAt,jdbcType=TIMESTAMP},
-      delete_at = #{deleteAt,jdbcType=TIMESTAMP},
-      withdrawals_record_uuid = #{withdrawalsRecordUuid,jdbcType=VARCHAR},
-      money = #{money,jdbcType=REAL},
-      apply_uuid = #{applyUuid,jdbcType=VARCHAR},
-      apply_status = #{applyStatus,jdbcType=INTEGER},
-      account_type = #{accountType,jdbcType=INTEGER},
-      account_number = #{accountNumber,jdbcType=VARCHAR},
-      handle_uuid = #{handleUuid,jdbcType=VARCHAR},
-      handle_time = #{handleTime,jdbcType=TIMESTAMP},
-      handle_dsp = #{handleDsp,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
+		<result column="create_at" property="createAt" jdbcType="TIMESTAMP" />
+		<result column="update_at" property="updateAt" jdbcType="TIMESTAMP" />
+		<result column="delete_at" property="deleteAt" jdbcType="TIMESTAMP" />
+		<result column="withdrawals_record_uuid" property="withdrawalsRecordUuid"
+			jdbcType="VARCHAR" />
+		<result column="money" property="money" jdbcType="REAL" />
+		<result column="apply_uuid" property="applyUuid" jdbcType="VARCHAR" />
+		<result column="apply_status" property="applyStatus" jdbcType="INTEGER" />
+		<result column="account_type" property="accountType" jdbcType="INTEGER" />
+		<result column="account_number" property="accountNumber"
+			jdbcType="VARCHAR" />
+		<result column="handle_uuid" property="handleUuid" jdbcType="VARCHAR" />
+		<result column="handle_time" property="handleTime" jdbcType="TIMESTAMP" />
+		<result column="handle_dsp" property="handleDsp" jdbcType="VARCHAR" />
+		<result column="bank" property="bank" jdbcType="VARCHAR" />
+		<result column="open_account_name" property="openAccountName" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, create_at, update_at, delete_at, withdrawals_record_uuid, money,
+		apply_uuid,
+		apply_status, account_type, account_number, bank, open_account_name, handle_uuid, handle_time, handle_dsp
+	</sql>
+
+	<select id="selectByUserUuid" resultMap="BaseResultMap"
+		parameterType="java.util.Map">
+		select
+		<include refid="Base_Column_List" />
+		from withdrawals_record
+		where apply_uuid=#{userUuid,jdbcType=VARCHAR} limit
+		#{pageIndex},#{pageSize}
+	</select>
+	<select id="selectByUserUuidCount" resultType="int"
+		parameterType="java.lang.String">
+		select count(1)
+		from withdrawals_record
+		where apply_uuid=#{userUuid,jdbcType=VARCHAR}
+	</select>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from withdrawals_record
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	
+	<select id="selectByMapLimit" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from withdrawals_record
+		where delete_at is null
+		<if test="applyUuid !='' and applyUuid !=null">
+			and apply_uuid=#{applyUuuid,jdbcType=VARCHAR}
+		</if>
+		order by create_at desc
+		limit #{start},#{end} 
+	</select>
+	
+	<select id="countSelectByMapLimit" resultType="java.lang.Integer" parameterType="java.util.HashMap">
+		select count(1)
+		from withdrawals_record
+		where delete_at is null
+		<if test="applyUuid !='' and applyUuid !=null">
+			and apply_uuid=#{applyUuuid,jdbcType=VARCHAR}
+		</if>
+	</select>
+	
+	
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from withdrawals_record
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.hcb.zzb.dto.WithdrawalsRecord">
+		insert into withdrawals_record (id, create_at, update_at,
+		delete_at, withdrawals_record_uuid, money,
+		apply_uuid, apply_status, account_type,
+		account_number,bank, open_account_name, handle_uuid, handle_time,
+		handle_dsp)
+		values (#{id,jdbcType=INTEGER}, #{createAt,jdbcType=TIMESTAMP},
+		#{updateAt,jdbcType=TIMESTAMP},
+		#{deleteAt,jdbcType=TIMESTAMP}, #{withdrawalsRecordUuid,jdbcType=VARCHAR}, #{money,jdbcType=REAL},
+		#{applyUuid,jdbcType=VARCHAR}, #{applyStatus,jdbcType=INTEGER},
+		#{accountType,jdbcType=INTEGER},
+		#{bank,jdbcType=VARCHAR},
+		#{openAccountName,jdbcType=VARCHAR},
+		#{accountNumber,jdbcType=VARCHAR}, 
+		#{handleUuid,jdbcType=VARCHAR}, 
+		#{handleTime,jdbcType=TIMESTAMP},
+		#{handleDsp,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.hcb.zzb.dto.WithdrawalsRecord">
+		insert into withdrawals_record
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="createAt != null">
+				create_at,
+			</if>
+			<if test="updateAt != null">
+				update_at,
+			</if>
+			<if test="deleteAt != null">
+				delete_at,
+			</if>
+			<if test="withdrawalsRecordUuid != null">
+				withdrawals_record_uuid,
+			</if>
+			<if test="money != null">
+				money,
+			</if>
+			<if test="applyUuid != null">
+				apply_uuid,
+			</if>
+			<if test="applyStatus != null">
+				apply_status,
+			</if>
+			<if test="accountType != null">
+				account_type,
+			</if>
+			<if test="accountNumber != null">
+				account_number,
+			</if>
+			<if test="bank != null">
+				bank,
+			</if>
+			<if test="openAccountName != null">
+				open_account_name,
+			</if>
+			<if test="handleUuid != null">
+				handle_uuid,
+			</if>
+			<if test="handleTime != null">
+				handle_time,
+			</if>
+			<if test="handleDsp != null">
+				handle_dsp,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="createAt != null">
+				#{createAt,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateAt != null">
+				#{updateAt,jdbcType=TIMESTAMP},
+			</if>
+			<if test="deleteAt != null">
+				#{deleteAt,jdbcType=TIMESTAMP},
+			</if>
+			<if test="withdrawalsRecordUuid != null">
+				#{withdrawalsRecordUuid,jdbcType=VARCHAR},
+			</if>
+			<if test="money != null">
+				#{money,jdbcType=REAL},
+			</if>
+			<if test="applyUuid != null">
+				#{applyUuid,jdbcType=VARCHAR},
+			</if>
+			<if test="applyStatus != null">
+				#{applyStatus,jdbcType=INTEGER},
+			</if>
+			<if test="accountType != null">
+				#{accountType,jdbcType=INTEGER},
+			</if>
+			<if test="accountNumber != null">
+				#{accountNumber,jdbcType=VARCHAR},
+			</if>
+			<if test="bank != null">
+				#{bank,jdbcType=VARCHAR},
+			</if>
+			<if test="openAccountName != null">
+				#{openAccountName,jdbcType=VARCHAR},
+			</if>
+			<if test="handleUuid != null">
+				#{handleUuid,jdbcType=VARCHAR},
+			</if>
+			<if test="handleTime != null">
+				#{handleTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="handleDsp != null">
+				#{handleDsp,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.hcb.zzb.dto.WithdrawalsRecord">
+		update withdrawals_record
+		<set>
+			<if test="createAt != null">
+				create_at = #{createAt,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateAt != null">
+				update_at = #{updateAt,jdbcType=TIMESTAMP},
+			</if>
+			<if test="deleteAt != null">
+				delete_at = #{deleteAt,jdbcType=TIMESTAMP},
+			</if>
+			<if test="withdrawalsRecordUuid != null">
+				withdrawals_record_uuid = #{withdrawalsRecordUuid,jdbcType=VARCHAR},
+			</if>
+			<if test="money != null">
+				money = #{money,jdbcType=REAL},
+			</if>
+			<if test="applyUuid != null">
+				apply_uuid = #{applyUuid,jdbcType=VARCHAR},
+			</if>
+			<if test="applyStatus != null">
+				apply_status = #{applyStatus,jdbcType=INTEGER},
+			</if>
+			<if test="accountType != null">
+				account_type = #{accountType,jdbcType=INTEGER},
+			</if>
+			<if test="accountNumber != null">
+				account_number = #{accountNumber,jdbcType=VARCHAR},
+			</if>
+			<if test="bank != null">
+				bank = #{accountNumber,jdbcType=VARCHAR},
+			</if>
+			<if test="openAccountName != null">
+				open_account_name = #{openAccountName,jdbcType=VARCHAR},
+			</if>
+			<if test="handleUuid != null">
+				handle_uuid = #{handleUuid,jdbcType=VARCHAR},
+			</if>
+			<if test="handleTime != null">
+				handle_time = #{handleTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="handleDsp != null">
+				handle_dsp = #{handleDsp,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.hcb.zzb.dto.WithdrawalsRecord">
+		update withdrawals_record
+		set create_at = #{createAt,jdbcType=TIMESTAMP},
+		update_at = #{updateAt,jdbcType=TIMESTAMP},
+		delete_at = #{deleteAt,jdbcType=TIMESTAMP},
+		withdrawals_record_uuid = #{withdrawalsRecordUuid,jdbcType=VARCHAR},
+		money = #{money,jdbcType=REAL},
+		apply_uuid = #{applyUuid,jdbcType=VARCHAR},
+		apply_status = #{applyStatus,jdbcType=INTEGER},
+		account_type = #{accountType,jdbcType=INTEGER},
+		account_number = #{accountNumber,jdbcType=VARCHAR},
+		bank = #{bank,jdbcType=VARCHAR},
+		open_account_name = #{openAccountName,jdbcType=VARCHAR},
+		handle_uuid = #{handleUuid,jdbcType=VARCHAR},
+		handle_time = #{handleTime,jdbcType=TIMESTAMP},
+		handle_dsp = #{handleDsp,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
 </mapper>

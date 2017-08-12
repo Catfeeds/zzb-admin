@@ -21,4 +21,8 @@ public interface IWithdrawalsRecordService {
 	public int updateByPrimaryKeySelective(WithdrawalsRecord record);
 
 	public int updateByPrimaryKey(WithdrawalsRecord record);
+	
+	List<WithdrawalsRecord> selectByMapLimit(Map<String, Object> map);
+    
+    int countSelectByMapLimit(Map<String, Object> map);
 }

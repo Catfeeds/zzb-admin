@@ -22,4 +22,6 @@ public interface IUsersService {
 	List<Users> selectUsersByMap(Map<String, Object> map);
 	
 	int countUsersByMap(Map<String, Object> map);
+	
+	Users selectByPrimaryKey(Integer id);
 }

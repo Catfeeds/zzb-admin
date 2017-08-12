@@ -3,7 +3,7 @@ package com.hcb.zzb.dto;
 import java.util.Date;
 
 public class WithdrawalsRecord {
-    private Integer id;
+	private Integer id;
 
     private Date createAt;
 
@@ -22,6 +22,10 @@ public class WithdrawalsRecord {
     private Integer accountType;
 
     private String accountNumber;
+    
+    private String bank;
+    
+    private String openAccountName;
 
     private String handleUuid;
 
@@ -132,4 +136,20 @@ public class WithdrawalsRecord {
     public void setHandleDsp(String handleDsp) {
         this.handleDsp = handleDsp == null ? null : handleDsp.trim();
     }
+
+	public String getBank() {
+		return bank;
+	}
+
+	public void setBank(String bank) {
+		this.bank = bank;
+	}
+
+	public String getOpenAccountName() {
+		return openAccountName;
+	}
+
+	public void setOpenAccountName(String openAccountName) {
+		this.openAccountName = openAccountName;
+	}
 }

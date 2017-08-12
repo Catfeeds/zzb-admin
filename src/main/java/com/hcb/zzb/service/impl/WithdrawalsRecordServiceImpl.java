@@ -63,5 +63,17 @@ public class WithdrawalsRecordServiceImpl implements IWithdrawalsRecordService{
 		return withdrawalsRecordMapper.selectByUserUuid(map);
 	}
 
+	@Override
+	public List<WithdrawalsRecord> selectByMapLimit(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return withdrawalsRecordMapper.selectByMapLimit(map);
+	}
+
+	@Override
+	public int countSelectByMapLimit(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return withdrawalsRecordMapper.countSelectByMapLimit(map);
+	}
+
 
 }

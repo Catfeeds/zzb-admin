@@ -219,7 +219,6 @@ public class OrdersController extends BaseControllers{
 	 * @return
 	 */
 	@RequestMapping(value="refund",method=RequestMethod.POST)
-	@Transactional
 	@ResponseBody
 	public String refund() {
 		JSONObject json=new JSONObject();
@@ -229,10 +228,34 @@ public class OrdersController extends BaseControllers{
 			return buildReqJsonInteger(1, json);
 		}
 		JSONObject bodyInfo=JSONObject.fromObject(bodyString);
+		if(bodyInfo.get("order_uuid")==null) {
+			json.put("result", "1");
+			json.put("description", "请检查参数是否正确或者完整");
+			return buildReqJsonObject(json);
+		}
+		if("".equals(bodyInfo.get("order_uuid"))) {
+			json.put("result", "1");
+			json.put("description", "请检查参数格式是否正确");
+			return buildReqJsonObject(json);
+		}
+		Orders order = orderService.selectByOrdersUuid(bodyInfo.getString("order_uuid"));
+		if(order!=null) {
+			order.setOrderStatus(8);//设置订单状态为8已退款
+			order.setUpdateAt(new Date());
+			int rs = orderService.updateByPrimaryKeySelective(order);
+			if(rs==1) {
+				json.put("result", "0");
+				json.put("description", "退款成功");
+			}else {
+				json.put("result", "1");
+				json.put("description", "退款失败");
+			}
+		}else {
+			json.put("result", "1");
+			json.put("description", "参数order_uuid不正确，没有查询到该订单");
+		}
 		
-		
-		
-		return "";
+		return buildReqJsonObject(json);
 	}
 	
 	

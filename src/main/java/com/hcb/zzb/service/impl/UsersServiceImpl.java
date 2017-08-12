@@ -102,6 +102,12 @@ public class UsersServiceImpl implements IUsersService {
 		// TODO Auto-generated method stub
 		return usersMapper.countUsersByMap(map);
 	}
+
+	@Override
+	public Users selectByPrimaryKey(Integer id) {
+		// TODO Auto-generated method stub
+		return usersMapper.selectByPrimaryKey(id);
+	}
 	
 
 }

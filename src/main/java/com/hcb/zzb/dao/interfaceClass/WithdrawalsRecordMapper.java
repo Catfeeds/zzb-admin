@@ -21,4 +21,8 @@ public interface WithdrawalsRecordMapper {
     int updateByPrimaryKeySelective(WithdrawalsRecord record);
 
     int updateByPrimaryKey(WithdrawalsRecord record);
+    
+    List<WithdrawalsRecord> selectByMapLimit(Map<String, Object> map);
+    
+    int countSelectByMapLimit(Map<String, Object> map);
 }
