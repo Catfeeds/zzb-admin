@@ -13,16 +13,19 @@
     <result column="model_year" property="modelYear" jdbcType="VARCHAR" />
     <result column="transmission_case" property="transmissionCase" jdbcType="VARCHAR" />
     <result column="displacement" property="displacement" jdbcType="VARCHAR" />
+    <result column="clutch" property="clutch" jdbcType="VARCHAR" />
+    <result column="seat_number" property="seatNumber" jdbcType="INTEGER" />
     <result column="car_model" property="carModel" jdbcType="VARCHAR" />
     <result column="apply_user_uuid" property="applyUserUuid" jdbcType="VARCHAR" />
     <result column="apply_status" property="applyStatus" jdbcType="INTEGER" />
     <result column="operator_uuid" property="operatorUuid" jdbcType="VARCHAR" />
+  	<result column="operationTime" property="operationTime" jdbcType="TIMESTAMP" />
   	<result column="color" property="color" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, create_at, update_at, delete_at, car_model_uuid, brand_model, brand, car_series, 
-    model_year, transmission_case, displacement, car_model, apply_user_uuid, apply_status, 
-    operator_uuid,color
+    model_year, transmission_case, displacement,clutch,seat_number, car_model, apply_user_uuid, apply_status, 
+    operator_uuid, operationTime, color
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -89,14 +92,16 @@
     insert into car_model (id, create_at, update_at, 
       delete_at, car_model_uuid, brand_model, 
       brand, car_series, model_year, 
-      transmission_case, displacement, car_model, 
-      apply_user_uuid, apply_status, operator_uuid,color
+      transmission_case, displacement, clutch, seat_number, car_model, 
+      apply_user_uuid, apply_status, operator_uuid,operationTime,color
       )
     values (#{id,jdbcType=INTEGER}, #{createAt,jdbcType=TIMESTAMP}, #{updateAt,jdbcType=TIMESTAMP}, 
       #{deleteAt,jdbcType=TIMESTAMP}, #{carModelUuid,jdbcType=VARCHAR}, #{brandModel,jdbcType=VARCHAR}, 
       #{brand,jdbcType=VARCHAR}, #{carSeries,jdbcType=VARCHAR}, #{modelYear,jdbcType=VARCHAR}, 
-      #{transmissionCase,jdbcType=VARCHAR}, #{displacement,jdbcType=VARCHAR}, #{carModel,jdbcType=VARCHAR}, 
+      #{transmissionCase,jdbcType=VARCHAR}, #{displacement,jdbcType=VARCHAR},#{clutch,jdbcType=VARCHAR},
+      #{seatNumber,jdbcType=INTEGER}, #{carModel,jdbcType=VARCHAR}, 
       #{applyUserUuid,jdbcType=VARCHAR}, #{applyStatus,jdbcType=INTEGER}, #{operatorUuid,jdbcType=VARCHAR},
+      #{operationTime,jdbcType=TIMESTAMP},
       #{color,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.hcb.zzb.dto.CarModel" >
@@ -135,6 +140,12 @@
       <if test="displacement != null" >
         displacement,
       </if>
+      <if test="clutch != null" >
+        clutch,
+      </if>
+      <if test="seatNumber != null" >
+        seat_number,
+      </if>
       <if test="carModel != null" >
         car_model,
       </if>
@@ -146,6 +157,9 @@
       </if>
       <if test="operatorUuid != null" >
         operator_uuid,
+      </if>
+      <if test="operationTime != null" >
+        operationTime,
       </if>
       <if test="color != null">
       	color,
@@ -185,6 +199,12 @@
       <if test="displacement != null" >
         #{displacement,jdbcType=VARCHAR},
       </if>
+      <if test="clutch != null" >
+        #{clutch,jdbcType=VARCHAR},
+      </if>
+      <if test="seatNumber != null" >
+        #{seatNumber,jdbcType=INTEGER},
+      </if>
       <if test="carModel != null" >
         #{carModel,jdbcType=VARCHAR},
       </if>
@@ -196,6 +216,9 @@
       </if>
       <if test="operatorUuid != null" >
         #{operatorUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="operationTime != null" >
+        #{operationTime,jdbcType=TIMESTAMP},
       </if>
       <if test="color != null" >
         #{color,jdbcType=VARCHAR},
@@ -235,6 +258,12 @@
       <if test="displacement != null" >
         displacement = #{displacement,jdbcType=VARCHAR},
       </if>
+      <if test="clutch != null" >
+        clutch = #{clutch,jdbcType=VARCHAR},
+      </if>
+      <if test="seatNumber != null" >
+        seat_number = #{seatNumber,jdbcType=INTEGER},
+      </if>
       <if test="carModel != null" >
         car_model = #{carModel,jdbcType=VARCHAR},
       </if>
@@ -246,6 +275,9 @@
       </if>
       <if test="operatorUuid != null" >
         operator_uuid = #{operatorUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="operationTime != null" >
+        operationTime = #{operationTime,jdbcType=TIMESTAMP},
       </if>
       <if test="color != null" >
         color = #{color,jdbcType=VARCHAR},
@@ -265,10 +297,13 @@
       model_year = #{modelYear,jdbcType=VARCHAR},
       transmission_case = #{transmissionCase,jdbcType=VARCHAR},
       displacement = #{displacement,jdbcType=VARCHAR},
+      clutch = #{clutch,jdbcType=VARCHAR},
+      seat_number = #{seatNumber,jdbcType=INTEGER},
       car_model = #{carModel,jdbcType=VARCHAR},
       apply_user_uuid = #{applyUserUuid,jdbcType=VARCHAR},
       apply_status = #{applyStatus,jdbcType=INTEGER},
       operator_uuid = #{operatorUuid,jdbcType=VARCHAR},
+      operationTime = #{operationTime,jdbcType=TIMESTAMP},
       color = #{color,jdbcType=VARCHAR},
     where id = #{id,jdbcType=INTEGER}
   </update>

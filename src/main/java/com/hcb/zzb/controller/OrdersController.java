@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -210,6 +211,28 @@ public class OrdersController extends BaseControllers{
 			model.put("description", "未查询到该订单信息,order_uuid不存在");
 		}
 		return buildReqJsonObject(model);
+	}
+	
+	
+	/**
+	 * 退款
+	 * @return
+	 */
+	@RequestMapping(value="refund",method=RequestMethod.POST)
+	@Transactional
+	@ResponseBody
+	public String refund() {
+		JSONObject json=new JSONObject();
+		if(sign==1||sign==2) {
+			json.put("result", "1");
+			json.put("description", "请检查参数格式是否正确或者参数是否完整");
+			return buildReqJsonInteger(1, json);
+		}
+		JSONObject bodyInfo=JSONObject.fromObject(bodyString);
+		
+		
+		
+		return "";
 	}
 	
 	

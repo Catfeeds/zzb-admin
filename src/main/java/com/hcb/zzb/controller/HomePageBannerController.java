@@ -166,21 +166,21 @@ public class HomePageBannerController extends BaseControllers {
 		JSONObject bodyInfo = JSONObject.fromObject(bodyString);
 		if (bodyInfo.get("operation_info") == null||bodyInfo.get("operation_picture") == null||bodyInfo.get("is_display") == null
 				||bodyInfo.get("link")==null) {
-			json.put("result", 1);
+			json.put("result", "1");
 			json.put("description", "请检查参数是否完整");
 			return buildReqJsonObject(json);
 		}
 		
 		if("".equals(bodyInfo.get("operation_info"))||"".equals(bodyInfo.get("operation_picture"))
 				||"".equals(bodyInfo.get("is_display"))||"".equals(bodyInfo.get("link"))) {
-			json.put("result", 1);
+			json.put("result", "1");
 			json.put("description", "请检查参数是否正确");
 			return buildReqJsonObject(json);
 		}
 		
 		int countDisplay = homePageBanner.countDisplay();
 		if(bodyInfo.getInt("is_display")==1 && countDisplay>=4) {
-			json.put("result", 1);
+			json.put("result", "1");
 			json.put("description", "轮播图上架数量不能大于4张");
 			return buildReqJsonObject(json);
 		}
@@ -198,10 +198,10 @@ public class HomePageBannerController extends BaseControllers {
 		}
 		int rs=homePageBanner.insertSelective(homepageBanner);
 		if(rs == 1){
-			json.put("result", 0);
+			json.put("result", "0");
 			json.put("description", "创建成功");
 		}else{
-			json.put("result", 1);
+			json.put("result", "1");
 			json.put("description", "创建失败，请重新尝试");
 		}
 		return buildReqJsonObject(json);
@@ -240,7 +240,7 @@ public class HomePageBannerController extends BaseControllers {
 		
 		int countDisplay = homePageBanner.countDisplay();
 		if(bodyInfo.getInt("is_display")==1 && countDisplay>=4) {
-			json.put("result", 1);
+			json.put("result", "1");
 			json.put("description", "轮播图上架数量不能大于4张");
 			return buildReqJsonObject(json);
 		}
@@ -263,10 +263,10 @@ public class HomePageBannerController extends BaseControllers {
 		banner.setLink(bodyInfo.getString("link"));
 		int rs = homePageBanner.updateByPrimaryKeySelective(banner);
 		if(rs == 1){
-			json.put("result", 0);
+			json.put("result", "0");
 			json.put("description", "修改成功");
 		}else{
-			json.put("result", 1);
+			json.put("result", "1");
 			json.put("description", "修改失败，请重新尝试");
 		}
 		
@@ -290,20 +290,20 @@ public class HomePageBannerController extends BaseControllers {
 		JSONObject headInfo=JSONObject.fromObject(headString);
 		JSONObject bodyInfo = JSONObject.fromObject(bodyString);
 		if (bodyInfo.get("is_display") == null||bodyInfo.get("id") == null) {
-			json.put("result", 1);
+			json.put("result", "1");
 			json.put("description", "请检查参数是否完整");
 			return buildReqJsonObject(json);
 		}
 		
 		if ("".equals(bodyInfo.get("is_display"))||"".equals(bodyInfo.get("id"))) {
-			json.put("result", 1);
+			json.put("result", "1");
 			json.put("description", "请检查参数是否正确");
 			return buildReqJsonObject(json);
 		}
 		
 		int countDisplay = homePageBanner.countDisplay();
 		if(bodyInfo.getInt("is_display")==1 && countDisplay>=4) {
-			json.put("result", 1);
+			json.put("result", "1");
 			json.put("description", "轮播图上架数量不能大于4张");
 			return buildReqJsonObject(json);
 		}
@@ -319,10 +319,10 @@ public class HomePageBannerController extends BaseControllers {
 		banner.setIsDisplay(bodyInfo.getInt("is_display"));
 		int rs = homePageBanner.updateByPrimaryKeySelective(banner);
 		if(rs == 1){
-			json.put("result", 0);
+			json.put("result", "0");
 			json.put("description", "上架成功");
 		}else{
-			json.put("result", 1);
+			json.put("result", "1");
 			json.put("description", "上架失败，请重新尝试");
 		}
 		
@@ -347,11 +347,11 @@ public class HomePageBannerController extends BaseControllers {
 		}*/
 		HomepageBanner banner = homePageBanner.selectByPrimaryKey(bodyInfo.getInt("id"));
 		if(banner != null){
-			json.put("result", 0);
+			json.put("result", "0");
 			json.put("description", "查看详情成功");
 			json.put("banner", banner);
 		}else{
-			json.put("result", 1);
+			json.put("result", "1");
 			json.put("description", "查看详情失败，请重新尝试");
 		}
 		

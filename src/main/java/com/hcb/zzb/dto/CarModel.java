@@ -24,7 +24,11 @@ public class CarModel {
     private String transmissionCase;
 
     private String displacement;
-
+    
+    private String clutch;
+    
+    private int seatNumber;
+    
     private String carModel;
 
     private String applyUserUuid;
@@ -32,6 +36,10 @@ public class CarModel {
     private Integer applyStatus;
 
     private String operatorUuid;
+    
+    private Date operationTime;
+    
+    private String operatorName;//
     
     private String color;
 
@@ -161,6 +169,38 @@ public class CarModel {
 
 	public void setColor(String color) {
 		this.color = color;
+	}
+
+	public String getClutch() {
+		return clutch;
+	}
+
+	public void setClutch(String clutch) {
+		this.clutch = clutch;
+	}
+
+	public int getSeatNumber() {
+		return seatNumber;
+	}
+
+	public void setSeatNumber(int seatNumber) {
+		this.seatNumber = seatNumber;
+	}
+
+	public Date getOperationTime() {
+		return operationTime;
+	}
+
+	public void setOperationTime(Date operationTime) {
+		this.operationTime = operationTime;
+	}
+
+	public String getOperatorName() {
+		return operatorName;
+	}
+
+	public void setOperatorName(String operatorName) {
+		this.operatorName = operatorName;
 	}
     
 }
