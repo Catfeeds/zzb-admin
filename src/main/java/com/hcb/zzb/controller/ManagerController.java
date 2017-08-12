@@ -68,7 +68,11 @@ public class ManagerController extends BaseControllers {
 			if(bodyInfo.get("account") != null){
 				map.put("account", bodyInfo.getString("account"));
 			}
-			
+			if(bodyInfo.get("orderBy")!=null&&!"".equals(bodyInfo.get("orderBy"))) {
+				map.put("orderBy", bodyInfo.getInt("orderBy"));
+			}else {
+				map.put("orderBy", 2);
+			}
 			list = managerService.searchByMap(map);
 			Integer count = 0;
 			count = managerService.countByMap(map);

@@ -78,7 +78,20 @@
   		<if test="userName != null and userName !=''">
   			and user_name like CONCAT('%', #{userName,jdbcType=VARCHAR}, '%')
   		</if>
+  		<if test="id != null and id !=''">
+  			and id=#{id,jdbcType=INTEGER}
+  		</if>
+  		
   	</where>
+  	<if test="orderBy != null and orderBy !=''">
+  		<if test="orderBy==1">
+  			order by create_at asc
+  		</if>
+  		<if test="orderBy==2">
+  			order by create_at desc
+  		</if>
+  	</if>
+  	
   	limit #{start},#{end}
   </select>
   
@@ -88,6 +101,9 @@
   		delete_at is null
   		<if test="userName != null and userName !=''">
   			and user_name like CONCAT('%', #{userName,jdbcType=VARCHAR}, '%')
+  		</if>
+  		<if test="id != null and id !=''">
+  			and id=#{id,jdbcType=INTEGER}
   		</if>
   	</where>
   </select>

@@ -39,7 +39,15 @@
 	<if test="is_display !='' and is_display != null">
 		and is_display like CONCAT('%', #{is_display,jdbcType=INTEGER}, '%')
 	</if>
-	order by create_at desc LIMIT #{start},#{end}
+	<if test="orderBy != null and orderBy !=''">
+  		<if test="orderBy==1">
+  			order by create_at asc
+  		</if>
+  		<if test="orderBy==2">
+  			order by create_at desc
+  		</if>
+  	</if>
+	 LIMIT #{start},#{end}
   </select>
   
   <select id="countByMap" resultType="java.lang.Integer" parameterType="java.util.HashMap" >

@@ -62,6 +62,11 @@ public class CarController extends BaseControllers{
 		if(bodyInfo.get("modelCharacter")!=null&&!"".equals(bodyInfo.get("modelCharacter"))) {
 			map.put("modelCharacter", bodyInfo.getString("modelCharacter"));
 		}
+		if(bodyInfo.get("orderBy")!=null&&!"".equals(bodyInfo.get("orderBy"))) {
+			map.put("orderBy", bodyInfo.getInt("orderBy"));
+		}else {
+			map.put("orderBy", 2);
+		}
 		int count=carService.countSelectByMapLimit(map);
 		if(count==0) {
 			json.put("result", "1");

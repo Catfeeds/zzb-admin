@@ -38,7 +38,7 @@ public interface IOrderService {
 
 	List<Orders> selectByOwnerUuid3(String string);
 	
-	List<Orders> selectByMapLimit(Map<String, Object> map);
+	List<Map<String, Object>> selectByMapLimit(Map<String, Object> map);
 	
 	int countselectByMapLimit(Map<String, Object> map);
 	

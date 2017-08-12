@@ -63,6 +63,11 @@ public class PlatformConfigController extends BaseControllers{
 		map.put("start", start);
 		map.put("end", pageSize);
 		map.put("recordType", 4);
+		if(bodyInfo.get("orderBy")!=null&&!"".equals(bodyInfo.get("orderBy"))) {
+			map.put("orderBy", bodyInfo.getInt("orderBy"));
+		}else {
+			map.put("orderBy", 2);
+		}
 		int count = financeRecordService.countSelectByRecordType(map);
 		if(count ==0) {
 			json.put("result", "1");

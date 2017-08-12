@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -38,7 +39,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.model.ObjectMetadata;
 import com.hcb.zzb.controller.base.BaseControllers;
-import com.hcb.zzb.dto.Orders;
 import com.hcb.zzb.dto.Users;
 import com.hcb.zzb.dto.export.OrderExport;
 import com.hcb.zzb.service.IOrderService;
@@ -75,48 +75,55 @@ public class ExportExcelOrderController<T> extends BaseControllers {
 		map.put("end", count);
 		
 		SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd");
-		
-		List<Orders> list= orderService.selectByMapLimit(map);
-		List<Orders> newList=new ArrayList<>();
+		SimpleDateFormat formats=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		List<Map<String,Object>> list= orderService.selectByMapLimit(map);
+		List<Map<String,Object>> newList=new ArrayList<>();
 		List<OrderExport> exportList=new ArrayList<>();
 		
-		for (Orders orders : list) {
-			Users user=userService.selectByUserUuid(orders.getUserUuid());
-			orders.setUserName(user.getUserName());
-			if(orders.getReturnCarTime()!=null&&orders.getTakeCarTime()!=null) {
-				orders.setUseCarTime(getDatePoor(orders.getReturnCarTime(),orders.getTakeCarTime()));
+		for (Map<String,Object> orders : list) {
+			Users user=userService.selectByUserUuid(orders.get("userUuid").toString());
+			orders.put("userName",user.getUserName());
+			if(orders.get("returnCarTime")!=null&&orders.get("takeCarTime")!=null) {
+				try {
+					orders.put("useCarTime",getDatePoor(formats.parse(orders.get("returnCarTime").toString()),formats.parse(orders.get("takeCarTime").toString())));
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}else {
-				orders.setUseCarTime("");
+				orders.put("useCarTime","");
 			}	
 			newList.add(orders);
 		}
 		
 		int i=1;
-		for (Orders orders : newList) {
+		for (Map<String,Object> orders : newList) {
 			OrderExport oe=new OrderExport();
 			oe.setSerialNumber(i);
-			oe.setOrderNumber(orders.getOrderNumber());
-			oe.setUserName(orders.getUserName());
-			oe.setUseCarTime(orders.getUseCarTime());
-			oe.setMoney(orders.getTotalPrice());
-			if(orders.getOrderStatus()==null||orders.getOrderStatus()==1) {
+			oe.setOrderNumber(orders.get("orderNumber").toString());
+			oe.setUserName(orders.get("userName").toString());
+			oe.setUseCarTime(orders.get("UseCarTime").toString());
+			oe.setMoney(Float.parseFloat(orders.get("TotalPrice").toString()));
+			if(orders.get("orderStatus")==null||orders.get("orderStatus").equals(1)) {
 				oe.setStatus("未接单");
-			}else if(orders.getOrderStatus()==2) {
+			}else if(orders.get("orderStatus").equals(2)) {
 				oe.setStatus("拒绝接单");
-			}else if(orders.getOrderStatus()==3) {
+			}else if(orders.get("orderStatus").equals(3)) {
 				oe.setStatus("接单未取车");
-			}else if(orders.getOrderStatus()==4) {
+			}else if(orders.get("orderStatus").equals(4)) {
 				oe.setStatus("接单已取车");
-			}else if(orders.getOrderStatus()==5) {
+			}else if(orders.get("orderStatus").equals(5)) {
 				oe.setStatus("确认还车未收车");
-			}else if(orders.getOrderStatus()==6) {
+			}else if(orders.get("orderStatus").equals(6)) {
 				oe.setStatus("已收车");
-			}else if(orders.getOrderStatus()==7) {
+			}else if(orders.get("orderStatus").equals(7)) {
 				oe.setStatus("已取消");
+			}else if(orders.get("orderStatus").equals(8)) {
+				oe.setStatus("已退款");
 			}else{
 				oe.setStatus("未知");
 			}
-			oe.setDate(orders.getCreateAt()==null?"":format.format(orders.getCreateAt()));
+			oe.setDate(orders.get("createAt")==null?"":format.format(orders.get("createAt")));
 		
 			exportList.add(oe);
 			i++;

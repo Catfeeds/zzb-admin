@@ -64,6 +64,11 @@ public class UserAccountController extends BaseControllers{
 		if(bodyInfo.get("userName")!=null&&!"".equals(bodyInfo.get("userName"))) {
 			map.put("userName", bodyInfo.getString("userName"));
 		}
+		if(bodyInfo.get("orderBy")!=null&&!"".equals(bodyInfo.get("orderBy"))) {
+			map.put("orderBy", bodyInfo.getInt("orderBy"));
+		}else {
+			map.put("orderBy", 2);
+		}
 		int count=userService.countUsersByMap(map);
 		if(count==0) {
 			json.put("result", "1");
@@ -268,6 +273,11 @@ public class UserAccountController extends BaseControllers{
 		Map<String, Object> map=new HashMap<>();
 		map.put("start", start);
 		map.put("end", end);
+		if(bodyInfo.get("orderBy")!=null&&!"".equals(bodyInfo.get("orderBy"))) {
+			map.put("orderBy", bodyInfo.getInt("orderBy"));
+		}else {
+			map.put("orderBy", 2);
+		}
 		int count=financeRecordService.countSelectByMapLimit(map);
 		if(count==0) {
 			json.put("result", "1");

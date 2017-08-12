@@ -64,6 +64,11 @@ public class ArticleController extends BaseControllers{
 		if(bodyInfo.get("tittle")!=null&&!"".equals(bodyInfo.get("tittle"))) {
 			map.put("tittle", bodyInfo.getString("tittle"));
 		}
+		if(bodyInfo.get("orderBy")!=null&&!"".equals(bodyInfo.get("orderBy"))) {
+			map.put("orderBy", bodyInfo.getInt("orderBy"));
+		}else {
+			map.put("orderBy", 2);
+		}
 		int count = articleService.countSelectByMapLimit(map);
 		if(count==0) {
 			json.put("result", "1");

@@ -110,7 +110,7 @@ private OrdersMapper ordersMapper;
 	}
 
 	@Override
-	public List<Orders> selectByMapLimit(Map<String, Object> map) {
+	public List<Map<String, Object>> selectByMapLimit(Map<String, Object> map) {
 		// TODO Auto-generated method stub
 		return ordersMapper.selectByMapLimit(map);
 	}

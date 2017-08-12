@@ -37,7 +37,15 @@
     <if test="tittle !='' and tittle != null">
 		and tittle like CONCAT('%', #{tittle,jdbcType=VARCHAR}, '%')
 	</if>
-	order by create_at desc LIMIT #{start},#{end}
+	<if test="orderBy != null and orderBy !=''">
+  		<if test="orderBy==1">
+  			order by create_at asc
+  		</if>
+  		<if test="orderBy==2">
+  			order by create_at desc
+  		</if>
+  	</if>
+	 LIMIT #{start},#{end}
   </select>
   
   <select id="countByMap" resultType="java.lang.Integer" parameterType="java.util.HashMap" >

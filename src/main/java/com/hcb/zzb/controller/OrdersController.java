@@ -1,7 +1,6 @@
 package com.hcb.zzb.controller;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -9,7 +8,6 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -71,7 +69,14 @@ public class OrdersController extends BaseControllers{
 		if(bodyInfo.get("orderNumber")!=null&&!"".equals(bodyInfo.get("orderNumber"))) {
 			map.put("orderNumber", bodyInfo.getString("orderNumber"));
 		}
-		
+		if(bodyInfo.get("userName")!=null&&!"".equals(bodyInfo.get("userName"))) {
+			map.put("userName", bodyInfo.getString("userName"));
+		}
+		if(bodyInfo.get("orderBy")!=null&&!"".equals(bodyInfo.get("orderBy"))) {
+			map.put("orderBy", bodyInfo.getInt("orderBy"));
+		}else {
+			map.put("orderBy", 2);
+		}
 		int count=orderService.countselectByMapLimit(map);
 		if(count==0) {
 			json.put("result", "1");
@@ -79,35 +84,16 @@ public class OrdersController extends BaseControllers{
 			return buildReqJsonObject(json);
 		}
 		int total=count%pageSize==0?count/pageSize:count/pageSize+1;
-		List<Orders> list=orderService.selectByMapLimit(map);
-		List<Orders> orderList=new ArrayList<Orders>();
+		List<Map<String, Object>> list=orderService.selectByMapLimit(map);
+		//List<Map<String, Object>> orderList=new ArrayList<Map<String, Object>>();
 		if(!list.isEmpty()) {
 			json.put("result", "0");
 			json.put("description", "查询成功");
 			json.put("total", total);
 			json.put("page", pageIndex);
 			
-			for (Orders orders : list) {	
-				if(orders.getUserUuid()==null) {
-					json.put("result", "1");
-					json.put("description", "错误,没有查询到该订单的用户");
-					return buildReqJsonObject(json);
-				}
-				Users user=userService.selectByUserUuid(orders.getUserUuid());
-				if(user==null) {
-					json.put("result", "1");
-					json.put("description", "错误,没有查询到该订单的用户");
-					return buildReqJsonObject(json);
-				}
-				orders.setUserName(user.getUserName());
-				if(orders.getReturnCarTime()!=null&&orders.getTakeCarTime()!=null) {
-					orders.setUseCarTime(getDatePoor(orders.getReturnCarTime(),orders.getTakeCarTime()));
-				}else {
-					orders.setUseCarTime("");
-				}	
-				orderList.add(orders);
-			}
-			json.put("orderList", orderList);
+			
+			json.put("orderList", list);
 		}else {
 			json.put("result", "1");
 			json.put("description", "没有查询到数据记录");

@@ -76,6 +76,11 @@ public class WithdrawalsRecordController extends BaseControllers{
 			}
 			
 		}
+		if(bodyInfo.get("orderBy")!=null&&!"".equals(bodyInfo.get("orderBy"))) {
+			map.put("orderBy", bodyInfo.getInt("orderBy"));
+		}else {
+			map.put("orderBy", 2);
+		}
 		int count = withdrawalsRecordService.countSelectByMapLimit(map);
 		if(count==0) {
 			json.put("result", "1");

@@ -113,16 +113,59 @@
   </select>
   
   
-  <select id="selectByMapLimit" resultMap="BaseResultMap" parameterType="java.util.HashMap">
+  <select id="selectByMapLimit" resultType="java.util.Map" parameterType="java.util.HashMap">
   	select
-  	<include refid="Base_Column_List" />
-  	from orders
+  	o.id AS id, 
+  	o.create_at AS createAt, 
+  	o.update_at AS updateAt, 
+  	o.delete_at as deleteAt, 
+  	o.order_uuid as orderUuid, 
+  	o.order_number as orderNumber, 
+  	o.user_uuid as userUuid, 
+  	o.car_owner_uuid as carOwnerUuid, 
+    o.car_uuid AS carUuid, 
+    o.start_time AS startTime, 
+    o.end_time AS endTime, 
+    o.take_car_time AS takeCarTime, 
+    o.take_car_address AS takeCarAddress, 
+    o.return_car_time AS returnCarTime, 
+    o.return_car_address AS returnCarAddress, 
+    o.is_damage AS isDamage, 
+    o.damage_dsp AS damageDsp, 
+    o.damage_picture AS damagePicture, 
+    o.compensate_money AS compensateMoney, 
+    o.closing_time AS closingTime, 
+    o.deposit AS deposit, 
+    o.deposit_status AS depositStatus, 
+    o.lease_price AS leasePrice, 
+    o.insurance_price AS insurancePrice, 
+    o.other_price AS otherPrice, 
+    o.total_price AS totalPrice, 
+    o.pay_time AS payTime, 
+    o.order_status AS orderStatus, 
+    o.pay_type AS payType, 
+    o.order_remark AS orderRemark, 
+    o.evaluate_score AS evaluateScore,  
+    o.evaluate_dsp AS evaluateDsp,
+    u.user_name AS userName
+  	from orders o left join users u on o.user_uuid=u.user_uuid
   	<where>
-  		delete_at is null
+  		o.delete_at is null
   		<if test="orderNumber !='' and orderNumber !=null">
-  			and order_number like CONCAT('%', #{orderNumber,jdbcType=VARCHAR}, '%')
+  			and o.order_number like CONCAT('%', #{orderNumber,jdbcType=VARCHAR}, '%')
+  		</if>
+  		<if test="userName !='' and userName !=null">
+  			and u.user_name like CONCAT('%', #{userName,jdbcType=VARCHAR}, '%')
   		</if>
   	</where>
+  	<if test="orderBy != null and orderBy !=''">
+  		<if test="orderBy==1">
+  			order by o.create_at asc
+  		</if>
+  		<if test="orderBy==2">
+  			order by o.create_at desc
+  		</if>
+  	</if>
   	limit #{start},#{end} 
   </select>
   

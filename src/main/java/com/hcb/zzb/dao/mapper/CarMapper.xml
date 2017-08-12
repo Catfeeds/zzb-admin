@@ -147,6 +147,14 @@
   	<if test="modelCharacter !='' and modelCharacter != null">
   		and model_character like CONCAT('%', #{modelCharacter,jdbcType=VARCHAR}, '%')
   	</if>
+  	<if test="orderBy != null and orderBy !=''">
+  		<if test="orderBy==1">
+  			order by create_at asc
+  		</if>
+  		<if test="orderBy==2">
+  			order by create_at desc
+  		</if>
+  	</if>
   	limit #{start},#{end}
   </select>
   

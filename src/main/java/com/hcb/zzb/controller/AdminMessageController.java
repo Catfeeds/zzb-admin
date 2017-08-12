@@ -67,7 +67,11 @@ public class AdminMessageController extends BaseControllers{
 			if(bodyInfo.get("messageContent") != null){
 				map.put("messageContent", bodyInfo.getString("messageContent"));
 			}
-			
+			if(bodyInfo.get("orderBy")!=null&&!"".equals(bodyInfo.get("orderBy"))) {
+				map.put("orderBy", bodyInfo.getInt("orderBy"));
+			}else {
+				map.put("orderBy", 2);
+			}
 			list = adminMessageService.searchByMap(map);
 			Integer count = 0;
 			count = adminMessageService.countByMap(map);

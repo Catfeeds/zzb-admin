@@ -68,6 +68,14 @@ public class TicketController extends BaseControllers{
 		if(bodyInfo.get("address")!=null&&!"".equals(bodyInfo.get("address"))) {
 			map.put("address", bodyInfo.getString("address"));
 		}
+		if(bodyInfo.get("orderNumber")!=null&&!"".equals(bodyInfo.get("orderNumber"))) {
+			map.put("orderNumber", bodyInfo.getString("orderNumber"));
+		}
+		if(bodyInfo.get("orderBy")!=null&&!"".equals(bodyInfo.get("orderBy"))) {
+			map.put("orderBy", bodyInfo.getInt("orderBy"));
+		}else {
+			map.put("orderBy", 2);
+		}
 		int count = ticketService.countSelectTickets(map);
 		if(count==0) {
 			json.put("result", "1");

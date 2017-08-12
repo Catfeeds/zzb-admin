@@ -37,7 +37,7 @@ public interface OrdersMapper {
 
 	List<Orders> selectByOwnerUuid3(String useruuid);
 	
-	List<Orders> selectByMapLimit(Map<String, Object> map);
+	List<Map<String, Object>> selectByMapLimit(Map<String, Object> map);
 	
 	int countselectByMapLimit(Map<String, Object> map);
 	//Orders selectByUserUuidAndOrderUUid( String orderuuid);

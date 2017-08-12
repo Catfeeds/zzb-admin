@@ -51,7 +51,18 @@
   		<if test="address != null and address !=''">
   			and address like CONCAT('%', #{address,jdbcType=VARCHAR}, '%')
   		</if>
+  		<if test="orderNumber != null and orderNumber !=''">
+  			and order_number like CONCAT('%', #{orderNumber,jdbcType=VARCHAR}, '%')
+  		</if>
   	</where>
+  	<if test="orderBy != null and orderBy !=''">
+  		<if test="orderBy==1">
+  			order by create_at asc
+  		</if>
+  		<if test="orderBy==2">
+  			order by create_at desc
+  		</if>
+  	</if>
   	limit #{start},#{end}
   </select>
   <select id="countSelectTickets" resultType="java.lang.Integer" parameterType="java.util.HashMap">

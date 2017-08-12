@@ -69,6 +69,14 @@ public class UsersController extends BaseControllers{
 			if(bodyInfo.get("userName")!=null&&!"".equals(bodyInfo.get("userName"))) {
 				map.put("userName", bodyInfo.getString("userName"));
 			}
+			if(bodyInfo.get("id")!=null&&!"".equals(bodyInfo.get("id"))) {
+				map.put("id", bodyInfo.getInt("id"));
+			}
+			if(bodyInfo.get("orderBy")!=null&&!"".equals(bodyInfo.get("orderBy"))) {
+				map.put("orderBy", bodyInfo.getInt("orderBy"));
+			}else {
+				map.put("orderBy", 2);
+			}
 			int count=usersService.countUsersByMap(map);
 			if(count==0) {
 				json.put("result", "1");
@@ -244,6 +252,11 @@ public class UsersController extends BaseControllers{
 			map.put("end", pageSize);
 			if(bodyInfo.get("userName")!=null&&!"".equals(bodyInfo.get("userName"))) {
 				map.put("userName", bodyInfo.getString("userName"));
+			}
+			if(bodyInfo.get("orderBy")!=null&&!"".equals(bodyInfo.get("orderBy"))) {
+				map.put("orderBy", bodyInfo.getInt("orderBy"));
+			}else {
+				map.put("orderBy", 2);
 			}
 			int count=usersService.countUsersByMap(map);
 			if(count==0) {

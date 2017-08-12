@@ -63,6 +63,11 @@ public class HomePageBannerController extends BaseControllers {
 		if(bodyInfo.get("is_display")!=null&&!"".equals(bodyInfo.get("is_display"))) {
 			map.put("is_display", bodyInfo.getInt("is_display"));
 		}
+		if(bodyInfo.get("orderBy")!=null&&!"".equals(bodyInfo.get("orderBy"))) {
+			map.put("orderBy", bodyInfo.getInt("orderBy"));
+		}else {
+			map.put("orderBy", 2);
+		}
 		int count = homePageBanner.countByMap(map);
 		if(count==0) {
 			json.put("result", "1");

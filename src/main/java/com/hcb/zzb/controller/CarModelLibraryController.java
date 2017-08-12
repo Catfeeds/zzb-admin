@@ -68,6 +68,11 @@ public class CarModelLibraryController extends BaseControllers{
 			if(bodyInfo.get("brand")!=null && !"".equals(bodyInfo.get("brand"))) {
 				map.put("brand", bodyInfo.getString("brand"));
 			}
+			if(bodyInfo.get("orderBy")!=null&&!"".equals(bodyInfo.get("orderBy"))) {
+				map.put("orderBy", bodyInfo.getInt("orderBy"));
+			}else {
+				map.put("orderBy", 2);
+			}
 			list=carModelService.selectByMapLimit(map);
 			Integer count=carModelService.countByMap(map);
 			
