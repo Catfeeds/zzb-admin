@@ -23,4 +23,6 @@ public interface MessageChildMapper {
     int selectAllMessageByUserCount(String userUuid);
     
     MessageChild selectByUserUuidMessageChildUuid(Map<String,Object> map);
+    
+    List<MessageChild> selectMessageChildByMessageBaseUuid(String messageBaseUUid);
 }

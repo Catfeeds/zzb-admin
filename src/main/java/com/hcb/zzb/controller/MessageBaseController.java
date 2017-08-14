@@ -9,6 +9,7 @@ import java.util.Map;
 import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -19,7 +20,11 @@ import com.hcb.zzb.dto.AdminMessage;
 import com.hcb.zzb.dto.HomepageBanner;
 import com.hcb.zzb.dto.Manager;
 import com.hcb.zzb.dto.MessageBase;
+import com.hcb.zzb.dto.MessageChild;
+import com.hcb.zzb.dto.Users;
 import com.hcb.zzb.service.IManagerService;
+import com.hcb.zzb.service.IMessageChildService;
+import com.hcb.zzb.service.IUsersService;
 import com.hcb.zzb.service.ImessageBaseService;
 import com.hcb.zzb.util.MD5Util;
 
@@ -31,7 +36,12 @@ public class MessageBaseController extends BaseControllers {
 	@Autowired
 	private ImessageBaseService messageBaseService;
 	@Autowired
-	IManagerService managerService;
+	private IManagerService managerService;
+	@Autowired
+	private IUsersService userService;
+	@Autowired
+	private IMessageChildService messageChildService;
+	
 	
 	@RequestMapping(value="list",method=RequestMethod.POST)
 	@ResponseBody
@@ -159,6 +169,7 @@ public class MessageBaseController extends BaseControllers {
 	
 	@RequestMapping(value ="add", method = RequestMethod.POST)
 	@ResponseBody
+	@Transactional
 	public String add(){
 		
 		JSONObject json = new JSONObject();
@@ -175,7 +186,8 @@ public class MessageBaseController extends BaseControllers {
 			return buildReqJsonObject(json);
 		}
 		MessageBase messageBase=new MessageBase();
-		messageBase.setCreateAt(new Date());
+		Date nowDate=new Date();
+		messageBase.setCreateAt(nowDate);
 		String messageBaseUuid;
 		try {
 			messageBaseUuid = MD5Util.md5Digest( System.currentTimeMillis() + RandomStringUtils.random(8));
@@ -191,6 +203,38 @@ public class MessageBaseController extends BaseControllers {
 		if(manager!=null){
 			messageBase.setCreater(manager.getManagerUuid());
 		}
+		
+		//增加消息子表
+		
+		Map<String, Object> map=new HashMap<>();
+		int count = userService.countUsersByMap(map);
+		map.put("start", 0);
+		map.put("end", count);
+		
+		List<Users> list=userService.selectUsersByMap(map);
+		for (Users users : list) {
+			MessageChild messageChild=new MessageChild();
+			messageChild.setContent(bodyInfo.getString("content"));
+			messageChild.setCreateAt(nowDate);
+			if(manager!=null) {
+				messageChild.setCreater(manager.getManagerUuid());
+			}
+			messageChild.setIsRead(1);//未读
+			messageChild.setMessageBaseUuid(messageBase.getMessageBaseUuid());
+			String messageChildUuid;
+			try {
+				messageChildUuid=MD5Util.md5Digest( System.currentTimeMillis() + RandomStringUtils.random(8));
+				messageChild.setMessageChildUuid(messageChildUuid);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			messageChild.setTittle(bodyInfo.getString("tittle"));
+			messageChild.setUserUuid(users.getUserUuid());
+			
+			messageChildService.insertSelective(messageChild);
+		}
+		
 		int rs=messageBaseService.insertSelective(messageBase);
 		if(rs == 1){
 			json.put("result", 0);
@@ -203,6 +247,7 @@ public class MessageBaseController extends BaseControllers {
 	}
 	@RequestMapping(value ="delete", method = RequestMethod.POST)
 	@ResponseBody
+	@Transactional
 	public String delete(){
 		JSONObject json = new JSONObject();
 		if (sign == 1||sign == 2) {
@@ -222,6 +267,13 @@ public class MessageBaseController extends BaseControllers {
 			messageBase.setDeleteAt(new Date());
 			int rs =0;
 			rs = messageBaseService.updateByPrimaryKeySelective(messageBase);
+			//删除子表信息
+			List<MessageChild> list =messageChildService.selectMessageChildByMessageBaseUuid(messageBase.getMessageBaseUuid());
+			for (MessageChild messageChild : list) {
+				messageChild.setDeleteAt(new Date());
+				messageChildService.updateByPrimaryKeySelective(messageChild);
+			}	
+			
 			if(rs == 1){
 				json.put("result", 0);
 				json.put("description", "删除成功");

@@ -22,25 +22,35 @@
     select 
     <include refid="Base_Column_List" />
     from message_child
-    where id = #{id,jdbcType=INTEGER}
+    where  where delete_at is null and id = #{id,jdbcType=INTEGER}
   </select>
   <select id="selectByUserUuidMessageChildUuid" resultMap="BaseResultMap" parameterType="java.util.Map">
   	select
   	<include refid="Base_Column_List" />
   	 from message_child
-  	 where user_uuid=#{user_uuid,jdbcType=VARCHAR} and message_child_uuid=#{messageChildUuid,jdbcType=VARCHAR}
+  	 where  where delete_at is null and user_uuid=#{user_uuid,jdbcType=VARCHAR} and message_child_uuid=#{messageChildUuid,jdbcType=VARCHAR}
   </select>
   <select id="selectAllMessageByUser" resultMap="BaseResultMap" parameterType="java.util.Map">
   	select 
     <include refid="Base_Column_List" />
     from message_child
-    where user_uuid = #{user_uuid,jdbcType=VARCHAR} limit #{pageIndex},#{pageSize}
+    where delete_at is null and user_uuid = #{user_uuid,jdbcType=VARCHAR} limit #{pageIndex},#{pageSize}
   </select>
   <select id="selectAllMessageByUserCount" resultType="int" parameterType="java.lang.String">
   	select count(1)
     from message_child
-    where user_uuid = #{user_uuid,jdbcType=VARCHAR}
+    where delete_at is null and user_uuid = #{user_uuid,jdbcType=VARCHAR}
   </select>
+  
+  <select id="selectMessageChildByMessageBaseUuid" resultMap="BaseResultMap" parameterType="java.lang.String">
+  	select 
+    <include refid="Base_Column_List" />
+    from message_child
+  	where delete_at is null
+  	and  message_base_uuid=#{messageBaseUuid,jdbcType=VARCHAR}
+  </select>
+  
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from message_child
     where id = #{id,jdbcType=INTEGER}
