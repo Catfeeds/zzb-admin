@@ -30,6 +30,10 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.model.ObjectMetadata;
@@ -42,13 +46,15 @@ import com.hcb.zzb.service.IWithdrawalsRecordService;
 import com.hcb.zzb.util.Config;
 
 import net.sf.json.JSONObject;
-
+@Controller
 public class ExportExcelWithdrawalsController<T> extends BaseControllers{
 	@Autowired
 	private IWithdrawalsRecordService withdrawalsRecordService;
 	@Autowired
 	private IUsersService userService;
 	
+	@RequestMapping(value="exportExcelWithdrawalsRecord",method=RequestMethod.POST)
+	@ResponseBody
 	public String sss() {
 		JSONObject json=new JSONObject();
 		if(sign==1||sign==2) {
