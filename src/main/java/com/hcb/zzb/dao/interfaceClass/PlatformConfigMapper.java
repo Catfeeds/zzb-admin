@@ -1,5 +1,7 @@
 package com.hcb.zzb.dao.interfaceClass;
 
+import java.util.List;
+
 import com.hcb.zzb.dto.PlatformConfig;
 
 public interface PlatformConfigMapper {
@@ -14,4 +16,6 @@ public interface PlatformConfigMapper {
     int updateByPrimaryKeySelective(PlatformConfig record);
 
     int updateByPrimaryKey(PlatformConfig record);
+    
+    List<PlatformConfig> selectAll();
 }

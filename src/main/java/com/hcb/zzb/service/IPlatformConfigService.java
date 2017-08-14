@@ -1,5 +1,7 @@
 package com.hcb.zzb.service;
 
+import java.util.List;
+
 import com.hcb.zzb.dto.PlatformConfig;
 
 public interface IPlatformConfigService {
@@ -14,4 +16,6 @@ public interface IPlatformConfigService {
     int updateByPrimaryKeySelective(PlatformConfig record);
 
     int updateByPrimaryKey(PlatformConfig record);
+    
+    List<PlatformConfig> selectAll();
 }

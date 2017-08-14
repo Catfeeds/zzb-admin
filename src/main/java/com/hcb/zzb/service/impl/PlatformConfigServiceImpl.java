@@ -1,5 +1,7 @@
 package com.hcb.zzb.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,6 +47,12 @@ public class PlatformConfigServiceImpl implements IPlatformConfigService{
 	public int updateByPrimaryKey(PlatformConfig record) {
 		// TODO Auto-generated method stub
 		return platformConfigMapper.updateByPrimaryKey(record);
+	}
+
+	@Override
+	public List<PlatformConfig> selectAll() {
+		// TODO Auto-generated method stub
+		return platformConfigMapper.selectAll();
 	}
 
 }

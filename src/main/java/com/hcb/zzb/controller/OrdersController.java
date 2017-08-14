@@ -1,22 +1,30 @@
 package com.hcb.zzb.controller;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.hcb.zzb.controller.base.BaseControllers;
+import com.hcb.zzb.dto.FinanceRecord;
 import com.hcb.zzb.dto.Orders;
+import com.hcb.zzb.dto.PlatformConfig;
 import com.hcb.zzb.dto.Users;
+import com.hcb.zzb.service.IFinanceRecordService;
 import com.hcb.zzb.service.IOrderService;
+import com.hcb.zzb.service.IPlatformConfigService;
 import com.hcb.zzb.service.ITicketService;
 import com.hcb.zzb.service.IUsersService;
 
@@ -25,11 +33,15 @@ import net.sf.json.JSONObject;
 @RequestMapping(value="order")
 public class OrdersController extends BaseControllers{
 	@Autowired
-	IOrderService orderService;
+	private IOrderService orderService;
 	@Autowired
-	IUsersService userService;
+	private IUsersService userService;
+	//@Autowired
+	//private ITicketService ticketService;
 	@Autowired
-	ITicketService ticketService;
+	private IPlatformConfigService platformConfigService;
+	@Autowired
+	private IFinanceRecordService financeRecordService;
 	/**
 	 * 订单列表（分页）
 	 * @return
@@ -243,6 +255,118 @@ public class OrdersController extends BaseControllers{
 		
 		return buildReqJsonObject(json);
 	}
+	
+	/**
+	 * 取消订单
+	 * @return
+	 */
+	@RequestMapping(value="cancelOrder",method=RequestMethod.POST)
+	@ResponseBody
+	@Transactional
+	public String cancelOrder() {
+		JSONObject json=new JSONObject();
+		if(sign==1||sign==2) {
+			json.put("result", "1");
+			json.put("description", "请检查参数格式是否正确或者参数是否完整");
+			return buildReqJsonInteger(1, json);
+		}
+		JSONObject bodyInfo=JSONObject.fromObject(bodyString);
+		if(bodyInfo.get("order_uuid")==null) {
+			json.put("result", "1");
+			json.put("description", "请检查参数是否正确或者完整");
+			return buildReqJsonObject(json);
+		}
+		if("".equals(bodyInfo.get("order_uuid"))) {
+			json.put("result", "1");
+			json.put("description", "请检查参数格式是否正确");
+			return buildReqJsonObject(json);
+		}
+		Orders order = orderService.selectByOrdersUuid(bodyInfo.getString("order_uuid"));
+		if(order!=null) {
+			if(order.getTakeCarTime()==null) {
+				json.put("result", "1");
+				json.put("description", "错误,该订单没有取车时间");
+				return buildReqJsonObject(json);
+			}
+			Users user = userService.selectByUserUuid(order.getUserUuid());
+			if(user==null) {
+				json.put("result", "1");
+				json.put("description", "错误,该订单的用户不存在");
+				return buildReqJsonObject(json);
+			}
+			Date beginTime=new Date();
+			Date endTime=order.getTakeCarTime();
+			long hour=(endTime.getTime()-beginTime.getTime())%(1000 * 24 * 60 * 60)/(1000 * 60 * 60);
+			
+			//车辆租赁费
+			float lease_price=order.getLeasePrice()==null?0:order.getLeasePrice();
+			//押金
+			float deposit=order.getDeposit()==null?0:order.getDeposit();
+			//罚金
+			float penalty=0;
+			if(hour>=72) {
+				//不承担罚金
+				penalty=0;
+			}else if(hour < 72 && hour > 0) {
+				//承担租赁费50%的罚金
+				DecimalFormat decf=new DecimalFormat("##0.00");
+				penalty =Float.parseFloat(decf.format(lease_price*0.5f));
+				
+			}else{
+				//承担租赁费100%的罚金
+				penalty=lease_price;
+			}
+			//退还剩余的钱
+			
+			float userBalance = user.getBalance()==null?0:user.getBalance();
+			user .setBalance(userBalance+(deposit-penalty));
+			userService.updateByPrimaryKeySelective(user);
+			
+			//收支明细
+			FinanceRecord finance1=new FinanceRecord();
+			finance1.setCreateAt(new Date());
+			finance1.setFinanceRecordUuid(UUID.randomUUID().toString().replaceAll("-", ""));
+			finance1.setFinanceType(1);//交易类型；1：收入；2：支出
+			finance1.setMoney(deposit-penalty);
+			finance1.setOrderRecordType(1);//订单记录类型；1：押金；2：租车费用；3：赔偿费用;
+			finance1.setOrderUuid(order.getOrderUuid());
+			finance1.setRecordType(3);//记录类型；1：充值；2：提现；3：订单；4：平台收费
+			finance1.setUserUuid(order.getUserUuid());
+			finance1.setPayType(1);//支付方式：1：余额；2：支付宝；3：微信；4：银行卡
+			financeRecordService.insertSelective(finance1);
+			
+			
+			
+			//平台账户减去
+			List<PlatformConfig> platforms = new ArrayList<>();
+			platforms = platformConfigService.selectAll();
+			if(!platforms.isEmpty()) {
+				PlatformConfig platform=platforms.get(0);
+				float blan = platform.getBalance();
+				platform.setBalance(blan-(deposit-penalty));
+				platformConfigService.updateByPrimaryKeySelective(platform);
+			}
+			//收支明细
+			FinanceRecord finance=new FinanceRecord();
+			finance.setCreateAt(new Date());
+			finance.setFinanceRecordUuid(UUID.randomUUID().toString().replaceAll("-", ""));
+			finance.setFinanceType(2);//交易类型；1：收入；2：支出
+			finance.setMoney(deposit-penalty);
+			finance.setOrderRecordType(1);//订单记录类型；1：押金；2：租车费用；3：赔偿费用;
+			finance.setOrderUuid(order.getOrderUuid());
+			finance.setRecordType(4);//记录类型；1：充值；2：提现；3：订单；4：平台收费；
+			finance.setUserUuid(order.getUserUuid());
+			finance.setPayType(1);//支付方式：1：余额；2：支付宝；3：微信；4：银行卡
+			financeRecordService.insertSelective(finance);
+			
+			json.put("result", "0");
+			json.put("description", "取消成功");
+			
+		}
+		return buildReqJsonObject(json);
+	}
+	
+	
 	
 	
 	
