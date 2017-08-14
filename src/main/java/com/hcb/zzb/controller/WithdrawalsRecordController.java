@@ -97,14 +97,24 @@ public class WithdrawalsRecordController extends BaseControllers{
 			json.put("description", "查询成功");
 			json.put("total", total);
 			json.put("page", pageIndex);
-
 			for (WithdrawalsRecord withdrawalsRecord : list) {
 				if(withdrawalsRecord.getApplyUuid()==null) {
 					json.put("result", "1");
 					json.put("description", "错误,该提现记录的申请人不存在");
+					return buildReqJsonObject(json);
 				}
 				Users user =userService.selectByUserUuid(withdrawalsRecord.getApplyUuid());
+				if(user==null) {
+					WithdrawalsRecord wr = withdrawalsRecordService.selectByPrimaryKey(withdrawalsRecord.getId());
+					wr.setDeleteAt(new Date());
+					withdrawalsRecordService.updateByPrimaryKeySelective(wr);
+				}
+			}
+			List<WithdrawalsRecord> newlist = withdrawalsRecordService.selectByMapLimit(map);
+			for (WithdrawalsRecord withdrawalsRecord : newlist) {
 				
+				Users user =userService.selectByUserUuid(withdrawalsRecord.getApplyUuid());
+
 				Map<String, Object> nmap=new HashMap<>();
 				nmap.put("withdrawalsRecordUuid", withdrawalsRecord.getWithdrawalsRecordUuid());
 				nmap.put("id", withdrawalsRecord.getId());
