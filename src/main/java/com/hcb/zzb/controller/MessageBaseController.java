@@ -206,7 +206,15 @@ public class MessageBaseController extends BaseControllers {
 		if(manager!=null){
 			messageBase.setCreater(manager.getManagerUuid());
 		}
+		int rs=messageBaseService.insertSelective(messageBase);
 		
+		if(rs == 1){
+			json.put("result", 0);
+			json.put("description", "创建成功");
+		}else{
+			json.put("result", 1);
+			json.put("description", "创建失败，请重新尝试");
+		}
 		//增加消息子表
 		
 		Map<String, Object> map=new HashMap<>();
@@ -274,15 +282,6 @@ public class MessageBaseController extends BaseControllers {
 			}
 		}
 		
-		int rs=messageBaseService.insertSelective(messageBase);
-		
-		if(rs == 1){
-			json.put("result", 0);
-			json.put("description", "创建成功");
-		}else{
-			json.put("result", 1);
-			json.put("description", "创建失败，请重新尝试");
-		}
 		return buildReqJsonObject(json);
 	}
 	@RequestMapping(value ="delete", method = RequestMethod.POST)
