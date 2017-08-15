@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hcb.zzb.dao.interfaceClass.PushInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.hcb.zzb.dto.PushInfo" >
+    <id column="fake_id" property="fakeId" jdbcType="INTEGER" />
+    <result column="push_uuid" property="pushUuid" jdbcType="VARCHAR" />
+    <result column="create_datetime" property="createDatetime" jdbcType="TIMESTAMP" />
+    <result column="update_datetime" property="updateDatetime" jdbcType="TIMESTAMP" />
+    <result column="delete_at" property="deleteAt" jdbcType="VARCHAR" />
+    <result column="push_title" property="pushTitle" jdbcType="VARCHAR" />
+    <result column="push_dsp" property="pushDsp" jdbcType="VARCHAR" />
+    <result column="is_send" property="isSend" jdbcType="INTEGER" />
+    <result column="push_datetime" property="pushDatetime" jdbcType="TIMESTAMP" />
+    <result column="user_uuid" property="userUuid" jdbcType="VARCHAR" />
+    <result column="push_type" property="pushType" jdbcType="INTEGER" />
+    <result column="event_uuid" property="eventUuid" jdbcType="VARCHAR" />
+    <result column="order_uuid" property="orderUuid" jdbcType="VARCHAR" />
+    <result column="groups" property="groups" jdbcType="CHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    fake_id, push_uuid, create_datetime, update_datetime, delete_at, push_title, push_dsp, 
+    is_send, push_datetime, user_uuid, push_type, event_uuid, order_uuid, groups
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from push_info
+    where fake_id = #{fakeId,jdbcType=INTEGER}
+  </select>
+  <!-- 根据uuid -->
+  <select id="selectByPushUuid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from push_info
+    where push_uuid = #{pushUuid,jdbcType=VARCHAR} and delete_at is null
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from push_info
+    where fake_id = #{fakeId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.hcb.zzb.dto.PushInfo" >
+    insert into push_info (fake_id, push_uuid, create_datetime, 
+      update_datetime, delete_at, push_title, 
+      push_dsp, is_send, push_datetime, 
+      user_uuid, push_type, event_uuid, 
+      order_uuid, groups)
+    values (#{fakeId,jdbcType=INTEGER}, #{pushUuid,jdbcType=VARCHAR}, #{createDatetime,jdbcType=TIMESTAMP}, 
+      #{updateDatetime,jdbcType=TIMESTAMP}, #{deleteAt,jdbcType=VARCHAR}, #{pushTitle,jdbcType=VARCHAR}, 
+      #{pushDsp,jdbcType=VARCHAR}, #{isSend,jdbcType=INTEGER}, #{pushDatetime,jdbcType=TIMESTAMP}, 
+      #{userUuid,jdbcType=VARCHAR}, #{pushType,jdbcType=INTEGER}, #{eventUuid,jdbcType=VARCHAR}, 
+      #{orderUuid,jdbcType=VARCHAR}, #{groups,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hcb.zzb.dto.PushInfo" >
+    insert into push_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="fakeId != null" >
+        fake_id,
+      </if>
+      <if test="pushUuid != null" >
+        push_uuid,
+      </if>
+      <if test="createDatetime != null" >
+        create_datetime,
+      </if>
+      <if test="updateDatetime != null" >
+        update_datetime,
+      </if>
+      <if test="deleteAt != null" >
+        delete_at,
+      </if>
+      <if test="pushTitle != null" >
+        push_title,
+      </if>
+      <if test="pushDsp != null" >
+        push_dsp,
+      </if>
+      <if test="isSend != null" >
+        is_send,
+      </if>
+      <if test="pushDatetime != null" >
+        push_datetime,
+      </if>
+      <if test="userUuid != null" >
+        user_uuid,
+      </if>
+      <if test="pushType != null" >
+        push_type,
+      </if>
+      <if test="eventUuid != null" >
+        event_uuid,
+      </if>
+      <if test="orderUuid != null" >
+        order_uuid,
+      </if>
+      <if test="groups != null" >
+        groups,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="fakeId != null" >
+        #{fakeId,jdbcType=INTEGER},
+      </if>
+      <if test="pushUuid != null" >
+        #{pushUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="createDatetime != null" >
+        #{createDatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDatetime != null" >
+        #{updateDatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteAt != null" >
+        #{deleteAt,jdbcType=VARCHAR},
+      </if>
+      <if test="pushTitle != null" >
+        #{pushTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="pushDsp != null" >
+        #{pushDsp,jdbcType=VARCHAR},
+      </if>
+      <if test="isSend != null" >
+        #{isSend,jdbcType=INTEGER},
+      </if>
+      <if test="pushDatetime != null" >
+        #{pushDatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userUuid != null" >
+        #{userUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="pushType != null" >
+        #{pushType,jdbcType=INTEGER},
+      </if>
+      <if test="eventUuid != null" >
+        #{eventUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="orderUuid != null" >
+        #{orderUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="groups != null" >
+        #{groups,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hcb.zzb.dto.PushInfo" >
+    update push_info
+    <set >
+      <if test="pushUuid != null" >
+        push_uuid = #{pushUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="createDatetime != null" >
+        create_datetime = #{createDatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDatetime != null" >
+        update_datetime = #{updateDatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteAt != null" >
+        delete_at = #{deleteAt,jdbcType=VARCHAR},
+      </if>
+      <if test="pushTitle != null" >
+        push_title = #{pushTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="pushDsp != null" >
+        push_dsp = #{pushDsp,jdbcType=VARCHAR},
+      </if>
+      <if test="isSend != null" >
+        is_send = #{isSend,jdbcType=INTEGER},
+      </if>
+      <if test="pushDatetime != null" >
+        push_datetime = #{pushDatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userUuid != null" >
+        user_uuid = #{userUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="pushType != null" >
+        push_type = #{pushType,jdbcType=INTEGER},
+      </if>
+      <if test="eventUuid != null" >
+        event_uuid = #{eventUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="orderUuid != null" >
+        order_uuid = #{orderUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="groups != null" >
+        groups = #{groups,jdbcType=CHAR},
+      </if>
+    </set>
+    where fake_id = #{fakeId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hcb.zzb.dto.PushInfo" >
+    update push_info
+    set push_uuid = #{pushUuid,jdbcType=VARCHAR},
+      create_datetime = #{createDatetime,jdbcType=TIMESTAMP},
+      update_datetime = #{updateDatetime,jdbcType=TIMESTAMP},
+      delete_at = #{deleteAt,jdbcType=VARCHAR},
+      push_title = #{pushTitle,jdbcType=VARCHAR},
+      push_dsp = #{pushDsp,jdbcType=VARCHAR},
+      is_send = #{isSend,jdbcType=INTEGER},
+      push_datetime = #{pushDatetime,jdbcType=TIMESTAMP},
+      user_uuid = #{userUuid,jdbcType=VARCHAR},
+      push_type = #{pushType,jdbcType=INTEGER},
+      event_uuid = #{eventUuid,jdbcType=VARCHAR},
+      order_uuid = #{orderUuid,jdbcType=VARCHAR},
+      groups = #{groups,jdbcType=CHAR}
+    where fake_id = #{fakeId,jdbcType=INTEGER}
+  </update>
+</mapper>

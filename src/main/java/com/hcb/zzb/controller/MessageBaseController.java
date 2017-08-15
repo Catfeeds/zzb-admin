@@ -21,11 +21,14 @@ import com.hcb.zzb.dto.HomepageBanner;
 import com.hcb.zzb.dto.Manager;
 import com.hcb.zzb.dto.MessageBase;
 import com.hcb.zzb.dto.MessageChild;
+import com.hcb.zzb.dto.PushInfo;
 import com.hcb.zzb.dto.Users;
 import com.hcb.zzb.service.IManagerService;
 import com.hcb.zzb.service.IMessageChildService;
+import com.hcb.zzb.service.IPushInfoService;
 import com.hcb.zzb.service.IUsersService;
 import com.hcb.zzb.service.ImessageBaseService;
+import com.hcb.zzb.util.HttpGet;
 import com.hcb.zzb.util.MD5Util;
 
 import net.sf.json.JSONObject;
@@ -41,7 +44,7 @@ public class MessageBaseController extends BaseControllers {
 	private IUsersService userService;
 	@Autowired
 	private IMessageChildService messageChildService;
-	
+	private IPushInfoService pushInfoService;
 	
 	@RequestMapping(value="list",method=RequestMethod.POST)
 	@ResponseBody
@@ -212,30 +215,67 @@ public class MessageBaseController extends BaseControllers {
 		map.put("end", count);
 		
 		List<Users> list=userService.selectUsersByMap(map);
-		for (Users users : list) {
-			MessageChild messageChild=new MessageChild();
-			messageChild.setContent(bodyInfo.getString("content"));
-			messageChild.setCreateAt(nowDate);
-			if(manager!=null) {
-				messageChild.setCreater(manager.getManagerUuid());
-			}
-			messageChild.setIsRead(1);//未读
-			messageChild.setMessageBaseUuid(messageBase.getMessageBaseUuid());
-			String messageChildUuid;
-			try {
-				messageChildUuid=MD5Util.md5Digest( System.currentTimeMillis() + RandomStringUtils.random(8));
-				messageChild.setMessageChildUuid(messageChildUuid);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			messageChild.setTittle(bodyInfo.getString("tittle"));
-			messageChild.setUserUuid(users.getUserUuid());
+		if(list!=null&&!list.isEmpty()) {
+			for (Users users : list) {
+				MessageChild messageChild=new MessageChild();
+				messageChild.setContent(bodyInfo.getString("content"));
+				messageChild.setCreateAt(nowDate);
+				if(manager!=null) {
+					messageChild.setCreater(manager.getManagerUuid());
+				}
+				messageChild.setIsRead(1);//未读
+				messageChild.setMessageBaseUuid(messageBase.getMessageBaseUuid());
+				String messageChildUuid;
+				try {
+					messageChildUuid=MD5Util.md5Digest( System.currentTimeMillis() + RandomStringUtils.random(8));
+					messageChild.setMessageChildUuid(messageChildUuid);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				messageChild.setTittle(bodyInfo.getString("tittle"));
+				messageChild.setUserUuid(users.getUserUuid());
+				
+				messageChildService.insertSelective(messageChild);
+				
+				//推送消息
+				PushInfo push = new PushInfo();
+				push.setCreateDatetime(new Date());
+				push.setGroups("article");
+				push.setUserUuid(users.getUserUuid());
+				push.setPushTitle("至尊宝");
+				push.setPushDsp("您有新的消息");
+				push.setPushDatetime(new Date());
+				push.setPushType(4);
+				try {
+					push.setPushUuid(MD5Util.md5Digest(users.getUserUuid() + System.currentTimeMillis() + RandomStringUtils.random(8)));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			   Integer rs1 = pushInfoService.insertSelective(push);
+				if(rs1==1){
+					String url = "http://120.27.151.185/zzb-admin-java/phppushinfo";
+					String str = HttpGet.sendGet(url, "push_uuid="+push.getPushUuid());
+					System.out.println("================="+str);
+					/*//推送消息
+					new Thread(new Runnable() {
+						public void run() {
+							PushInfo pushInfo = PushInfoService.selectByPushUuid(push.getPushUuid());
+							if(pushInfo!=null){
+								String url = "http://120.27.151.185/zzb-java/phppushinfo";
+								String str = HttpGet.sendGet(url, "push_uuid="+push.getPushUuid());
+								System.out.println("================="+str);
+							}
+						}
+					}).start();*/
+				}
 			
-			messageChildService.insertSelective(messageChild);
+				////////////推送结束
+			}
 		}
 		
 		int rs=messageBaseService.insertSelective(messageBase);
+		
 		if(rs == 1){
 			json.put("result", 0);
 			json.put("description", "创建成功");
