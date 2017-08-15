@@ -36,8 +36,8 @@ public class OrdersController extends BaseControllers{
 	private IOrderService orderService;
 	@Autowired
 	private IUsersService userService;
-	//@Autowired
-	//private ITicketService ticketService;
+	@Autowired
+	private ITicketService ticketService;
 	@Autowired
 	private IPlatformConfigService platformConfigService;
 	@Autowired
@@ -141,19 +141,35 @@ public class OrdersController extends BaseControllers{
 		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		ModelMap model=new ModelMap();
 		Orders order=orderService.selectByOrdersUuid(bodyInfo.getString("order_uuid"));
+		
+		//罚单数量
+		int count=0;
+		
 		if(order!=null) {
 			if(order.getUserUuid()==null) {
 				json.put("result", "1");
 				json.put("description", "操作失败,这个订单没有属于用户");
 				return buildReqJsonObject(json);
 			}
+			//罚单数量
+			count = ticketService.countUserTicket(order.getUserUuid());
 			Users user=userService.selectByUserUuid(order.getUserUuid());
 			if(user==null) {
 				json.put("result", "1");
 				json.put("description", "操作失败,没有查询到订单属于哪个用户");
 				return buildReqJsonObject(json);	
 			}
-			
+			if(order.getCarOwnerUuid()==null) {
+				json.put("result", "1");
+				json.put("description", "操作失败,这个订单没有车主");
+				return buildReqJsonObject(json);
+			}
+			Users carOwner=userService.selectByUserUuid(order.getCarOwnerUuid());
+			if(carOwner==null) {
+				json.put("result", "1");
+				json.put("description", "操作失败,没有查询到这个订单的车主");
+				return buildReqJsonObject(json);	
+			}
 			model.put("result", "0");
 			model.put("description", "查询成功");
 			if(order.getOrderNumber()!=null) {
@@ -166,7 +182,11 @@ public class OrdersController extends BaseControllers{
 			}else {
 				model.put("userName", "");
 			}
-			
+			if(carOwner.getUserName()!=null) {
+				model.put("carOwner", carOwner.getUserName());
+			}else {
+				model.put("carOwner", "");
+			}
 			model.put("totalPrice", order.getTotalPrice());
 			if(order.getTakeCarTime()!=null) {	
 				model.put("takeCarTime",sdf.format(order.getTakeCarTime()));
@@ -204,6 +224,7 @@ public class OrdersController extends BaseControllers{
 			}
 			
 			model.put("compensateMoney", order.getCompensateMoney());
+			model.put("count", count);
 		}else {
 			model.put("result", "1");
 			model.put("description", "未查询到该订单信息,order_uuid不存在");

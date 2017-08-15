@@ -27,4 +27,6 @@ public interface ITicketService {
 	List<Map<String, Object>> selectTicketsLimit(Map<String, Object> map);
     
     int countSelectTickets(Map<String, Object> map);
+    
+    int countUserTicket(String userUuid);
 }

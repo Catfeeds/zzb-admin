@@ -87,25 +87,25 @@ public class ExportExcelTicketController<T> extends BaseControllers{
 		map.put("start", start);
 		map.put("end", count);	
 		
-		List<Ticket> list=new ArrayList<>();
+		List<Map<String, Object>> list=new ArrayList<>();
 		list=ticketService.selectTicketsLimit(map);
 		List<TicketExport> exportList=new ArrayList<>();
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		int i=1;
-		for (Ticket ticket : list) {
+		for (Map<String, Object> ticket : list) {
 			TicketExport ticketExp=new TicketExport();
 			ticketExp.setSerialNumber(i);
-			ticketExp.setOrderNumber(ticket.getOrderNumber()==null?"":ticket.getOrderNumber());
-			Users user = userService.selectByUserUuid(ticket.getUserUuid());
+			ticketExp.setOrderNumber(ticket.get("orderNumber")==null?"":ticket.get("orderNumber").toString());
+			Users user = userService.selectByUserUuid(ticket.get("userUuid").toString());
 			if(user!=null) {
 				ticketExp.setUserName(user.getUserName()==null?"":user.getUserName());
 			}else {
 				ticketExp.setUserName("");
 			}
-			ticketExp.setAddress(ticket.getAddress()==null?"":ticket.getAddress());
-			ticketExp.setMoney(ticket.getMoney()==null?0:ticket.getMoney());
-			ticketExp.setPoints(ticket.getPoints()==null?0:ticket.getPoints());
-			ticketExp.setTime(ticket.getIllegalTime()==null?"":format.format(ticket.getIllegalTime()));
+			ticketExp.setAddress(ticket.get("address")==null?"":ticket.get("address").toString());
+			ticketExp.setMoney(ticket.get("moeny")==null?0:Float.parseFloat(ticket.get("moeny").toString()));
+			ticketExp.setPoints(ticket.get("points")==null?0:Integer.parseInt(ticket.get("points").toString()));
+			ticketExp.setTime(ticket.get("illegalTime")==null?"":format.format(ticket.get("illegalTime")));
 		
 			exportList.add(ticketExp);
 			i++;
