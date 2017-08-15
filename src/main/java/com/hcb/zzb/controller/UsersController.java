@@ -302,7 +302,7 @@ public class UsersController extends BaseControllers{
 					}
 					userCre.setOutScore(outScore);
 					//用车行为
-					userCre.setUseCarScore(users.getVehicleBehavior());
+					userCre.setUseCarScore(users.getVehicleBehavior()==null?20:users.getVehicleBehavior());
 					//状态
 					if(users.getUserStatus()==2) {
 						userCre.setCreditStatus("拉黑");

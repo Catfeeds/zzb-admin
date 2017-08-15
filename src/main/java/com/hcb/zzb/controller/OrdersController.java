@@ -296,7 +296,7 @@ public class OrdersController extends BaseControllers{
 			}
 			Date beginTime=new Date();
 			Date endTime=order.getTakeCarTime();
-			long hour=(endTime.getTime()-beginTime.getTime())%(1000 * 24 * 60 * 60)/(1000 * 60 * 60);
+			long min=(endTime.getTime()-beginTime.getTime())/1000 / 60 ;
 			
 			//车辆租赁费
 			float lease_price=order.getLeasePrice()==null?0:order.getLeasePrice();
@@ -304,10 +304,10 @@ public class OrdersController extends BaseControllers{
 			float deposit=order.getDeposit()==null?0:order.getDeposit();
 			//罚金
 			float penalty=0;
-			if(hour>=72) {
+			if(min>=72*60) {
 				//不承担罚金
 				penalty=0;
-			}else if(hour < 72 && hour > 0) {
+			}else if(min < 72*60 && min > 0) {
 				//承担租赁费50%的罚金
 				DecimalFormat decf=new DecimalFormat("##0.00");
 				penalty =Float.parseFloat(decf.format(lease_price*0.5f));
@@ -358,6 +358,9 @@ public class OrdersController extends BaseControllers{
 			finance.setUserUuid(order.getUserUuid());
 			finance.setPayType(1);//支付方式：1：余额；2：支付宝；3：微信；4：银行卡
 			financeRecordService.insertSelective(finance);
+			
+			order.setOrderStatus(7);//状态改为已取消
+			orderService.updateByPrimaryKeySelective(order);
 			
 			json.put("result", "0");
 			json.put("description", "取消成功");
