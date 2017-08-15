@@ -71,6 +71,9 @@ public class TicketController extends BaseControllers{
 		if(bodyInfo.get("orderNumber")!=null&&!"".equals(bodyInfo.get("orderNumber"))) {
 			map.put("orderNumber", bodyInfo.getString("orderNumber"));
 		}
+		if(bodyInfo.get("userName")!=null&&!"".equals(bodyInfo.get("userName"))) {
+			map.put("userName", bodyInfo.getString("userName"));
+		}
 		if(bodyInfo.get("orderBy")!=null&&!"".equals(bodyInfo.get("orderBy"))) {
 			map.put("orderBy", bodyInfo.getInt("orderBy"));
 		}else {
@@ -94,29 +97,15 @@ public class TicketController extends BaseControllers{
 			return buildReqJsonObject(json);
 		}
 		
-		List<Ticket> list = ticketService.selectTicketsLimit(map);
-		List<Ticket> lists=new ArrayList<Ticket>();
+		List<Map<String, Object>> list = ticketService.selectTicketsLimit(map);
+		
 		if(list!=null&&!list.isEmpty()) {
 			json.put("result", "0");
 			json.put("description", "查询成功");
 			json.put("total", total);
 			json.put("page", pageIndex);
-			for (Ticket ticket : list) {
-				if(ticket.getUserUuid()==null) {
-					json.put("result", "1");
-					json.put("description", "错误,该罚单中没有用户关联");
-					return buildReqJsonObject(json);
-				}
-				Users user = usersService.selectByUserUuid(ticket.getUserUuid());
-				if(user==null) {
-					json.put("result", "1");
-					json.put("description", "错误,没有查询到该罚单的用户");
-					return buildReqJsonObject(json);
-				}
-				ticket.setUserName(user.getUserName()==null?"":user.getUserName());
-				lists.add(ticket);
-			}
-			json.put("ticketList", lists);
+			
+			json.put("ticketList", list);
 		}else {
 			json.put("result", "1");
 			json.put("description", "没有查询到数据记录");

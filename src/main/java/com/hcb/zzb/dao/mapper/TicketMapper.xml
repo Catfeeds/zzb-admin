@@ -42,36 +42,61 @@
     from ticket
     where delete_at is null and ticket_uuid=#{ticket_uuid,jdbcType=VARCHAR}
   </select>
-  <select id="selectTicketsLimit" resultMap="BaseResultMap" parameterType="java.util.HashMap">
+  <select id="selectTicketsLimit" resultType="java.util.Map" parameterType="java.util.HashMap">
   	select 
-  	<include refid="Base_Column_List" />
-  	from ticket
+  	t.id AS id, 
+  	t.create_at AS createAt, 
+  	t.update_at AS updateAt, 
+  	t.delete_at AS deleteAt, 
+  	t.ticket_uuid AS ticketUuid, 
+  	t.order_number AS orderNumber, 
+  	t.address AS address, 
+  	t.money AS money, 
+  	t.points AS points, 
+    t.illegal_time AS illegalTime, 
+    t.illegal_code AS illegalCode, 
+    t.ticket_status AS ticketStatus, 
+    t.user_uuid AS userUuid,
+    u.user_name AS userName
+  	from ticket t 
+  	left join users u
+  	on t.user_uuid=u.user_uuid
   	<where>
-  		delete_at is null
+  		t.delete_at is null
   		<if test="address != null and address !=''">
-  			and address like CONCAT('%', #{address,jdbcType=VARCHAR}, '%')
+  			and t.address like CONCAT('%', #{address,jdbcType=VARCHAR}, '%')
   		</if>
   		<if test="orderNumber != null and orderNumber !=''">
-  			and order_number like CONCAT('%', #{orderNumber,jdbcType=VARCHAR}, '%')
+  			and t.order_number like CONCAT('%', #{orderNumber,jdbcType=VARCHAR}, '%')
+  		</if>
+  		<if test="userName != null and userName !=''">
+  			and u.user_name like CONCAT('%', #{userName,jdbcType=VARCHAR}, '%')
   		</if>
   	</where>
   	<if test="orderBy != null and orderBy !=''">
   		<if test="orderBy==1">
-  			order by create_at asc
+  			order by t.create_at asc
   		</if>
   		<if test="orderBy==2">
-  			order by create_at desc
+  			order by t.create_at desc
   		</if>
   	</if>
   	limit #{start},#{end}
   </select>
   <select id="countSelectTickets" resultType="java.lang.Integer" parameterType="java.util.HashMap">
   	select count(1)
-  	from ticket
+  	from ticket t left join users u
+  	on t.user_uuid=u.user_uuid
   	<where>
-  		delete_at is null
+  		t.delete_at is null
   		<if test="address != null and address !=''">
-  			and address like CONCAT('%', #{address,jdbcType=VARCHAR}, '%')
+  			and t.address like CONCAT('%', #{address,jdbcType=VARCHAR}, '%')
+  		</if>
+  		<if test="orderNumber != null and orderNumber !=''">
+  			and t.order_number like CONCAT('%', #{orderNumber,jdbcType=VARCHAR}, '%')
+  		</if>
+  		<if test="userName != null and userName !=''">
+  			and u.user_name like CONCAT('%', #{userName,jdbcType=VARCHAR}, '%')
   		</if>
   	</where>
   </select>

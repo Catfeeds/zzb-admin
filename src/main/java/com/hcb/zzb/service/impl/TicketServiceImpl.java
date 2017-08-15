@@ -68,7 +68,7 @@ public class TicketServiceImpl implements ITicketService{
 	}
 
 	@Override
-	public List<Ticket> selectTicketsLimit(Map<String, Object> map) {
+	public List<Map<String, Object>> selectTicketsLimit(Map<String, Object> map) {
 		// TODO Auto-generated method stub
 		return ticketMapper.selectTicketsLimit(map);
 	}

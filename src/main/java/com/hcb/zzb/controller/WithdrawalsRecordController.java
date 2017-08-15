@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -212,6 +213,122 @@ public class WithdrawalsRecordController extends BaseControllers{
 			}else {
 				json.put("result", "1");
 				json.put("description", "删除失败");
+			}
+		}else {
+			json.put("result", "1");
+			json.put("description", "id不正确,未查询到结果");
+		}
+		return buildReqJsonObject(json);
+	}
+	
+	/**
+	 * 提现通过
+	 * @return
+	 */
+	@RequestMapping(value="agree",method=RequestMethod.POST)
+	@ResponseBody
+	@Transactional
+	public String pass() {
+		JSONObject json=new JSONObject();
+		if(sign==1||sign==2) {
+			json.put("result", "1");
+			json.put("description", "请检查参数格式是否正确或者参数是否完整");
+			return buildReqJsonInteger(1, json);
+		}
+		JSONObject bodyInfo=JSONObject.fromObject(bodyString);
+		
+		if(bodyInfo.get("id")==null) {
+			json.put("result", "1");
+			json.put("description", "请检查参数是否正确或者完整");
+			return buildReqJsonObject(json);
+		}
+		if("".equals(bodyInfo.get("id"))) {
+			json.put("result", "1");
+			json.put("description", "请检查参数是否正确");
+			return buildReqJsonObject(json);
+		}
+		WithdrawalsRecord  withdrawalsRecord = withdrawalsRecordService.selectByPrimaryKey(bodyInfo.getInt("id"));
+		if(withdrawalsRecord!=null) {
+			withdrawalsRecord.setApplyStatus(2);//申请状态；1：申请中；2：已通过；3：已决绝(已驳回)
+			withdrawalsRecord.setUpdateAt(new Date());
+			withdrawalsRecordService.updateByPrimaryKeySelective(withdrawalsRecord);
+			//用户的冻结金额减去
+			Users user = userService.selectByUserUuid(withdrawalsRecord.getApplyUuid());
+			if(user!=null) {
+				float frozen=user.getFrozenBalance()==null?0:user.getFrozenBalance();
+				user.setFrozenBalance(frozen-withdrawalsRecord.getMoney());
+				int rs = userService.updateByPrimaryKeySelective(user);
+				if(rs == 1) {
+					json.put("result", "0");
+					json.put("description", "操作成功");
+				
+				}else {
+					json.put("result", "1");
+					json.put("description", "操作失败");
+				}
+			}else {
+				json.put("result", "1");
+				json.put("description", "该提现记录的用户不存在！");
+			}
+		}else {
+			json.put("result", "1");
+			json.put("description", "id不正确,未查询到结果");
+		}
+		return buildReqJsonObject(json);
+	}
+	
+	
+	/**
+	 * 提现驳回
+	 * @return
+	 */
+	@RequestMapping(value="reject",method=RequestMethod.POST)
+	@ResponseBody
+	@Transactional
+	public String reject() {
+		JSONObject json=new JSONObject();
+		if(sign==1||sign==2) {
+			json.put("result", "1");
+			json.put("description", "请检查参数格式是否正确或者参数是否完整");
+			return buildReqJsonInteger(1, json);
+		}
+		JSONObject bodyInfo=JSONObject.fromObject(bodyString);
+		
+		if(bodyInfo.get("id")==null) {
+			json.put("result", "1");
+			json.put("description", "请检查参数是否正确或者完整");
+			return buildReqJsonObject(json);
+		}
+		if("".equals(bodyInfo.get("id"))) {
+			json.put("result", "1");
+			json.put("description", "请检查参数是否正确");
+			return buildReqJsonObject(json);
+		}
+		WithdrawalsRecord  withdrawalsRecord = withdrawalsRecordService.selectByPrimaryKey(bodyInfo.getInt("id"));
+		if(withdrawalsRecord!=null) {
+			withdrawalsRecord.setApplyStatus(3);//申请状态；1：申请中；2：已通过；3：已决绝(已驳回)
+			withdrawalsRecord.setUpdateAt(new Date());
+			withdrawalsRecordService.updateByPrimaryKeySelective(withdrawalsRecord);
+			//用户冻结金额解除，返还余额
+			Users user = userService.selectByUserUuid(withdrawalsRecord.getApplyUuid());
+			if(user!=null) {
+				float frozen=user.getFrozenBalance()==null?0:user.getFrozenBalance();
+				float balance=user.getBalance()==null?0:user.getBalance();
+				user.setFrozenBalance(frozen-withdrawalsRecord.getMoney());
+				user.setBalance(balance+withdrawalsRecord.getMoney());
+				
+				int rs = userService.updateByPrimaryKeySelective(user);
+				if(rs == 1) {
+					json.put("result", "0");
+					json.put("description", "操作成功");
+				
+				}else {
+					json.put("result", "1");
+					json.put("description", "操作失败");
+				}
+			}else {
+				json.put("result", "1");
+				json.put("description", "该提现记录的用户不存在！");
 			}
 		}else {
 			json.put("result", "1");

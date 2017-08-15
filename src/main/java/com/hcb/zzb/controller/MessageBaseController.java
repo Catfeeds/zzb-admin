@@ -246,7 +246,7 @@ public class MessageBaseController extends BaseControllers {
 				
 				messageChildService.insertSelective(messageChild);
 				
-				//推送消息
+				/*//推送消息
 				PushInfo push = new PushInfo();
 				push.setCreateDatetime(new Date());
 				push.setGroups("article");
@@ -265,7 +265,7 @@ public class MessageBaseController extends BaseControllers {
 					String url = "http://120.27.151.185/zzb-admin-java/phppushinfo";
 					String str = HttpGet.sendGet(url, "push_uuid="+push.getPushUuid());
 					System.out.println("================="+str);
-					/*//推送消息
+					//推送消息
 					new Thread(new Runnable() {
 						public void run() {
 							PushInfo pushInfo = PushInfoService.selectByPushUuid(push.getPushUuid());
@@ -275,10 +275,10 @@ public class MessageBaseController extends BaseControllers {
 								System.out.println("================="+str);
 							}
 						}
-					}).start();*/
+					}).start();
 				}
 			
-				////////////推送结束
+				////////////推送结束*/
 			}
 		}
 		
