@@ -304,16 +304,19 @@ public class UsersController extends BaseControllers{
 					//用车行为
 					userCre.setUseCarScore(users.getVehicleBehavior()==null?20:users.getVehicleBehavior());
 					//状态
-					if(users.getUserStatus()==2) {
+					int sta=users.getUserStatus()==null?1:users.getUserStatus();
+					if(sta==2) {
 						userCre.setCreditStatus("拉黑");
 					}else {
-						if(users.getCreditScore()<60) {
+						int credits=users.getCreditScore()==null?20:users.getCreditScore();
+						
+						if(credits<60) {
 							userCre.setCreditStatus("较差");
-						}else if(users.getCreditScore()>=60&&users.getCreditScore()<70) {
+						}else if(credits>=60 && credits<70) {
 							userCre.setCreditStatus("一般");
-						}else if(users.getCreditScore()>=70&&users.getCreditScore()<90) {
+						}else if(credits >= 70 && credits < 90) {
 							userCre.setCreditStatus("良好");
-						}else if(users.getCreditScore()>=90&&users.getCreditScore()<=100) {
+						}else if(credits >= 90 && credits<=100) {
 							userCre.setCreditStatus("优秀");
 						}
 					}
