@@ -7,13 +7,16 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.hcb.zzb.controller.base.BaseControllers;
 import com.hcb.zzb.dto.Car;
+import com.hcb.zzb.dto.Users;
 import com.hcb.zzb.service.ICarSevice;
+import com.hcb.zzb.service.IUsersService;
 
 import net.sf.json.JSONObject;
 
@@ -21,8 +24,9 @@ import net.sf.json.JSONObject;
 @RequestMapping(value="car")
 public class CarController extends BaseControllers{
 	@Autowired
-	ICarSevice carService;
-	
+	private ICarSevice carService;
+	@Autowired
+	private IUsersService userService;
 	/**
 	 * 车辆列表
 	 * @return
@@ -135,6 +139,7 @@ public class CarController extends BaseControllers{
 	 */
 	@RequestMapping(value="updateCarStatus",method=RequestMethod.POST)
 	@ResponseBody
+	@Transactional
 	public String operationCarStatus() {
 		JSONObject json=new JSONObject();
 		if(sign==1||sign==2) {
@@ -157,7 +162,19 @@ public class CarController extends BaseControllers{
 		if(car!=null) {
 			car.setUpdateAt(new Date());
 			car.setCarStatus(bodyInfo.getInt("carStatus"));
-			int rs = carService.updateByPrimaryKeySelective(car);
+			int rs=0;
+			rs = carService.updateByPrimaryKeySelective(car);
+			if(bodyInfo.getInt("carStatus")==2){//如果通过，设置上传车辆的人为车主身份
+				Users user = userService.selectByUserUuid(car.getUserUuid());
+				if(user != null){
+					user.setUserType(1);//1车主 2车友
+					userService.updateByPrimaryKeySelective(user);
+				}else{
+					json.put("result", "1");
+					json.put("description", "操作失败，没有查询到该车辆的用户");
+					return buildReqJsonObject(json);
+				}
+			}
 			if(rs==1) {
 				json.put("result", "0");
 				json.put("description", "操作成功");

@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.hcb.zzb.controller.base.BaseControllers;
 import com.hcb.zzb.dto.CarModel;
 import com.hcb.zzb.service.ICarModel;
-import com.hcb.zzb.service.IManagerService;
+
 
 import net.sf.json.JSONObject;
 @Controller
@@ -182,14 +182,14 @@ public class CarModelLibraryController extends BaseControllers{
 		}
 		JSONObject bodyInfo=JSONObject.fromObject(bodyString);
 		if(bodyInfo.get("car_model_uuid")==null||bodyInfo.get("brand")==null||bodyInfo.get("carSeries")==null||bodyInfo.get("modelYear")==null
-				||bodyInfo.get("carModel")==null||bodyInfo.get("color")==null||
+				||bodyInfo.get("carModel")==null||
 				bodyInfo.get("displacement")==null||bodyInfo.get("seatNumber")==null||bodyInfo.get("clutch")==null) {
 			json.put("result", "1");
 			json.put("description", "请检查参数是否正确或完整");
 			return buildReqJsonObject(json);
 		}
 		if("".equals(bodyInfo.get("car_model_uuid"))||bodyInfo.get("brand").equals("")||bodyInfo.get("carSeries").equals("")||bodyInfo.get("modelYear").equals("")
-				||bodyInfo.get("carModel").equals("")||bodyInfo.get("color").equals("")||"".equals(bodyInfo.get("displacement"))
+				||bodyInfo.get("carModel").equals("")||"".equals(bodyInfo.get("displacement"))
 				||"".equals(bodyInfo.get("seatNumber"))||"".equals(bodyInfo.get("clutch"))) {
 			json.put("result", "1");
 			json.put("description", "请检查参数是否正确");
@@ -211,7 +211,9 @@ public class CarModelLibraryController extends BaseControllers{
 			carModel.setCarSeries(bodyInfo.getString("carSeries"));
 			carModel.setModelYear(bodyInfo.getString("modelYear"));
 			carModel.setCarModel(bodyInfo.getString("carModel"));
-			carModel.setColor(bodyInfo.getString("color"));
+			if(bodyInfo.get("color")!=null&&!"".equals(bodyInfo.get("color"))){
+				carModel.setColor(bodyInfo.getJSONArray("color").toString());
+			}
 			carModel.setDisplacement(bodyInfo.getString("displacement"));
 			carModel.setClutch(bodyInfo.getString("clutch"));
 			carModel.setSeatNumber(bodyInfo.getInt("seatNumber"));
@@ -287,14 +289,14 @@ public class CarModelLibraryController extends BaseControllers{
 		JSONObject bodyInfo=JSONObject.fromObject(bodyString);
 		if(bodyInfo.get("brand")==null||bodyInfo.get("carSeries")==null
 				||bodyInfo.get("color")==null||bodyInfo.get("modelYear")==null
-				||bodyInfo.get("carModel")==null||bodyInfo.get("displacement")==null
+				||bodyInfo.get("displacement")==null
 				||bodyInfo.get("seatNumber")==null||bodyInfo.get("clutch")==null) {
 			json.put("result", "1");
 			json.put("description", "请检查参数是否正确或完整");
 			return buildReqJsonObject(json);
 		}
 		if("".equals(bodyInfo.get("brand"))||"".equals(bodyInfo.get("carSeries"))||
-				"".equals(bodyInfo.get("color"))||"".equals(bodyInfo.get("modelYear"))
+				"".equals(bodyInfo.get("modelYear"))
 				||"".equals(bodyInfo.get("carModel"))||"".equals(bodyInfo.get("displacement"))
 				||"".equals(bodyInfo.get("seatNumber"))||"".equals(bodyInfo.get("clutch"))) {
 			json.put("result", "1");
@@ -310,7 +312,10 @@ public class CarModelLibraryController extends BaseControllers{
 		CarModel carModel=new CarModel();
 		carModel.setBrand(bodyInfo.getString("brand"));
 		carModel.setCarSeries(bodyInfo.getString("carSeries"));
-		carModel.setColor(bodyInfo.getString("color"));
+		if(bodyInfo.get("color")!=null&&!"".equals(bodyInfo.get("color"))){
+			carModel.setColor(bodyInfo.getJSONArray("color").toString());
+		}
+		
 		carModel.setModelYear(bodyInfo.getString("modelYear"));
 		carModel.setCarModel(bodyInfo.getString("carModel"));
 		carModel.setCarModelUuid(UUID.randomUUID().toString().replaceAll("-", ""));

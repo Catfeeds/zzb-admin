@@ -251,6 +251,8 @@ public class WithdrawalsRecordController extends BaseControllers{
 		if(withdrawalsRecord!=null) {
 			withdrawalsRecord.setApplyStatus(2);//申请状态；1：申请中；2：已通过；3：已决绝(已驳回)
 			withdrawalsRecord.setUpdateAt(new Date());
+			withdrawalsRecord.setHandleUuid(manager.getManagerUuid());
+			withdrawalsRecord.setHandleTime(new Date());
 			withdrawalsRecordService.updateByPrimaryKeySelective(withdrawalsRecord);
 			//用户的冻结金额减去
 			Users user = userService.selectByUserUuid(withdrawalsRecord.getApplyUuid());
@@ -308,6 +310,8 @@ public class WithdrawalsRecordController extends BaseControllers{
 		if(withdrawalsRecord!=null) {
 			withdrawalsRecord.setApplyStatus(3);//申请状态；1：申请中；2：已通过；3：已决绝(已驳回)
 			withdrawalsRecord.setUpdateAt(new Date());
+			withdrawalsRecord.setHandleUuid(manager.getManagerUuid());
+			withdrawalsRecord.setHandleTime(new Date());
 			withdrawalsRecordService.updateByPrimaryKeySelective(withdrawalsRecord);
 			//用户冻结金额解除，返还余额
 			Users user = userService.selectByUserUuid(withdrawalsRecord.getApplyUuid());
