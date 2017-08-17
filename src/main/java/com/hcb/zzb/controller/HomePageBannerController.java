@@ -269,6 +269,7 @@ public class HomePageBannerController extends BaseControllers {
 		banner.setOperationInfo(bodyInfo.getString("operation_info"));
 		banner.setUpdateAt(new Date());
 		banner.setLink(bodyInfo.getString("link"));
+		banner.setOperationPicture(bodyInfo.getString("operation_picture"));
 		int rs = homePageBanner.updateByPrimaryKeySelective(banner);
 		if(rs == 1){
 			json.put("result", "0");
