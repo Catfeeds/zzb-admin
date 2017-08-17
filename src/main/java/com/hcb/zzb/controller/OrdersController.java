@@ -213,7 +213,8 @@ public class OrdersController extends BaseControllers{
 				
 			}else {
 				model.put("userCarTime","");
-			}			
+			}
+			model.put("createAt", order.getCreateAt()==null?"":sdf.format(order.getCreateAt()));
 			model.put("takeCarAddress", order.getTakeCarAddress());
 			model.put("returnCarAddress", order.getReturnCarAddress());
 			model.put("orderStatus", order.getOrderStatus());
