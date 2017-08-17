@@ -23,31 +23,19 @@ public class TestCollection {
    	    HashMap<String, Object> map = new HashMap<String, Object>();
      	// map集合
         HashMap<String, Object> head = new HashMap<String, Object>();
-        head.put("user_uuid", "8741951256ce34f7eb575c438b06ae65");
-      
+        head.put("account", "admin");
+        head.put("password", "123456");
         map.put("head", head);	
         
         HashMap<String, Object> body = new HashMap<String, Object>();
-        //body.put("articleUuid", "c03f26b8b162456fb3781706b3457007");
-        //body.put("ticket_uuid", "761c7e81140c4112a4b694505df0d645");
-        //body.put("pageIndex", 1);
-        //body.put("pageSize", 5);
-        // body.put("message_child_uuid", "6741951256ce34f7eb575c438b06ae66");
-        //body.put("modelCharacter", "SUV");
-        // body.put("ticketStatus", 1);
-        //body.put("ticket_uuid", "761c7e81140c4112a4b694505df0d645");
-        body.put("car_uuid", "5741951256ce34f7eb575c438b06ae70");
-        /*body.put("accountNumber", "621238748439890098");
-        body.put("money", 0);*/
-        
-        /*body.put("cardUserName", "李四");
-        body.put("cardNumber", "621878727656767");
-        body.put("phone", "13137279268");
-        body.put("captcha", "368449");
-        body.put("bank", "中国建设银行");
-        body.put("bankIcon", "xusidksnhjhwl");
-        body.put("cardType", "储蓄卡");*/
-        
+        String [] color={"白色","黑色","银白色"};
+        body.put("brand", "宝马");
+        body.put("carSeries", "x1");
+        body.put("color", color);
+        body.put("modelYear", "2017");
+        body.put("displacement", "20L");
+        body.put("seatNumber", 5);
+        body.put("clutch", "离合器");
         map.put("body",body);
   
         
@@ -60,7 +48,7 @@ public class TestCollection {
    	    //新建审批条目 在审批信息表 approval_inner_base_infos中0558
    	    //返回审批uuid
    	  // String url = "http://120.26.120.57:8080/apparel/special/list";
-   	    String url = "http://localhost:8080/zzb-java/collection/insert";
+   	    String url = "http://localhost:8080/zzb-admin-api/carMoldeLibrary/insert";
    	 //String url = "http://192.168.73.1:8080/user/phone/login";
       // String url = "http://test.appring.cn:8080/fastask/question/show"; /* * * * * * root wget http://test.appring.cn:8080/fastask/energy/timing -q -O /usr/local/time/timelog
  	    HttpPost httpPost = new HttpPost(url);

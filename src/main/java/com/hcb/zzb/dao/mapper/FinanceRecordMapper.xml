@@ -67,17 +67,40 @@
     and finance_record_uuid=#{financeRecordUuid,jdbcType=VARCHAR}
   </select>
   
-  <select id="selectByMapLimit" resultMap="BaseResultMap" parameterType="java.util.HashMap">
+  <select id="selectByMapLimit" resultType="java.util.Map" parameterType="java.util.HashMap">
   	select 
-    <include refid="Base_Column_List" />
-    from finance_record
-    where delete_at is null
+    fin.id AS id, 
+    fin.create_at AS createAt, 
+    fin.update_at AS updateAt, 
+    fin.delete_at AS deleteAt, 
+    fin.finance_record_uuid AS financeRecordUuid, 
+    fin.record_type AS recordType, 
+    fin.order_record_type AS orderRecordType, 
+    fin.order_uuid AS orderUuid, 
+    fin.recharge_record_uuid AS rechargeRecordUuid, 
+    fin.withdrawals_record_uuid AS withdrawalsRecordUuid, 
+    fin.money AS money, 
+    fin.finance_type AS financeType, 
+    fin.user_uuid AS userUuid,
+    fin.pay_type AS payType,
+    fin.pay_way AS payWay,
+    u.user_name AS userName
+    from finance_record fin
+    left join users u
+    on fin.user_uuid=u.user_uuid
+    where fin.delete_at is null and u.delete_at is null
+    <if test="userName !='' and userName != null">
+		and  u.user_name like CONCAT('%', #{userName,jdbcType=VARCHAR}, '%')
+	</if>
+	<if test="userUuid !='' and userUuid != null">
+		and  u.user_uuid=#{userUuid,jdbcType=VARCHAR}
+	</if>
     <if test="orderBy != null and orderBy !=''">
   		<if test="orderBy==1">
-  			order by create_at asc
+  			order by fin.create_at asc
   		</if>
   		<if test="orderBy==2">
-  			order by create_at desc
+  			order by fin.create_at desc
   		</if>
   	</if>
     limit #{start},#{end}
@@ -85,8 +108,16 @@
   
   <select id="countSelectByMapLimit" resultType="java.lang.Integer" parameterType="java.util.HashMap">
   	select count(1)
-    from finance_record
-    where delete_at is null
+    from finance_record fin 
+    left join users u
+    on fin.user_uuid=u.user_uuid
+    where fin.delete_at is null and u.delete_at is null
+     <if test="userName !='' and userName != null">
+		and  u.user_name like CONCAT('%', #{userName,jdbcType=VARCHAR}, '%')
+	</if>
+	<if test="userUuid !='' and userUuid != null">
+		and  u.user_uuid=#{userUuid,jdbcType=VARCHAR}
+	</if>
   </select>
   
   <select id="selectByRecordType" resultMap="BaseResultMap" parameterType="java.util.HashMap">

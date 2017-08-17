@@ -26,7 +26,7 @@ public interface IFinanceRecordService {
 
     FinanceRecord selectByUuid(String uuid);
     
-    List<FinanceRecord> selectByMapLimit(Map<String, Object> map);
+    List<Map<String, Object>> selectByMapLimit(Map<String, Object> map);
     
     int countSelectByMapLimit(Map<String, Object> map);
     

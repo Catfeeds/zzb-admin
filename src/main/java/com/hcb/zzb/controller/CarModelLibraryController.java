@@ -112,14 +112,6 @@ public class CarModelLibraryController extends BaseControllers{
 		return buildReqJsonObject(model);
 	}
 	
-	/**
-	 * 车型库管理（导出Excel）
-	 * @return
-	 */
-	public String exportExcel() {
-		
-		return "";
-	}
 	
 	/**
 	 * 车型库管理（车型详情）
@@ -182,14 +174,13 @@ public class CarModelLibraryController extends BaseControllers{
 		}
 		JSONObject bodyInfo=JSONObject.fromObject(bodyString);
 		if(bodyInfo.get("car_model_uuid")==null||bodyInfo.get("brand")==null||bodyInfo.get("carSeries")==null||bodyInfo.get("modelYear")==null
-				||bodyInfo.get("carModel")==null||
-				bodyInfo.get("displacement")==null||bodyInfo.get("seatNumber")==null||bodyInfo.get("clutch")==null) {
+				||bodyInfo.get("displacement")==null||bodyInfo.get("seatNumber")==null||bodyInfo.get("clutch")==null) {
 			json.put("result", "1");
 			json.put("description", "请检查参数是否正确或完整");
 			return buildReqJsonObject(json);
 		}
 		if("".equals(bodyInfo.get("car_model_uuid"))||bodyInfo.get("brand").equals("")||bodyInfo.get("carSeries").equals("")||bodyInfo.get("modelYear").equals("")
-				||bodyInfo.get("carModel").equals("")||"".equals(bodyInfo.get("displacement"))
+				||"".equals(bodyInfo.get("displacement"))
 				||"".equals(bodyInfo.get("seatNumber"))||"".equals(bodyInfo.get("clutch"))) {
 			json.put("result", "1");
 			json.put("description", "请检查参数是否正确");
@@ -210,7 +201,6 @@ public class CarModelLibraryController extends BaseControllers{
 			carModel.setBrand(bodyInfo.getString("brand"));	
 			carModel.setCarSeries(bodyInfo.getString("carSeries"));
 			carModel.setModelYear(bodyInfo.getString("modelYear"));
-			carModel.setCarModel(bodyInfo.getString("carModel"));
 			if(bodyInfo.get("color")!=null&&!"".equals(bodyInfo.get("color"))){
 				carModel.setColor(bodyInfo.getJSONArray("color").toString());
 			}
@@ -232,7 +222,10 @@ public class CarModelLibraryController extends BaseControllers{
 		return buildReqJsonObject(model);
 	}
 	
-	
+	/**
+	 * 删除车型
+	 * @return
+	 */
 	@RequestMapping(value="delete",method=RequestMethod.POST)
 	@ResponseBody
 	public String deleteCarModel() {
@@ -287,18 +280,24 @@ public class CarModelLibraryController extends BaseControllers{
 			return buildReqJsonInteger(1, json);
 		}
 		JSONObject bodyInfo=JSONObject.fromObject(bodyString);
-		if(bodyInfo.get("brand")==null||bodyInfo.get("carSeries")==null
-				||bodyInfo.get("color")==null||bodyInfo.get("modelYear")==null
+		if(bodyInfo.get("brand")==null
+				||bodyInfo.get("carSeries")==null
+				||bodyInfo.get("color")==null
+				||bodyInfo.get("modelYear")==null
 				||bodyInfo.get("displacement")==null
-				||bodyInfo.get("seatNumber")==null||bodyInfo.get("clutch")==null) {
+				||bodyInfo.get("seatNumber")==null
+				||bodyInfo.get("clutch")==null) {
 			json.put("result", "1");
 			json.put("description", "请检查参数是否正确或完整");
 			return buildReqJsonObject(json);
 		}
-		if("".equals(bodyInfo.get("brand"))||"".equals(bodyInfo.get("carSeries"))||
-				"".equals(bodyInfo.get("modelYear"))
-				||"".equals(bodyInfo.get("carModel"))||"".equals(bodyInfo.get("displacement"))
-				||"".equals(bodyInfo.get("seatNumber"))||"".equals(bodyInfo.get("clutch"))) {
+		if("".equals(bodyInfo.get("brand"))
+				||"".equals(bodyInfo.get("carSeries"))
+				||"".equals(bodyInfo.get("color"))
+				||"".equals(bodyInfo.get("modelYear"))
+				||"".equals(bodyInfo.get("displacement"))
+				||"".equals(bodyInfo.get("seatNumber"))
+				||"".equals(bodyInfo.get("clutch"))) {
 			json.put("result", "1");
 			json.put("description", "请检查参数是否正确");
 			return buildReqJsonObject(json);
@@ -315,9 +314,7 @@ public class CarModelLibraryController extends BaseControllers{
 		if(bodyInfo.get("color")!=null&&!"".equals(bodyInfo.get("color"))){
 			carModel.setColor(bodyInfo.getJSONArray("color").toString());
 		}
-		
 		carModel.setModelYear(bodyInfo.getString("modelYear"));
-		carModel.setCarModel(bodyInfo.getString("carModel"));
 		carModel.setCarModelUuid(UUID.randomUUID().toString().replaceAll("-", ""));
 		carModel.setCreateAt(new Date());
 		carModel.setApplyStatus(1);

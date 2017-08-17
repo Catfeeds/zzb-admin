@@ -74,7 +74,7 @@ public class FinanceRecordServiceImpl implements IFinanceRecordService{
 	}
 
 	@Override
-	public List<FinanceRecord> selectByMapLimit(Map<String, Object> map) {
+	public List<Map<String, Object>> selectByMapLimit(Map<String, Object> map) {
 		// TODO Auto-generated method stub
 		return financeRecordMapper.selectByMapLimit(map);
 	}

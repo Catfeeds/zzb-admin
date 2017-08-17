@@ -18,7 +18,7 @@ import com.hcb.zzb.service.IUsersService;
 
 import net.sf.json.JSONObject;
 @Controller
-@RequestMapping(value="userAccount")
+@RequestMapping("userAccount")
 public class UserAccountController extends BaseControllers{
 	@Autowired
 	IUsersService userService;
@@ -273,6 +273,12 @@ public class UserAccountController extends BaseControllers{
 		Map<String, Object> map=new HashMap<>();
 		map.put("start", start);
 		map.put("end", end);
+		if(bodyInfo.get("userName")!=null&&!"".equals(bodyInfo.get("userName"))){
+			map.put("userName", bodyInfo.getString("userName"));
+		}
+		if(bodyInfo.get("userUuid")!=null&&!"".equals(bodyInfo.get("userUuid"))){
+			map.put("userUuid", bodyInfo.getString("userUuid"));
+		}
 		if(bodyInfo.get("orderBy")!=null&&!"".equals(bodyInfo.get("orderBy"))) {
 			map.put("orderBy", bodyInfo.getInt("orderBy"));
 		}else {
@@ -290,7 +296,7 @@ public class UserAccountController extends BaseControllers{
 			json.put("description", "操作失败,请求页数大于总页数");
 			return buildReqJsonObject(json);
 		}
-		List<FinanceRecord> list=financeRecordService.selectByMapLimit(map);
+		List<Map<String, Object>> list=financeRecordService.selectByMapLimit(map);
 		if(!list.isEmpty()) {
 			json.put("result", "0");
 			json.put("description", "查询成功");
