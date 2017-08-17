@@ -1,6 +1,7 @@
 package com.hcb.zzb.controller;
 
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -98,12 +99,20 @@ public class OrdersController extends BaseControllers{
 		int total=count%pageSize==0?count/pageSize:count/pageSize+1;
 		List<Map<String, Object>> list=orderService.selectByMapLimit(map);
 		//List<Map<String, Object>> orderList=new ArrayList<Map<String, Object>>();
-		if(!list.isEmpty()) {
+		SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		if(list!=null&&!list.isEmpty()) {
 			json.put("result", "0");
 			json.put("description", "查询成功");
 			json.put("total", total);
 			json.put("page", pageIndex);
-			
+			for (Map<String, Object> map2 : list) {
+				try {
+					map2.put("useCarTime", getDatePoor(format.parse(map2.get("returnCarTime").toString()),format.parse(map2.get("takeCarTime").toString())));
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 			
 			json.put("orderList", list);
 		}else {

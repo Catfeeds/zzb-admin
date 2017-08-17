@@ -28,14 +28,17 @@ public class TestCollection {
         map.put("head", head);	
         
         HashMap<String, Object> body = new HashMap<String, Object>();
-        String [] color={"白色","黑色","银白色"};
+       /* String [] color={"白色","黑色","银白色"};
         body.put("brand", "宝马");
         body.put("carSeries", "x1");
         body.put("color", color);
         body.put("modelYear", "2017");
         body.put("displacement", "20L");
         body.put("seatNumber", 5);
-        body.put("clutch", "离合器");
+        body.put("clutch", "离合器");*/
+        
+        body.put("pageIndex", 1);
+        body.put("pageSize", 5);
         map.put("body",body);
   
         
@@ -48,7 +51,7 @@ public class TestCollection {
    	    //新建审批条目 在审批信息表 approval_inner_base_infos中0558
    	    //返回审批uuid
    	  // String url = "http://120.26.120.57:8080/apparel/special/list";
-   	    String url = "http://localhost:8080/zzb-admin-api/carMoldeLibrary/insert";
+   	    String url = "http://localhost:8080/zzb-admin-api/order/list";
    	 //String url = "http://192.168.73.1:8080/user/phone/login";
       // String url = "http://test.appring.cn:8080/fastask/question/show"; /* * * * * * root wget http://test.appring.cn:8080/fastask/energy/timing -q -O /usr/local/time/timelog
  	    HttpPost httpPost = new HttpPost(url);
