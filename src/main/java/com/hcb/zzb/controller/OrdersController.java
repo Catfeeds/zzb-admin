@@ -327,7 +327,7 @@ public class OrdersController extends BaseControllers{
 			}
 			Date beginTime=new Date();
 			Date endTime=order.getTakeCarTime();
-			long min=(endTime.getTime()-beginTime.getTime())/1000 / 60 ;
+			long min=(beginTime.getTime()-endTime.getTime())/1000 / 60 ;
 			
 			//车辆租赁费
 			float lease_price=order.getLeasePrice()==null?0:order.getLeasePrice();
