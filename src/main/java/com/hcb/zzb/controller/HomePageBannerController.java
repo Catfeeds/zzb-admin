@@ -243,16 +243,19 @@ public class HomePageBannerController extends BaseControllers {
 			return buildReqJsonObject(json);
 		}
 		
-		int countDisplay = homePageBanner.countDisplay();
-		if(bodyInfo.getInt("is_display")==1 && countDisplay>=4) {
-			json.put("result", "1");
-			json.put("description", "轮播图上架数量不能大于4张");
-			return buildReqJsonObject(json);
-		}
 		
 		HomepageBanner banner = homePageBanner.selectByPrimaryKey(bodyInfo.getInt("id"));
-		
-		
+		if(banner.getIsDisplay()==1){
+			//编辑时已为上架状态时，保存时不阻止
+		}else if(banner.getIsDisplay()==2){
+			//编辑时为下架状态时，保存为上架时，如果大于4就阻止
+			int countDisplay = homePageBanner.countDisplay();
+			if(bodyInfo.getInt("is_display")==1 && countDisplay>=4) {
+				json.put("result", "1");
+				json.put("description", "轮播图上架数量不能大于4张");
+				return buildReqJsonObject(json);
+			}
+		}
 		
 		//Manager manager=  managerService.selectByAccountUuid(headInfo.getString("manager_uuid"));
 		
