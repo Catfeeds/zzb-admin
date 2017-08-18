@@ -342,10 +342,16 @@ public class OrdersController extends BaseControllers{
 				//承担租赁费50%的罚金
 				DecimalFormat decf=new DecimalFormat("##0.00");
 				penalty =Float.parseFloat(decf.format(lease_price*0.5f));
+				if(penalty>3000){
+					penalty=3000;
+				}
 				
 			}else{
 				//承担租赁费100%的罚金
 				penalty=lease_price;
+				if(penalty>3000){
+					penalty=3000;
+				}
 			}
 			//退还剩余的钱
 			

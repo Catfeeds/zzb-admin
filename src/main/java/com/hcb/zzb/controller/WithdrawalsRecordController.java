@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,10 +16,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.hcb.zzb.controller.base.BaseControllers;
+import com.hcb.zzb.dto.PushInfo;
 import com.hcb.zzb.dto.Users;
 import com.hcb.zzb.dto.WithdrawalsRecord;
+import com.hcb.zzb.service.IPushInfoService;
 import com.hcb.zzb.service.IUsersService;
 import com.hcb.zzb.service.IWithdrawalsRecordService;
+import com.hcb.zzb.util.HttpGet;
+import com.hcb.zzb.util.MD5Util;
 
 import net.sf.json.JSONObject;
 @Controller
@@ -28,7 +33,8 @@ public class WithdrawalsRecordController extends BaseControllers{
 	private IWithdrawalsRecordService withdrawalsRecordService;
 	@Autowired
 	private IUsersService userService;
-	
+	@Autowired
+	private IPushInfoService pushInfoService;
 	
 	/**
 	 * 提现记录列表
@@ -263,7 +269,40 @@ public class WithdrawalsRecordController extends BaseControllers{
 				if(rs == 1) {
 					json.put("result", "0");
 					json.put("description", "操作成功");
+					//推送消息
+					PushInfo push = new PushInfo();
+					push.setCreateDatetime(new Date());
+					push.setGroups("article");
+					push.setUserUuid(user.getUserUuid());
+					push.setPushTitle("至尊宝");
+					push.setPushDsp("您的提现已成功");
+					push.setPushDatetime(new Date());
+					push.setPushType(8);
+					try {
+						push.setPushUuid(MD5Util.md5Digest(user.getUserUuid() + System.currentTimeMillis() + RandomStringUtils.random(8)));
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				   Integer rs1 = pushInfoService.insertSelective(push);
+					if(rs1==1){
+						String url = "http://120.27.151.185/zzb-java/phppushinfo";
+						String str = HttpGet.sendGet(url, "push_uuid="+push.getPushUuid());
+						System.out.println("================="+str);
+						//推送消息
+						new Thread(new Runnable() {
+							public void run() {
+								PushInfo pushInfo = pushInfoService.selectByPushUuid(push.getPushUuid());
+								if(pushInfo!=null){
+									String url = "http://120.27.151.185/zzb-java/phppushinfo";
+									String str = HttpGet.sendGet(url, "push_uuid="+push.getPushUuid());
+									System.out.println("================="+str);
+								}
+							}
+						}).start();
+					}
 				
+					////////////推送结束
+					
 				}else {
 					json.put("result", "1");
 					json.put("description", "操作失败");
@@ -325,7 +364,39 @@ public class WithdrawalsRecordController extends BaseControllers{
 				if(rs == 1) {
 					json.put("result", "0");
 					json.put("description", "操作成功");
+					//推送消息
+					PushInfo push = new PushInfo();
+					push.setCreateDatetime(new Date());
+					push.setGroups("article");
+					push.setUserUuid(user.getUserUuid());
+					push.setPushTitle("至尊宝");
+					push.setPushDsp("您的提现申请被驳回");
+					push.setPushDatetime(new Date());
+					push.setPushType(8);
+					try {
+						push.setPushUuid(MD5Util.md5Digest(user.getUserUuid() + System.currentTimeMillis() + RandomStringUtils.random(8)));
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				   Integer rs1 = pushInfoService.insertSelective(push);
+					if(rs1==1){
+						String url = "http://120.27.151.185/zzb-java/phppushinfo";
+						String str = HttpGet.sendGet(url, "push_uuid="+push.getPushUuid());
+						System.out.println("================="+str);
+						//推送消息
+						new Thread(new Runnable() {
+							public void run() {
+								PushInfo pushInfo = pushInfoService.selectByPushUuid(push.getPushUuid());
+								if(pushInfo!=null){
+									String url = "http://120.27.151.185/zzb-java/phppushinfo";
+									String str = HttpGet.sendGet(url, "push_uuid="+push.getPushUuid());
+									System.out.println("================="+str);
+								}
+							}
+						}).start();
+					}
 				
+					////////////推送结束
 				}else {
 					json.put("result", "1");
 					json.put("description", "操作失败");

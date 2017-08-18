@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,9 +15,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.hcb.zzb.controller.base.BaseControllers;
 import com.hcb.zzb.dto.Car;
+import com.hcb.zzb.dto.PushInfo;
 import com.hcb.zzb.dto.Users;
 import com.hcb.zzb.service.ICarSevice;
+import com.hcb.zzb.service.IPushInfoService;
 import com.hcb.zzb.service.IUsersService;
+import com.hcb.zzb.util.HttpGet;
+import com.hcb.zzb.util.MD5Util;
 
 import net.sf.json.JSONObject;
 
@@ -27,6 +32,8 @@ public class CarController extends BaseControllers{
 	private ICarSevice carService;
 	@Autowired
 	private IUsersService userService;
+	@Autowired
+	private IPushInfoService pushInfoService;
 	/**
 	 * 车辆列表
 	 * @return
@@ -160,22 +167,158 @@ public class CarController extends BaseControllers{
 		}
 		Car car=carService.selectByUuid(bodyInfo.getString("carUuid"));
 		if(car!=null) {
+			Users user = userService.selectByUserUuid(car.getUserUuid());
+			if(user == null){
+				json.put("result", "1");
+				json.put("description", "操作失败，没有查询到该车辆的用户");
+				return buildReqJsonObject(json);
+			}
 			car.setUpdateAt(new Date());
 			car.setCarStatus(bodyInfo.getInt("carStatus"));
 			int rs=0;
 			rs = carService.updateByPrimaryKeySelective(car);
-			if(bodyInfo.getInt("carStatus")==2){//如果通过，设置上传车辆的人为车主身份
-				Users user = userService.selectByUserUuid(car.getUserUuid());
-				if(user != null){
+			if(rs==1) {
+				if(bodyInfo.getInt("carStatus")==2){//如果通过，设置上传车辆的人为车主身份
+					
 					user.setUserType(1);//1车主 2车友
 					userService.updateByPrimaryKeySelective(user);
-				}else{
-					json.put("result", "1");
-					json.put("description", "操作失败，没有查询到该车辆的用户");
-					return buildReqJsonObject(json);
+					
+					//推送消息
+					PushInfo push = new PushInfo();
+					push.setCreateDatetime(new Date());
+					push.setGroups("article");
+					push.setUserUuid(user.getUserUuid());
+					push.setPushTitle("至尊宝");
+					push.setPushDsp("您的车辆已通过审核");
+					push.setPushDatetime(new Date());
+					push.setPushType(8);
+					try {
+						push.setPushUuid(MD5Util.md5Digest(user.getUserUuid() + System.currentTimeMillis() + RandomStringUtils.random(8)));
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				   Integer rs1 = pushInfoService.insertSelective(push);
+					if(rs1==1){
+						String url = "http://120.27.151.185/zzb-java/phppushinfo";
+						String str = HttpGet.sendGet(url, "push_uuid="+push.getPushUuid());
+						System.out.println("================="+str);
+						//推送消息
+						new Thread(new Runnable() {
+							public void run() {
+								PushInfo pushInfo = pushInfoService.selectByPushUuid(push.getPushUuid());
+								if(pushInfo!=null){
+									String url = "http://120.27.151.185/zzb-java/phppushinfo";
+									String str = HttpGet.sendGet(url, "push_uuid="+push.getPushUuid());
+									System.out.println("================="+str);
+								}
+							}
+						}).start();
+					}
+				
+					////////////推送结束
+				}else if(bodyInfo.getInt("carStatus")==3){
+					//推送消息
+					PushInfo push = new PushInfo();
+					push.setCreateDatetime(new Date());
+					push.setGroups("article");
+					push.setUserUuid(user.getUserUuid());
+					push.setPushTitle("至尊宝");
+					push.setPushDsp("很遗憾！您的车辆未通过审核");
+					push.setPushDatetime(new Date());
+					push.setPushType(8);
+					try {
+						push.setPushUuid(MD5Util.md5Digest(user.getUserUuid() + System.currentTimeMillis() + RandomStringUtils.random(8)));
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				   Integer rs1 = pushInfoService.insertSelective(push);
+					if(rs1==1){
+						String url = "http://120.27.151.185/zzb-java/phppushinfo";
+						String str = HttpGet.sendGet(url, "push_uuid="+push.getPushUuid());
+						System.out.println("================="+str);
+						//推送消息
+						new Thread(new Runnable() {
+							public void run() {
+								PushInfo pushInfo = pushInfoService.selectByPushUuid(push.getPushUuid());
+								if(pushInfo!=null){
+									String url = "http://120.27.151.185/zzb-java/phppushinfo";
+									String str = HttpGet.sendGet(url, "push_uuid="+push.getPushUuid());
+									System.out.println("================="+str);
+								}
+							}
+						}).start();
+					}
+				
+					////////////推送结束
+				}else if(bodyInfo.getInt("carStatus")==4){
+					//推送消息
+					PushInfo push = new PushInfo();
+					push.setCreateDatetime(new Date());
+					push.setGroups("article");
+					push.setUserUuid(user.getUserUuid());
+					push.setPushTitle("至尊宝");
+					push.setPushDsp("您的车辆被冻结");
+					push.setPushDatetime(new Date());
+					push.setPushType(8);
+					try {
+						push.setPushUuid(MD5Util.md5Digest(user.getUserUuid() + System.currentTimeMillis() + RandomStringUtils.random(8)));
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				   Integer rs1 = pushInfoService.insertSelective(push);
+					if(rs1==1){
+						String url = "http://120.27.151.185/zzb-java/phppushinfo";
+						String str = HttpGet.sendGet(url, "push_uuid="+push.getPushUuid());
+						System.out.println("================="+str);
+						//推送消息
+						new Thread(new Runnable() {
+							public void run() {
+								PushInfo pushInfo = pushInfoService.selectByPushUuid(push.getPushUuid());
+								if(pushInfo!=null){
+									String url = "http://120.27.151.185/zzb-java/phppushinfo";
+									String str = HttpGet.sendGet(url, "push_uuid="+push.getPushUuid());
+									System.out.println("================="+str);
+								}
+							}
+						}).start();
+					}
+				
+					////////////推送结束
+				}else if(bodyInfo.getInt("carStatus")==5){
+					//推送消息
+					PushInfo push = new PushInfo();
+					push.setCreateDatetime(new Date());
+					push.setGroups("article");
+					push.setUserUuid(user.getUserUuid());
+					push.setPushTitle("至尊宝");
+					push.setPushDsp("您的车辆被驳回");
+					push.setPushDatetime(new Date());
+					push.setPushType(8);
+					try {
+						push.setPushUuid(MD5Util.md5Digest(user.getUserUuid() + System.currentTimeMillis() + RandomStringUtils.random(8)));
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				   Integer rs1 = pushInfoService.insertSelective(push);
+					if(rs1==1){
+						String url = "http://120.27.151.185/zzb-java/phppushinfo";
+						String str = HttpGet.sendGet(url, "push_uuid="+push.getPushUuid());
+						System.out.println("================="+str);
+						//推送消息
+						new Thread(new Runnable() {
+							public void run() {
+								PushInfo pushInfo = pushInfoService.selectByPushUuid(push.getPushUuid());
+								if(pushInfo!=null){
+									String url = "http://120.27.151.185/zzb-java/phppushinfo";
+									String str = HttpGet.sendGet(url, "push_uuid="+push.getPushUuid());
+									System.out.println("================="+str);
+								}
+							}
+						}).start();
+					}
+					////////////推送结束
 				}
-			}
-			if(rs==1) {
+				
 				json.put("result", "0");
 				json.put("description", "操作成功");
 			}else {
