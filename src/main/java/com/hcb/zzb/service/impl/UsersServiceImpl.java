@@ -108,6 +108,12 @@ public class UsersServiceImpl implements IUsersService {
 		// TODO Auto-generated method stub
 		return usersMapper.selectByPrimaryKey(id);
 	}
+
+	@Override
+	public Users selectByUserOwnerUuid(String carOwnerUuid) {
+		// TODO Auto-generated method stub
+		return usersMapper.selectByUserOwnerUuid(carOwnerUuid);
+	}
 	
 
 }

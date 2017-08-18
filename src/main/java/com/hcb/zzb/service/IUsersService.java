@@ -24,4 +24,6 @@ public interface IUsersService {
 	int countUsersByMap(Map<String, Object> map);
 	
 	Users selectByPrimaryKey(Integer id);
+
+	Users selectByUserOwnerUuid(String carOwnerUuid);
 }

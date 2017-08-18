@@ -49,6 +49,13 @@
     from users
     where user_uuid = #{userUuid,jdbcType=VARCHAR} and delete_at is null
   </select>
+  <select id="selectByUserOwnerUuid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from users
+    where user_uuid = #{userUuid,jdbcType=VARCHAR} and delete_at is null and user_type =1
+  </select>
+  
   <select id="selectByPhone" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />

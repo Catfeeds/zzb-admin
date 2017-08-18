@@ -1,6 +1,7 @@
 
 package com.hcb.zzb.controller;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -20,10 +21,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.hcb.zzb.controller.base.BaseControllers;
+import com.hcb.zzb.dto.Car;
 import com.hcb.zzb.dto.FinanceRecord;
 import com.hcb.zzb.dto.Orders;
 import com.hcb.zzb.dto.PlatformConfig;
 import com.hcb.zzb.dto.Users;
+import com.hcb.zzb.service.ICarSevice;
 import com.hcb.zzb.service.IFinanceRecordService;
 import com.hcb.zzb.service.IOrderService;
 import com.hcb.zzb.service.IPlatformConfigService;
@@ -44,6 +47,8 @@ public class OrdersController extends BaseControllers{
 	private IPlatformConfigService platformConfigService;
 	@Autowired
 	private IFinanceRecordService financeRecordService;
+	@Autowired
+	private ICarSevice carService;
 	/**
 	 * 订单列表（分页）
 	 * @return
@@ -109,6 +114,22 @@ public class OrdersController extends BaseControllers{
 			for (Map<String, Object> map2 : list) {
 				try {
 					map2.put("useCarTime", getDatePoor(format.parse(map2.get("returnCarTime").toString()),format.parse(map2.get("takeCarTime").toString())));
+					//Car car=(Car)map2.get("carUuid");
+					String carUuid=(String)map2.get("carUuid");
+					Car car = carService.selectByUuid(carUuid);
+					String carOwnerUuid=(String)map2.get("carOwnerUuid");
+					String userUuid=(String)map2.get("userUuid");
+					Users user=userService.selectByUserUuid(userUuid);
+					Users user_owner=userService.selectByUserOwnerUuid(carOwnerUuid);
+					map2.put("car_series", car.getCarSeries()==null?"":car.getCarSeries());//车系
+					map2.put("license_plate_number", car.getLicensePlateNumber()==null?"":car.getLicensePlateNumber());//车牌号
+					map2.put("banner", car.getBanner()==null?"":car.getBanner());//图片
+					//车主
+					map2.put("user_owner_name", user_owner.getUserName()==null?"":user_owner.getUserName());//姓名
+					map2.put("user_phone", user.getUserPhone()==null?"":user.getUserPhone());//电话号
+					//车友
+					map2.put("user_name", user.getUserName()==null?"":user_owner.getUserName());//车友名字
+					map2.put("phone", user.getUserPhone()==null?"":user.getUserPhone());//电话号
 				} catch (ParseException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -407,7 +428,151 @@ public class OrdersController extends BaseControllers{
 		return buildReqJsonObject(json);
 	}
 	
-	
+	/**
+	 * 转账
+	 * @return
+	 */
+	@RequestMapping(value="transferOrder",method=RequestMethod.POST)
+	@ResponseBody
+	@Transactional
+	public String transferOrder() {
+		JSONObject json=new JSONObject();
+		if(sign==1||sign==2) {
+			json.put("result", "1");
+			json.put("description", "请检查参数格式是否正确或者参数是否完整");
+			return buildReqJsonInteger(1, json);
+		}
+		JSONObject bodyInfo=JSONObject.fromObject(bodyString);
+		if(bodyInfo.get("order_uuid")==null) {
+			json.put("result", "1");
+			json.put("description", "请检查参数是否正确或者完整");
+			return buildReqJsonObject(json);
+		}
+		if("".equals(bodyInfo.get("order_uuid"))) {
+			json.put("result", "1");
+			json.put("description", "请检查参数格式是否正确");
+			return buildReqJsonObject(json);
+		}
+		if("".equals(bodyInfo.get("money"))||bodyInfo.get("money")==null) {
+			json.put("result", "1");
+			json.put("description", "请检查参数格式是否正确");
+			return buildReqJsonObject(json);
+		}
+		
+		Orders order = orderService.selectByOrdersUuid(bodyInfo.getString("order_uuid"));
+		if(order!=null) {
+			if(order.getTakeCarTime()==null) {
+				json.put("result", "1");
+				json.put("description", "错误,该订单没有取车时间");
+				return buildReqJsonObject(json);
+			}
+			Users user = userService.selectByUserUuid(order.getUserUuid());
+			if(user==null) {
+				json.put("result", "1");
+				json.put("description", "错误,该订单的用户不存在");
+				return buildReqJsonObject(json);
+			}
+			Users userOwner = userService.selectByUserUuid(order.getCarOwnerUuid());
+			if(userOwner==null){
+				json.put("result", "1");
+				json.put("description", "错误,该订单的用户不存在");
+				return buildReqJsonObject(json);
+			}
+			String string = bodyInfo.getString("money");
+			float float1 = Float.parseFloat(string);
+			if(order.getOrderStatus()==6){
+				
+				BigDecimal big=new BigDecimal(100);
+				float userBalance = userOwner.getBalance()==null?0:userOwner.getBalance();
+				BigDecimal money=new BigDecimal(Float.toString(userBalance));
+				BigDecimal money1=new BigDecimal(Float.toString(float1));
+				BigDecimal total=money.add(money1);
+				Float float2 = Float.valueOf(total.toString());
+				userOwner.setBalance(float2);
+				userService.updateByPrimaryKeySelective(userOwner);
+				
+				//收支明细
+				FinanceRecord finance1=new FinanceRecord();
+				finance1.setCreateAt(new Date());
+				finance1.setFinanceRecordUuid(UUID.randomUUID().toString().replaceAll("-", ""));
+				finance1.setFinanceType(2);//交易类型；1：收入；2：支出
+				//finance1.setMoney(deposit-penalty);
+				finance1.setOrderRecordType(3);//订单记录类型；1：押金；2：租车费用；3：赔偿费用;
+				finance1.setOrderUuid(order.getOrderUuid());
+				finance1.setRecordType(5);//记录类型；1：充值；2：提现；3：订单；4：平台收费
+				finance1.setUserUuid(order.getCarOwnerUuid());
+				finance1.setPayType(5);//支付方式：1：余额；2：支付宝；3：微信；4：银行卡
+				finance1.setPayWay(3);;//支付渠道：1:APP; 2:H5 3:系统 
+				financeRecordService.insertSelective(finance1);
+				
+				
+				//平台账户减去
+				List<PlatformConfig> platforms = new ArrayList<>();
+				platforms = platformConfigService.selectAll();
+				if(!platforms.isEmpty()) {
+					PlatformConfig platform=platforms.get(0);
+					float blan = platform.getBalance();
+					platform.setBalance(blan-float2);
+					platformConfigService.updateByPrimaryKeySelective(platform);
+				}
+				/*//收支明细
+				FinanceRecord finance=new FinanceRecord();
+				finance.setCreateAt(new Date());
+				finance.setFinanceRecordUuid(UUID.randomUUID().toString().replaceAll("-", ""));
+				finance.setFinanceType(2);//交易类型；1：收入；2：支出
+				finance.setMoney(deposit-penalty);
+				finance.setOrderRecordType(1);//订单记录类型；1：押金；2：租车费用；3：赔偿费用;
+				finance.setOrderUuid(order.getOrderUuid());
+				finance.setRecordType(4);//记录类型；1：充值；2：提现；3：订单；4：平台收费；
+				finance.setUserUuid(order.getUserUuid());
+				finance.setPayType(1);//支付方式：1：余额；2：支付宝；3：微信；4：银行卡
+				financeRecordService.insertSelective(finance);*/
+				
+				//order.setOrderStatus(7);//状态改为已取消
+				//orderService.updateByPrimaryKeySelective(order);
+				json.put("result", "0");
+				json.put("description", "转账成功");
+				
+			}else{
+				json.put("result", "1");
+				json.put("description", "该订单未结束或者已取消，不能转账");
+				return buildReqJsonObject(json);
+			}
+			/*Date beginTime=new Date();
+			Date endTime=order.getTakeCarTime();
+			long min=(endTime.getTime()-beginTime.getTime())/1000 / 60 ;
+			
+			//车辆租赁费
+			float lease_price=order.getLeasePrice()==null?0:order.getLeasePrice();
+			//押金
+			float deposit=order.getDeposit()==null?0:order.getDeposit();
+			//罚金
+			float penalty=0;
+			if(min>=72*60) {
+				//不承担罚金
+				penalty=0;
+			}else if(min < 72*60 && min > 0) {
+				//承担租赁费50%的罚金
+				DecimalFormat decf=new DecimalFormat("##0.00");
+				penalty =Float.parseFloat(decf.format(lease_price*0.5f));
+				if(penalty>3000){
+					penalty=3000;
+				}
+				
+			}else{
+				//承担租赁费100%的罚金
+				penalty=lease_price;
+				if(penalty>3000){
+					penalty=3000;
+				}
+			}
+			//退还剩余的钱
+			*/
+			
+			
+		}
+		return buildReqJsonObject(json);
+	}
 	
 	
 	

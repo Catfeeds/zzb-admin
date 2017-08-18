@@ -57,7 +57,28 @@ public class Users {
     
     private Integer vehicleBehavior;
     
-    private Float deposit;
+    private String takeCarAddressMap;
+    private String return_car_address_map;
+    
+    
+    
+    public String getTakeCarAddressMap() {
+		return takeCarAddressMap;
+	}
+
+	public void setTakeCarAddressMap(String takeCarAddressMap) {
+		this.takeCarAddressMap = takeCarAddressMap;
+	}
+
+	public String getReturn_car_address_map() {
+		return return_car_address_map;
+	}
+
+	public void setReturn_car_address_map(String return_car_address_map) {
+		this.return_car_address_map = return_car_address_map;
+	}
+
+	private Float deposit;
     public Integer getId() {
         return id;
     }

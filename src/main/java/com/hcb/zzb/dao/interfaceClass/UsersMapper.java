@@ -30,4 +30,6 @@ public interface UsersMapper {
 	
 	int countUsersByMap(Map<String, Object> map);
 
+	Users selectByUserOwnerUuid(String carOwnerUuid);
+
 }
