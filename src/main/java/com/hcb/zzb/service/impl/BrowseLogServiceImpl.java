@@ -86,4 +86,10 @@ public class BrowseLogServiceImpl implements IBrowseLogService{
 		return browseLogMapper.selectByrecentBrowse(userUuid);
 	}
 
+	@Override
+	public BrowseLog selectByUserIdAndCarId(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return browseLogMapper.selectByUserIdAndCarId(map);
+	}
+
 }

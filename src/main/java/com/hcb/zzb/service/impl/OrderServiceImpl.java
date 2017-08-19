@@ -127,10 +127,45 @@ private OrdersMapper ordersMapper;
 		return ordersMapper.selectByOrderNumber(orderNumber);
 	}
 
+	@Override
+	public int selectCountByConsume(String userUuid) {
+		// TODO Auto-generated method stub
+		return ordersMapper.selectCountByConsume(userUuid);
+	}
+
+	@Override
+	public Float selectMoneyByConsume(String userUuid) {
+		// TODO Auto-generated method stub
+		return ordersMapper.selectMoneyByConsume(userUuid);
+	}
+
+	@Override
+	public int selectSureOrder(String userUuid) {
+		// TODO Auto-generated method stub
+		return ordersMapper.selectSureOrder(userUuid);
+	}
 	/*@Override
 	public Orders selectByUserUuidAndOrderUUid(String orderuuid) {
 		// TODO Auto-generated method stub
 		return ordersMapper.selectByUserUuidAndOrderUUid(orderuuid);
 	}*/
+
+	@Override
+	public int selectCount(String uuid) {
+		// TODO Auto-generated method stub
+		return ordersMapper.selectCount(uuid);
+	}
+
+	@Override
+	public Float selectMoney() {
+		// TODO Auto-generated method stub
+		return ordersMapper.selectMoney();
+	}
+
+	@Override
+	public Orders selectByordernumber(String ordernumber) {
+		// TODO Auto-generated method stub
+		return ordersMapper.selectByordernumber(ordernumber);
+	}
 
 }

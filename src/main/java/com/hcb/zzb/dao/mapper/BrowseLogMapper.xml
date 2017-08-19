@@ -45,6 +45,16 @@
 	</if>
   	group by car_uuid order by create_at
   </select>
+  
+  <select id="selectByUserIdAndCarId" resultMap="BaseResultMap"
+		parameterType="java.util.Map">
+		select
+		<include refid="Base_Column_List" />
+		from browse_log where user_uuid=#{user_uuid,jdbcType=VARCHAR}
+		and car_uuid=#{car_uuid,jdbcType=VARCHAR}
+	</select>
+  
+  
   <select id="selectByrecentBrowse" resultMap="BaseResultMap" parameterType="java.lang.String">
   	select 
   	<include refid="Base_Column_List" />

@@ -61,4 +61,10 @@ public interface ICarSevice {
 	List<Car> selectByMapLimit(Map<String, Object> map);
 	
 	int countSelectByMapLimit(Map<String, Object> map);
+
+	List<Car> selectByCarBand(String userUuid);
+
+	int selectNum1(String userUuid);
+
+	int selectNum2(String userUuid);
 }

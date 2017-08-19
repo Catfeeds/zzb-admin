@@ -42,4 +42,16 @@ public interface OrdersMapper {
 	int countselectByMapLimit(Map<String, Object> map);
 	//Orders selectByUserUuidAndOrderUUid( String orderuuid);
 	Orders selectByOrderNumber(String orderNumber);
+
+	int selectCountByConsume(String userUuid);
+
+	Float selectMoneyByConsume(String userUuid);
+
+	int selectSureOrder(String userUuid);
+
+	int selectCount(String carUuid);
+
+	Float selectMoney();
+
+	Orders selectByordernumber(String ordernumber);
 }

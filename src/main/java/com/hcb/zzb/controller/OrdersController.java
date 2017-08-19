@@ -121,15 +121,36 @@ public class OrdersController extends BaseControllers{
 					String userUuid=(String)map2.get("userUuid");
 					Users user=userService.selectByUserUuid(userUuid);
 					Users user_owner=userService.selectByUserOwnerUuid(carOwnerUuid);
-					map2.put("car_series", car.getCarSeries()==null?"":car.getCarSeries());//车系
-					map2.put("license_plate_number", car.getLicensePlateNumber()==null?"":car.getLicensePlateNumber());//车牌号
-					map2.put("banner", car.getBanner()==null?"":car.getBanner());//图片
-					//车主
-					map2.put("user_owner_name", user_owner.getUserName()==null?"":user_owner.getUserName());//姓名
-					map2.put("user_phone", user.getUserPhone()==null?"":user.getUserPhone());//电话号
-					//车友
-					map2.put("user_name", user.getUserName()==null?"":user_owner.getUserName());//车友名字
-					map2.put("phone", user.getUserPhone()==null?"":user.getUserPhone());//电话号
+					if(user_owner==null){
+						//车主
+						map2.put("user_owner_name", "");//姓名
+						map2.put("user_phone", "");//电话号
+					}else{
+						//车主
+						map2.put("user_owner_name", user_owner.getUserName()==null?"":user_owner.getUserName());//姓名
+						map2.put("user_phone", user_owner.getUserPhone()==null?"":user_owner.getUserPhone());//电话号
+					}
+					if(user==null){
+						//车友
+						map2.put("user_name", "");//车友名字
+						map2.put("phone", "");//电话号
+					}else{
+						//车友
+						map2.put("user_name", user.getUserName()==null?"":user.getUserName());//车友名字
+						map2.put("phone", user.getUserPhone()==null?"":user.getUserPhone());//电话号
+					}
+					if(car==null){
+						map2.put("car_series", "");//车系
+						map2.put("license_plate_number", "");//车牌号
+						map2.put("banner", "");//图片
+					}else{
+						map2.put("car_series", car.getCarSeries()==null?"":car.getCarSeries());//车系
+						map2.put("license_plate_number", car.getLicensePlateNumber()==null?"":car.getLicensePlateNumber());//车牌号
+						map2.put("banner", car.getBanner()==null?"":car.getBanner());//图片
+					}
+					
+					
+					
 				} catch (ParseException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -466,7 +487,11 @@ public class OrdersController extends BaseControllers{
 				json.put("description", "错误,该订单没有取车时间");
 				return buildReqJsonObject(json);
 			}
-			Users user = userService.selectByUserUuid(order.getUserUuid());
+			String userUuid = order.getUserUuid();
+			if(userUuid==null){
+				System.out.println(userUuid);
+			}
+			Users user = userService.selectByUserUuid(userUuid);
 			if(user==null) {
 				json.put("result", "1");
 				json.put("description", "错误,该订单的用户不存在");
@@ -534,7 +559,7 @@ public class OrdersController extends BaseControllers{
 				json.put("description", "转账成功");
 				
 			}else{
-				json.put("result", "1");
+				json.put("result", "0");
 				json.put("description", "该订单未结束或者已取消，不能转账");
 				return buildReqJsonObject(json);
 			}

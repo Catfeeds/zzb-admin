@@ -16,6 +16,7 @@ import com.hcb.zzb.controller.base.BaseControllers;
 import com.hcb.zzb.dto.FinanceRecord;
 import com.hcb.zzb.dto.PlatformConfig;
 import com.hcb.zzb.service.IFinanceRecordService;
+import com.hcb.zzb.service.IOrderService;
 import com.hcb.zzb.service.IPlatformConfigService;
 
 import net.sf.json.JSONObject;
@@ -26,7 +27,8 @@ public class PlatformConfigController extends BaseControllers{
 	IFinanceRecordService financeRecordService;
 	@Autowired
 	IPlatformConfigService platformConfigService;
-	
+	@Autowired
+	IOrderService orderService;
 	/**
 	 * 平台账户收支明细列表
 	 * @return
@@ -82,8 +84,17 @@ public class PlatformConfigController extends BaseControllers{
 		}
 		
 		ModelMap model=new ModelMap();
-		
+		//总营收（历史成功订单总数）
+		Float totalmoney =orderService.selectMoney();
+		model.put("totalmoney", totalmoney);
+		//历史新高（日期-金额）
+		model.put("highmoney", 0);
+		//押金池，
+		model.put("poolmoney", 0);
 		//平台账户收支明细列表
+		//订单状态（预定成功，服务中，已还车，已结案）
+		//租客/车东/车款/用车时间/付款时间/
+		//付款渠道/付款金额/押金金额/城市/
 		List<FinanceRecord> financeList=new ArrayList<>();
 		financeList=financeRecordService.selectByRecordType(map);
 		

@@ -29,6 +29,7 @@ import net.sf.json.JSONObject;
 @Controller
 @RequestMapping(value="ticket")
 public class TicketController extends BaseControllers{
+	private static final String String = null;
 	@Autowired
 	ITicketService ticketService;
 	@Autowired
@@ -97,9 +98,29 @@ public class TicketController extends BaseControllers{
 			return buildReqJsonObject(json);
 		}
 		
+		///车主/违章信息（可附图）/罚款/扣分/
+		//处理方式（自负/委托--价格：扣分*150+罚款金额+50元手续费/单，12分代扣1万元）/已处理凭证上传
 		List<Map<String, Object>> list = ticketService.selectTicketsLimit(map);
 		
 		if(list!=null&&!list.isEmpty()) {
+			for (Map<String, Object> map2 : list) {
+				String userUuid=(String)map2.get("userUuid");
+				String ordernumber=(String)map2.get("orderNumber");
+				Orders orders= orderService.selectByordernumber(ordernumber);
+				if(orders!=null){
+					String carOwnerUuid = orders.getCarOwnerUuid();
+					Users userOwner = usersService.selectByUserUuid(carOwnerUuid);
+					map2.put("userOwner", userOwner);
+				}else{
+					map2.put("userOwner", "");
+				}
+				Users user = usersService.selectByUserUuid(userUuid);
+				if(user!=null){
+					map2.put("user", user);
+				}else{
+					map2.put("user", "");
+				}
+			}
 			json.put("result", "0");
 			json.put("description", "查询成功");
 			json.put("total", total);

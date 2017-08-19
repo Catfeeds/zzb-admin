@@ -134,10 +134,29 @@
   	from car
   	where model_character=#{modelCharacter,jdbcType=VARCHAR} limit #{pageIndex},#{pageSize}
   </select>
+  
+  <select id="selectByCarBand" resultMap="BaseResultMap" parameterType="java.lang.String">
+  	select
+  	<include refid="Base_Column_List" />
+  	from car
+  	where user_uuid=#{userUuid,jdbcType=VARCHAR} AND brand IS NOT NULL AND car_status=2
+  </select>
+  
   <select id="selectCountByCarModel" resultType="int" parameterType="java.lang.String">
   	select count(1)
   	from car
   	where model_character=#{modelCharacter,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectNum1" resultType="int" parameterType="java.lang.String">
+  	select count(1)
+  	from car
+  	where car_status=2 AND user_uuid=#{userUuid,jdbcType=VARCHAR} 
+  </select>
+  <select id="selectNum2" resultType="int" parameterType="java.lang.String">
+  	select count(1)
+  	from car
+  	where user_uuid=#{userUuid,jdbcType=VARCHAR} 
   </select>
   
   <select id="selectByMapLimit" resultMap="BaseResultMap" parameterType="java.util.HashMap">

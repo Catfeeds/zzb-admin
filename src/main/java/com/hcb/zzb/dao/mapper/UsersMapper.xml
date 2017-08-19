@@ -53,7 +53,7 @@
     select 
     <include refid="Base_Column_List" />
     from users
-    where user_uuid = #{userUuid,jdbcType=VARCHAR} and delete_at is null and user_type =1
+    where user_uuid = #{userUuid,jdbcType=VARCHAR} and delete_at is null
   </select>
   
   <select id="selectByPhone" resultMap="BaseResultMap" parameterType="java.lang.String" >
@@ -102,10 +102,75 @@
   	limit #{start},#{end}
   </select>
   
+  <select id="selectUsersOwnerByMap" resultMap="BaseResultMap" parameterType="java.util.HashMap">
+  	select
+  	<include refid="Base_Column_List" />
+  	from users
+  	<where>
+  		delete_at is null and user_type =1
+  		<if test="userName != null and userName !=''">
+  			and user_name like CONCAT('%', #{userName,jdbcType=VARCHAR}, '%')
+  		</if>
+  		<if test="id != null and id !=''">
+  			and id=#{id,jdbcType=INTEGER}
+  		</if>
+  		
+  	</where>
+  	<if test="orderBy != null and orderBy !=''">
+  		<if test="orderBy==1">
+  			order by create_at asc
+  		</if>
+  		<if test="orderBy==2">
+  			order by create_at desc
+  		</if>
+  	</if>
+  	
+  	limit #{start},#{end}
+  </select>
+  
+  <select id="selectUsers" resultMap="BaseResultMap" parameterType="java.util.HashMap">
+  	select
+  	<include refid="Base_Column_List" />
+  	from users
+  	<where>
+  		delete_at is null and user_type =2 
+  		<if test="userName != null and userName !=''">
+  			and user_name like CONCAT('%', #{userName,jdbcType=VARCHAR}, '%')
+  		</if>
+  		<if test="id != null and id !=''">
+  			and id=#{id,jdbcType=INTEGER}
+  		</if>
+  		
+  	</where>
+  	<if test="orderBy != null and orderBy !=''">
+  		<if test="orderBy==1">
+  			order by create_at asc
+  		</if>
+  		<if test="orderBy==2">
+  			order by create_at desc
+  		</if>
+  	</if>
+  	
+  	limit #{start},#{end}
+  </select>
+  
   <select id="countUsersByMap" resultType="java.lang.Integer" parameterType="java.util.HashMap">
   	select count(1) from users
   	<where>
-  		delete_at is null
+  		delete_at is null and user_type =2 
+  		<if test="userName != null and userName !=''">
+  			and user_name like CONCAT('%', #{userName,jdbcType=VARCHAR}, '%')
+  		</if>
+  		<if test="id != null and id !=''">
+  			and id=#{id,jdbcType=INTEGER}
+  		</if>
+  	</where>
+  </select>
+  
+   <select id="countUsersOwnerByMap" resultType="java.lang.Integer" parameterType="java.util.HashMap">
+  	select count(1) from users
+  	<where>
+  		delete_at is null and user_type =1
   		<if test="userName != null and userName !=''">
   			and user_name like CONCAT('%', #{userName,jdbcType=VARCHAR}, '%')
   		</if>

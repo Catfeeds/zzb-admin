@@ -45,4 +45,16 @@ public interface IOrderService {
 	//Orders selectByUserUuidAndOrderUUid(String orderuuid);
 	
 	Orders selectByOrderNumber(String orderNumber);
+
+	int selectCountByConsume(String userUuid);
+
+	Float selectMoneyByConsume(String userUuid);
+
+	int selectSureOrder(String userUuid);
+
+	int selectCount(String uuid);
+
+	Float selectMoney();
+
+	Orders selectByordernumber(java.lang.String ordernumber);
 }

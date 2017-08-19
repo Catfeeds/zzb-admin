@@ -14,10 +14,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.hcb.zzb.controller.base.BaseControllers;
+import com.hcb.zzb.dto.BrowseLog;
 import com.hcb.zzb.dto.Car;
 import com.hcb.zzb.dto.PushInfo;
 import com.hcb.zzb.dto.Users;
+import com.hcb.zzb.service.IBrowseLogService;
 import com.hcb.zzb.service.ICarSevice;
+import com.hcb.zzb.service.IOrderService;
 import com.hcb.zzb.service.IPushInfoService;
 import com.hcb.zzb.service.IUsersService;
 import com.hcb.zzb.util.HttpGet;
@@ -34,9 +37,13 @@ public class CarController extends BaseControllers{
 	private IUsersService userService;
 	@Autowired
 	private IPushInfoService pushInfoService;
+	@Autowired
+	private IBrowseLogService browseLogService;
+	@Autowired
+	IOrderService orderService;
 	/**
 	 * 车辆列表
-	 * @return
+	 * @return0..........................
 	 */
 	@RequestMapping(value="list",method=RequestMethod.POST)
 	@ResponseBody
@@ -91,7 +98,40 @@ public class CarController extends BaseControllers{
 			return buildReqJsonObject(json);
 		}
 		List<Car> list = carService.selectByMapLimit(map);
+		
+		int ordercount;//
 		if(!list.isEmpty()) {
+			for (Car car : list) {
+				if(car!=null){
+					String uuid = car.getUserUuid();
+					String carUuid = car.getCarUuid();
+					ordercount=orderService.selectCount(carUuid);//订单数
+					Map<String, Object> mapp=new HashMap<>();
+					mapp.put("user_uuid", uuid);
+					mapp.put("car_uuid",carUuid );
+					BrowseLog browseLogg=browseLogService.selectByUserIdAndCarId(mapp);
+					if(browseLogg==null){
+						json.put("updatetime", new Date());//最后登录时间
+					}else{
+						json.put("updatetime", browseLogg.getUpdateAt());
+					}
+					Users user = userService.selectByUserOwnerUuid(uuid);
+					json.put("user", user);//用户ID（绑定+超链）
+					json.put("status", 1);//状态（服务中、等待接单、离线中、失联中——可定义最好）
+					json.put("rate", 0);////差价利润
+					json.put("hot", 0);//需求热度
+					json.put("price", 0f);//上架价格（需审核，并且需定义到服役时间）
+					json.put("ordercount", ordercount);//订单数
+				}else{
+					json.put("updatetime", new Date());
+					//json.put("user", user);//用户ID（绑定+超链）
+					json.put("status", 1);//状态（服务中、等待接单、离线中、失联中——可定义最好）
+					json.put("rate", 0);////差价利润
+					json.put("hot", 0);//需求热度
+					json.put("price", 0f);//上架价格（需审核，并且需定义到服役时间）
+					json.put("ordercount", 0);//订单数
+				}
+			}
 			json.put("result", "0");
 			json.put("description", "查询成功");
 			json.put("total", total);

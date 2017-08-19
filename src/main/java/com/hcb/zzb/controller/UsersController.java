@@ -89,13 +89,159 @@ public class UsersController extends BaseControllers{
 				json.put("description", "操作失败,请求页数大于总页数");
 				return buildReqJsonObject(json);
 			}
-			List<Users> list=usersService.selectUsersByMap(map);
+			//List<Users> list=usersService.selectUsersByMap(map);
+			List<Users> list=usersService.selectUsers(map);
+			List<Map<String, Object>>list2=new ArrayList<Map<String, Object>>();
+			int consume=0;//消费
+			Float money;//消费金额
 			if(!list.isEmpty()) {
+				for (Users user : list) {
+					Map<String, Object> map2=new HashMap<>();
+					if(user!=null){
+						String userUuid=user.getUserUuid();
+						if(userUuid!=null){
+							 consume=orderService.selectCountByConsume(userUuid);
+							 money=orderService.selectMoneyByConsume(userUuid);
+							 map2.put("consume", consume);
+							 map2.put("money", money);
+							 map2.put("profit", 0);
+							 map2.put("profitRate", 0);
+							 map2.put("consumeIntegration", 0);//消费积分
+							 map2.put("Grade", 0);//会员等级
+							 map2.put("cashbalance", 0);//现金余额
+							 map2.put("givebalance", 0);//赠送余额
+						}else{
+							map2.put("consume", 0);
+							map2.put("money", 0f);
+							map2.put("profit", 0f);//利润
+							map2.put("profitRate", 0);//比例
+							map2.put("consumeIntegration", 0);//消费积分
+							map2.put("Grade", 0);//会员等级
+							map2.put("cashbalance", 0);//现金余额
+							map2.put("givebalance", 0);//赠送余额
+						}
+						
+					}
+					list2.add(map2);
+				}
 				json.put("result", "0");
 				json.put("description", "查询成功");
 				json.put("total", total);
 				json.put("page", pageIndex);
 				json.put("userList", list);
+				json.put("userList1", list2);
+			}else {
+				json.put("result", "1");
+				json.put("description", "未查询到数据");
+			}
+		}
+		return buildReqJsonObject(json);
+	}
+	/**
+	 * 车主信息列表
+	 * @return
+	 */
+	@RequestMapping(value="userOwnerList",method=RequestMethod.POST)
+	@ResponseBody
+	public String findUsersOwner() {
+		JSONObject json=new JSONObject();
+		if(sign==1||sign==2) {
+			json.put("result", "1");
+			json.put("description", "请检查参数格式是否正确或者参数是否完整");
+			return buildReqJsonInteger(1, json);
+		}
+		JSONObject bodyInfo=JSONObject.fromObject(bodyString);
+		if(bodyInfo.get("pageIndex")==null||bodyInfo.get("pageSize")==null) {
+			json.put("result", "1");
+			json.put("description", "请检查参数是否完整");
+			return buildReqJsonObject(json);
+		}
+		if ("".equals(bodyInfo.get("pageIndex")) || "".equals(bodyInfo.get("pageSize"))) {
+			json.put("result", "1");
+			json.put("description", "操作失败，请检查输入的参数是否正确");
+			return buildReqJsonObject(json);
+		}
+		Integer pageIndex=bodyInfo.getInt("pageIndex");
+		Integer pageSize=bodyInfo.getInt("pageSize");
+		if (pageIndex <= 0) {
+			json.put("result", "1");
+			json.put("description", "操作失败，pageIndex不小于0");
+			return buildReqJsonObject(json);
+		}else {
+			Map<String, Object> map=new HashMap<String, Object>();
+			int start=(pageIndex-1)*pageSize;
+			map.put("start", start);
+			map.put("end", pageSize);
+			if(bodyInfo.get("userName")!=null&&!"".equals(bodyInfo.get("userName"))) {
+				map.put("userName", bodyInfo.getString("userName"));
+			}
+			if(bodyInfo.get("id")!=null&&!"".equals(bodyInfo.get("id"))) {
+				map.put("id", bodyInfo.getInt("id"));
+			}
+			if(bodyInfo.get("orderBy")!=null&&!"".equals(bodyInfo.get("orderBy"))) {
+				map.put("orderBy", bodyInfo.getInt("orderBy"));
+			}else {
+				map.put("orderBy", 2);
+			}
+			int count=usersService.countUsersOwnerByMap(map);
+			if(count==0) {
+				json.put("result", "1");
+				json.put("description", "未查询到数据");
+				return buildReqJsonObject(json);
+			}
+			int total=count % pageSize ==0 ? count/pageSize : count/pageSize + 1;
+			if(pageIndex>total) {
+				json.put("result", "1");
+				json.put("description", "操作失败,请求页数大于总页数");
+				return buildReqJsonObject(json);
+			}
+			List<Users> list=usersService.selectUsersOwnerByMap(map);
+			List<Map<String, Object>>list2=new ArrayList<Map<String, Object>>();
+			int carnum1=0;//有效车辆数
+			int carnum2=0;//历史车辆数
+			int sureordercount;//接单次数
+			//Float money;//消费金额
+			if(!list.isEmpty()) {
+				for (Users user : list) {
+					Map<String, Object> map2=new HashMap<>();
+					if(user!=null){
+						String userUuid=user.getUserUuid();
+						if(userUuid!=null){
+							sureordercount=orderService.selectSureOrder(userUuid);
+							List<Car> car=carService.selectByCarBand(userUuid);
+							carnum1=carService.selectNum1(userUuid);
+							carnum2=carService.selectNum2(userUuid);
+							 map2.put("car", car);
+							 map2.put("carnum", carnum1);
+							 map2.put("historycarnum", carnum2);
+							 map2.put("sureordercount", sureordercount);
+							 map2.put("GDP", 0);//订单GDP
+							 map2.put("avg", 0);//平台分佣、
+							 map2.put("chajialirun", 0);//差价利润
+							 map2.put("ketixianjiner", 0);///可提现金额
+							 map2.put("cashbalance", 0);//提现中金额
+							 map2.put("alreadybalance", 0);//已提现金额
+						}else{
+							 //map2.put("car", "");
+							 map2.put("carnum", 0);
+							 map2.put("historycarnum", 0);
+							 map2.put("sureordercount", 0);
+							 map2.put("GDP", 0);//订单GDP
+							 map2.put("avg", 0);//平台分佣、
+							 map2.put("chajialirun", 0);//差价利润
+							 map2.put("ketixianjiner", 0);///可提现金额
+							 map2.put("cashbalance", 0);//提现中金额
+							 map2.put("alreadybalance", 0);//已提现金额
+							}
+					}
+					list2.add(map2);
+				}
+				json.put("result", "0");
+				json.put("description", "查询成功");
+				json.put("total", total);
+				json.put("page", pageIndex);
+				json.put("userList", list);
+				json.put("userList1", list2);
 			}else {
 				json.put("result", "1");
 				json.put("description", "未查询到数据");

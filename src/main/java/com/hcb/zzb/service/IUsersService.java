@@ -26,4 +26,10 @@ public interface IUsersService {
 	Users selectByPrimaryKey(Integer id);
 
 	Users selectByUserOwnerUuid(String carOwnerUuid);
+
+	List<Users> selectUsers(Map<String, Object> map);
+
+	int countUsersOwnerByMap(Map<String, Object> map);
+
+	List<Users> selectUsersOwnerByMap(Map<String, Object> map);
 }

@@ -57,6 +57,15 @@
     from orders
     where delete_at is null and order_uuid = #{ordersUuid,jdbcType=VARCHAR}
   </select>
+  
+  <select id="selectByordernumber" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from orders
+    where delete_at is null and order_number = #{ordernumber,jdbcType=VARCHAR}
+  </select>
+  
+  
   <select id="selectByOrderNumber" resultMap="BaseResultMap" parameterType="java.lang.String">
   	select 
     <include refid="Base_Column_List" />
@@ -108,10 +117,28 @@
   </select>
   
   
-  <select id="selectCountByUserUuid" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select count(1) from orders where delete_at is null and car_owner_uuid = #{useruuid,jdbcType=VARCHAR} and order_status=3
+  <select id="selectCount" resultType="int" parameterType="java.lang.String" >
+    select count(1) from orders where delete_at is null and car_uuid = #{carUuid,jdbcType=VARCHAR}
   </select>
   
+   <select id="selectMoney" resultType="java.lang.Float" parameterType="java.lang.String" >
+    select sum(total_price) from orders where delete_at is null and order_status=6
+  </select>
+  
+  <select id="selectCountByUserUuid" resultType="int" parameterType="java.lang.String" >
+    select count(1) from orders where delete_at is null and car_owner_uuid = #{useruuid,jdbcType=VARCHAR} and order_status=3
+  </select>
+  <select id="selectCountByConsume" resultType="int" parameterType="java.lang.String" >
+    select count(1) from orders where delete_at is null and user_uuid = #{userUuid,jdbcType=VARCHAR} and deposit_status=2
+  </select>
+  
+  <select id="selectSureOrder" resultType="int" parameterType="java.lang.String" >
+    select count(1) from orders where delete_at is null and car_owner_uuid = #{userUuid,jdbcType=VARCHAR} and order_status not in(1,2,7)
+  </select>
+  
+  <select id="selectMoneyByConsume" resultType="java.lang.Float" parameterType="java.lang.String" >
+    select sum(total_price) from orders where delete_at is null and user_uuid = #{userUuid,jdbcType=VARCHAR} and deposit_status=2
+  </select>
   
   <select id="selectByMapLimit" resultType="java.util.Map" parameterType="java.util.HashMap">
   	select

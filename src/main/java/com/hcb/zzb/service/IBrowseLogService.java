@@ -44,4 +44,6 @@ public interface IBrowseLogService {
 	public List<BrowseLog> selectByGuessYouLike1(String string);
 
 	public List<BrowseLog> selectByrecentBrowse(String string);
+
+	public BrowseLog selectByUserIdAndCarId(Map<String, Object> map);
 }

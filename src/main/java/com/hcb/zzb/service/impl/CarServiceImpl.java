@@ -115,4 +115,22 @@ CarMapper carMapper;
 		// TODO Auto-generated method stub
 		return carMapper.countSelectByMapLimit(map);
 	}
+
+	@Override
+	public List<Car> selectByCarBand(String userUuid) {
+		// TODO Auto-generated method stub
+		return carMapper.selectByCarBand(userUuid);
+	}
+
+	@Override
+	public int selectNum1(String userUuid) {
+		// TODO Auto-generated method stub
+		return carMapper.selectNum1(userUuid);
+	}
+
+	@Override
+	public int selectNum2(String userUuid) {
+		// TODO Auto-generated method stub
+		return carMapper.selectNum2(userUuid);
+	}
 }

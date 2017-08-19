@@ -114,6 +114,24 @@ public class UsersServiceImpl implements IUsersService {
 		// TODO Auto-generated method stub
 		return usersMapper.selectByUserOwnerUuid(carOwnerUuid);
 	}
+
+	@Override
+	public List<Users> selectUsers(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return usersMapper.selectUsers(map);
+	}
+
+	@Override
+	public int countUsersOwnerByMap(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return usersMapper.countUsersOwnerByMap(map);
+	}
+
+	@Override
+	public List<Users> selectUsersOwnerByMap(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return usersMapper.selectUsersOwnerByMap(map);
+	}
 	
 
 }

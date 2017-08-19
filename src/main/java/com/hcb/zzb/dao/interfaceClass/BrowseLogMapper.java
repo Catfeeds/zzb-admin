@@ -29,4 +29,8 @@ public interface BrowseLogMapper {
 	List<BrowseLog> selectByGuessYouLike1(String userUuid);
 
 	List<BrowseLog> selectByrecentBrowse(String userUuid);
+
+	BrowseLog selectByrecentBrowse(Map<String, Object> map);
+
+	BrowseLog selectByUserIdAndCarId(Map<String, Object> map);
 }
