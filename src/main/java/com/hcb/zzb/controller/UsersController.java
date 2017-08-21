@@ -91,7 +91,10 @@ public class UsersController extends BaseControllers{
 			}
 			//List<Users> list=usersService.selectUsersByMap(map);
 			List<Users> list=usersService.selectUsers(map);
+			Map<String, Object> mappp=new HashMap<>();
+			mappp.put("list", list);
 			List<Map<String, Object>>list2=new ArrayList<Map<String, Object>>();
+			list2.add(mappp);
 			int consume=0;//消费次数
 			Float money;//消费金额
 			if(!list.isEmpty()) {
@@ -128,7 +131,7 @@ public class UsersController extends BaseControllers{
 				json.put("description", "查询成功");
 				json.put("total", total);
 				json.put("page", pageIndex);
-				json.put("userList", list);
+				//json.put("userList", list);
 				json.put("userList1", list2);
 			}else {
 				json.put("result", "1");
@@ -196,7 +199,10 @@ public class UsersController extends BaseControllers{
 				return buildReqJsonObject(json);
 			}
 			List<Users> list=usersService.selectUsersOwnerByMap(map);
+			Map<String, Object> mapppp=new HashMap<>();
+			mapppp.put("list", list);
 			List<Map<String, Object>>list2=new ArrayList<Map<String, Object>>();
+			list2.add(mapppp);
 			int carnum1=0;//有效车辆数
 			int carnum2=0;//历史车辆数
 			int sureordercount;//接单次数
@@ -240,7 +246,7 @@ public class UsersController extends BaseControllers{
 				json.put("description", "查询成功");
 				json.put("total", total);
 				json.put("page", pageIndex);
-				json.put("userList", list);
+				//json.put("userList", list);
 				json.put("userList1", list2);
 			}else {
 				json.put("result", "1");

@@ -1,5 +1,6 @@
 package com.hcb.zzb.controller;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -98,10 +99,13 @@ public class CarController extends BaseControllers{
 			return buildReqJsonObject(json);
 		}
 		List<Car> list = carService.selectByMapLimit(map);
-		
+		List<Map<String, Object>> listlist=new ArrayList<Map<String, Object>>();
+		Map<String, Object> mapppp=new HashMap<String, Object>();
+		mapppp.put("list", list);
 		int ordercount;//
 		if(!list.isEmpty()) {
 			for (Car car : list) {
+				Map<String, Object> mappp=new HashMap<String, Object>();
 				if(car!=null){
 					String uuid = car.getUserUuid();
 					String carUuid = car.getCarUuid();
@@ -111,32 +115,49 @@ public class CarController extends BaseControllers{
 					mapp.put("car_uuid",carUuid );
 					BrowseLog browseLogg=browseLogService.selectByUserIdAndCarId(mapp);
 					if(browseLogg==null){
-						json.put("updatetime", new Date());//最后登录时间
+						//json.put("updatetime", new Date());//最后登录时间
+						//json.put("updatetime", new Date());//最后登录时间
+						mappp.put("updatetime", new Date());
 					}else{
-						json.put("updatetime", browseLogg.getUpdateAt());
+						//json.put("updatetime", browseLogg.getUpdateAt());
+						mappp.put("updatetime", browseLogg.getUpdateAt());
 					}
 					Users user = userService.selectByUserOwnerUuid(uuid);
-					json.put("user", user);//用户ID（绑定+超链）
-					json.put("status", 1);//状态（服务中、等待接单、离线中、失联中——可定义最好）
-					json.put("rate", 0);////差价利润
-					json.put("hot", 0);//需求热度
-					json.put("price", 0f);//上架价格（需审核，并且需定义到服役时间）
-					json.put("ordercount", ordercount);//订单数
-				}else{
-					json.put("updatetime", new Date());
 					//json.put("user", user);//用户ID（绑定+超链）
-					json.put("status", 1);//状态（服务中、等待接单、离线中、失联中——可定义最好）
-					json.put("rate", 0);////差价利润
-					json.put("hot", 0);//需求热度
-					json.put("price", 0f);//上架价格（需审核，并且需定义到服役时间）
-					json.put("ordercount", 0);//订单数
+					//json.put("status", 1);//状态（服务中、等待接单、离线中、失联中——可定义最好）
+					//json.put("rate", 0);////差价利润
+					//json.put("hot", 0);//需求热度
+					//json.put("price", 0f);//上架价格（需审核，并且需定义到服役时间）
+					//json.put("ordercount", ordercount);//订单数
+					mappp.put("user", user);
+					mappp.put("status", 1);
+					mappp.put("rate", 0);
+					mappp.put("hot", 0);
+					mappp.put("price", 0f);
+					mappp.put("ordercount", ordercount);
+				}else{
+					//json.put("updatetime", new Date());
+					//json.put("user", user);//用户ID（绑定+超链）
+					//json.put("status", 1);//状态（服务中、等待接单、离线中、失联中——可定义最好）
+					//json.put("rate", 0);////差价利润
+					//json.put("hot", 0);//需求热度
+					//json.put("price", 0f);//上架价格（需审核，并且需定义到服役时间）
+					//json.put("ordercount", 0);//订单数
+					mappp.put("user", "");
+					mappp.put("status", 1);
+					mappp.put("rate", 0);
+					mappp.put("hot", 0);
+					mappp.put("price", 0f);
+					mappp.put("ordercount", 0);
 				}
+				listlist.add(mappp);
 			}
 			json.put("result", "0");
 			json.put("description", "查询成功");
 			json.put("total", total);
 			json.put("page", pageIndex);
-			json.put("carList", list);
+			//json.put("carList", list);
+			json.put("carList", listlist);
 		}else {
 			json.put("result", "1");
 			json.put("description", "没有查询到车辆信息");
