@@ -92,7 +92,7 @@ public class UsersController extends BaseControllers{
 			//List<Users> list=usersService.selectUsersByMap(map);
 			List<Users> list=usersService.selectUsers(map);
 			List<Map<String, Object>>list2=new ArrayList<Map<String, Object>>();
-			int consume=0;//消费
+			int consume=0;//消费次数
 			Float money;//消费金额
 			if(!list.isEmpty()) {
 				for (Users user : list) {

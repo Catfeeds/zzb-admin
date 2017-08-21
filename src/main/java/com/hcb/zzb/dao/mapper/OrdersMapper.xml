@@ -125,6 +125,14 @@
     select sum(total_price) from orders where delete_at is null and order_status=6
   </select>
   
+  <select id="selectHighMoney" resultType="java.lang.Float" >
+    SELECT SUM(total_price) s FROM orders WHERE  order_status=6  GROUP BY DAY(create_at)  ORDER BY  s DESC 
+  </select>
+  
+  <select id="selectPoolMoney" resultType="java.lang.Float" >
+    SELECT SUM(total_price) FROM orders WHERE delete_at IS NULL AND  deposit_status=2
+  </select>
+  
   <select id="selectCountByUserUuid" resultType="int" parameterType="java.lang.String" >
     select count(1) from orders where delete_at is null and car_owner_uuid = #{useruuid,jdbcType=VARCHAR} and order_status=3
   </select>

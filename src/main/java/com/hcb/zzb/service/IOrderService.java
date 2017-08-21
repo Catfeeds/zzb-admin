@@ -57,4 +57,8 @@ public interface IOrderService {
 	Float selectMoney();
 
 	Orders selectByordernumber(java.lang.String ordernumber);
+
+	Float selectHighMoney();
+
+	Float selectPoolMoney();
 }

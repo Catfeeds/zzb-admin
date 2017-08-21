@@ -57,12 +57,21 @@ public class Users {
     
     private Integer vehicleBehavior;
     
+    
     private String takeCarAddressMap;
     private String return_car_address_map;
     
+    private Integer loginCount;
     
-    
-    public String getTakeCarAddressMap() {
+    public Integer getLoginCount() {
+		return loginCount;
+	}
+
+	public void setLoginCount(Integer loginCount) {
+		this.loginCount = loginCount;
+	}
+
+	public String getTakeCarAddressMap() {
 		return takeCarAddressMap;
 	}
 

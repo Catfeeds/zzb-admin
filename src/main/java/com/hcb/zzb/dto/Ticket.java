@@ -31,7 +31,17 @@ public class Ticket {
     
     private String userName;//用户姓名，不对应数据库罚单ticket表中字段
 
-    public Integer getId() {
+    private Integer dealWay;
+    
+    public Integer getDealWay() {
+		return dealWay;
+	}
+
+	public void setDealWay(Integer dealWay) {
+		this.dealWay = dealWay;
+	}
+
+	public Integer getId() {
         return id;
     }
 

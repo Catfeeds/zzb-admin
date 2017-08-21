@@ -54,4 +54,8 @@ public interface OrdersMapper {
 	Float selectMoney();
 
 	Orders selectByordernumber(String ordernumber);
+
+	Float selectHighMoney();
+
+	Float selectPoolMoney();
 }

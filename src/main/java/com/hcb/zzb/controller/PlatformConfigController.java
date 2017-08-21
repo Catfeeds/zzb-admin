@@ -13,11 +13,18 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.hcb.zzb.controller.base.BaseControllers;
+import com.hcb.zzb.dto.Car;
 import com.hcb.zzb.dto.FinanceRecord;
+import com.hcb.zzb.dto.Orders;
 import com.hcb.zzb.dto.PlatformConfig;
+import com.hcb.zzb.dto.Users;
+import com.hcb.zzb.service.ICarSevice;
 import com.hcb.zzb.service.IFinanceRecordService;
 import com.hcb.zzb.service.IOrderService;
 import com.hcb.zzb.service.IPlatformConfigService;
+import com.hcb.zzb.service.IUsersService;
+import com.hcb.zzb.util.DateUtil;
+import com.hcb.zzb.util.StringUtil;
 
 import net.sf.json.JSONObject;
 @Controller
@@ -29,6 +36,10 @@ public class PlatformConfigController extends BaseControllers{
 	IPlatformConfigService platformConfigService;
 	@Autowired
 	IOrderService orderService;
+	@Autowired
+	IUsersService usersService;
+	@Autowired
+	private ICarSevice carService;
 	/**
 	 * 平台账户收支明细列表
 	 * @return
@@ -88,9 +99,13 @@ public class PlatformConfigController extends BaseControllers{
 		Float totalmoney =orderService.selectMoney();
 		model.put("totalmoney", totalmoney);
 		//历史新高（日期-金额）
-		model.put("highmoney", 0);
+		Float highmoney =orderService.selectHighMoney();
+		
+		model.put("highmoney", 0 * highmoney);
 		//押金池，
-		model.put("poolmoney", 0);
+		Float poolmoney =orderService.selectPoolMoney();
+		
+		model.put("poolmoney", poolmoney);
 		//平台账户收支明细列表
 		//订单状态（预定成功，服务中，已还车，已结案）
 		//租客/车东/车款/用车时间/付款时间/
@@ -131,6 +146,46 @@ public class PlatformConfigController extends BaseControllers{
 					todayExpenditureTotal = todayExpenditureTotal + financeRecord.getMoney();
 				}
 				model.put("expenditure", (float)(Math.round(todayExpenditureTotal*100))/100);
+				for (FinanceRecord financeRecord : todayExpenditureList) {
+					if(financeRecord!=null&&financeRecord.getOrderUuid()!=null){
+						String orderUuid=financeRecord.getOrderUuid();
+						Orders order = orderService.selectByOrdersUuid(orderUuid);
+						if(order!=null){
+							//int orderStatus =order.getOrderStatus();
+							String userUuid=order.getUserUuid();
+							String ownerUuid=order.getCarOwnerUuid();
+							String carUuid=order.getCarUuid();
+							Users user = usersService.selectByUserUuid(userUuid);
+							Users userOwner = usersService.selectByUserOwnerUuid(ownerUuid);
+							if(user!=null){
+								json.put("user", user);
+							}else{
+								json.put("user", "");
+							}
+							if(userOwner!=null){
+								json.put("userOwner", userOwner);
+							}else{
+								json.put("userOwner", "");
+							}
+							Car car = carService.selectByUuid(carUuid);
+							if(car!=null){
+								//车款/用车时间/付款时间 /付款渠道/付款金额/押金金额/城市/订单链接
+								json.put("carBrand", car.getBrand());
+								json.put("city", car.getCity());
+							}
+							//（预定成功，服务中，已还车，已结案）
+							//if(orderStatus==3){}
+							json.put("orderNumber", order.getOrderNumber()==null?"":order.getOrderNumber());
+							json.put("orderStatus", order.getOrderStatus()==null?"":order.getOrderStatus());
+							json.put("takeCarTime", DateUtil.getDate(order.getTakeCarTime()));
+							json.put("payTime", DateUtil.getDate(order.getPayTime()));
+							json.put("payType", order.getPayType()==null?1:order.getPayType());
+							json.put("totalPrice", String.valueOf(order.getTotalPrice()==null?"":order.getTotalPrice()));
+							json.put("deposit", String.valueOf(order.getDeposit()==null?"":order.getDeposit()));
+							
+						}
+					}
+				}
 			}else {
 				model.put("expenditure", 0);
 			}

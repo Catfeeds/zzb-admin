@@ -168,4 +168,16 @@ private OrdersMapper ordersMapper;
 		return ordersMapper.selectByordernumber(ordernumber);
 	}
 
+	@Override
+	public Float selectHighMoney() {
+		// TODO Auto-generated method stub
+		return ordersMapper.selectHighMoney();
+	}
+
+	@Override
+	public Float selectPoolMoney() {
+		// TODO Auto-generated method stub
+		return ordersMapper.selectPoolMoney();
+	}
+
 }
