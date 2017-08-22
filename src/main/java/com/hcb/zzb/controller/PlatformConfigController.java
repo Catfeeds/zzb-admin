@@ -97,14 +97,13 @@ public class PlatformConfigController extends BaseControllers{
 		ModelMap model=new ModelMap();
 		//总营收（历史成功订单总数）
 		Float totalmoney =orderService.selectMoney();
-		model.put("totalmoney", totalmoney);
+		model.put("totalmoney", 0 * totalmoney);
 		//历史新高（日期-金额）
 		Float highmoney =orderService.selectHighMoney();
 		
 		model.put("highmoney", 0 * highmoney);
 		//押金池，
 		Float poolmoney =orderService.selectPoolMoney();
-		
 		model.put("poolmoney", poolmoney);
 		//平台账户收支明细列表
 		//订单状态（预定成功，服务中，已还车，已结案）
@@ -112,7 +111,8 @@ public class PlatformConfigController extends BaseControllers{
 		//付款渠道/付款金额/押金金额/城市/
 		List<FinanceRecord> financeList=new ArrayList<>();
 		financeList=financeRecordService.selectByRecordType(map);
-		
+		Map<String, Object>mapp1=new HashMap<String, Object>();
+		mapp1.put("platformList", financeList);
 		if(!financeList.isEmpty()) {
 			
 			model.put("result", "0");
@@ -146,7 +146,16 @@ public class PlatformConfigController extends BaseControllers{
 					todayExpenditureTotal = todayExpenditureTotal + financeRecord.getMoney();
 				}
 				model.put("expenditure", (float)(Math.round(todayExpenditureTotal*100))/100);
-				for (FinanceRecord financeRecord : todayExpenditureList) {
+				
+			}else {
+				model.put("expenditure", 0);
+			}
+			//列表明细
+			List<Map<String, Object>> listlist=new ArrayList<Map<String, Object>>();
+			listlist.add(mapp1);
+			if(financeList.size()>0){
+				for (FinanceRecord financeRecord : financeList) {
+					Map<String, Object>map2=new HashMap<String, Object>();
 					if(financeRecord!=null&&financeRecord.getOrderUuid()!=null){
 						String orderUuid=financeRecord.getOrderUuid();
 						Orders order = orderService.selectByOrdersUuid(orderUuid);
@@ -158,36 +167,48 @@ public class PlatformConfigController extends BaseControllers{
 							Users user = usersService.selectByUserUuid(userUuid);
 							Users userOwner = usersService.selectByUserOwnerUuid(ownerUuid);
 							if(user!=null){
-								json.put("user", user);
+								//json.put("user", user);
+								map2.put("user", user);
 							}else{
-								json.put("user", "");
+								//json.put("user", "");
+								map2.put("user", user);
 							}
 							if(userOwner!=null){
-								json.put("userOwner", userOwner);
+								//json.put("userOwner", userOwner);
+								map2.put("userOwner", userOwner);
 							}else{
-								json.put("userOwner", "");
+								//json.put("userOwner", "");
+								map2.put("userOwner", "");
 							}
 							Car car = carService.selectByUuid(carUuid);
 							if(car!=null){
 								//车款/用车时间/付款时间 /付款渠道/付款金额/押金金额/城市/订单链接
-								json.put("carBrand", car.getBrand());
-								json.put("city", car.getCity());
+								//json.put("carBrand", car.getBrand());
+								//json.put("city", car.getCity());
+								map2.put("carBrand", car.getBrand());
+								map2.put("city", car.getCity());
 							}
 							//（预定成功，服务中，已还车，已结案）
 							//if(orderStatus==3){}
-							json.put("orderNumber", order.getOrderNumber()==null?"":order.getOrderNumber());
-							json.put("orderStatus", order.getOrderStatus()==null?"":order.getOrderStatus());
-							json.put("takeCarTime", DateUtil.getDate(order.getTakeCarTime()));
-							json.put("payTime", DateUtil.getDate(order.getPayTime()));
-							json.put("payType", order.getPayType()==null?1:order.getPayType());
-							json.put("totalPrice", String.valueOf(order.getTotalPrice()==null?"":order.getTotalPrice()));
-							json.put("deposit", String.valueOf(order.getDeposit()==null?"":order.getDeposit()));
-							
+							//json.put("orderNumber", order.getOrderNumber()==null?"":order.getOrderNumber());
+							//json.put("orderStatus", order.getOrderStatus()==null?"":order.getOrderStatus());
+							//json.put("takeCarTime", DateUtil.getDate(order.getTakeCarTime()));
+							//json.put("payTime", DateUtil.getDate(order.getPayTime()));
+							//json.put("payType", order.getPayType()==null?1:order.getPayType());
+							//json.put("totalPrice", String.valueOf(order.getTotalPrice()==null?"":order.getTotalPrice()));
+							//json.put("deposit", String.valueOf(order.getDeposit()==null?"":order.getDeposit()));
+							map2.put("orderNumber", order.getOrderNumber()==null?"":order.getOrderNumber());
+							map2.put("orderStatus", order.getOrderStatus()==null?"":order.getOrderStatus());
+							map2.put("takeCarTime", DateUtil.getDate(order.getTakeCarTime()));
+							map2.put("payTime", DateUtil.getDate(order.getPayTime()));
+							map2.put("payType", order.getPayType()==null?1:order.getPayType());
+							map2.put("totalPrice", String.valueOf(order.getTotalPrice()==null?"":order.getTotalPrice()));
+							map2.put("deposit", String.valueOf(order.getDeposit()==null?"":order.getDeposit()));
 						}
+						listlist.add(map2);
 					}
 				}
-			}else {
-				model.put("expenditure", 0);
+				model.put("platformList", listlist);
 			}
 			
 			PlatformConfig platform = platformConfigService.selectByPrimaryKey(39);
@@ -197,7 +218,7 @@ public class PlatformConfigController extends BaseControllers{
 				return buildReqJsonObject(json);
 			}
 			model.put("balance", platform.getBalance()==null?0:platform.getBalance());
-			model.put("platformList", financeList);
+			//model.put("platformList", financeList);
 			
 		}else {
 			model.put("result", "1");
