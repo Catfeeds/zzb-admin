@@ -28,8 +28,20 @@ public class Manager {
     private String managerPower;
 
     private String creater;
+    
+    private String managerPowerChild;
 
-    public Integer getId() {
+    
+
+	public String getManagerPowerChild() {
+		return managerPowerChild;
+	}
+
+	public void setManagerPowerChild(String managerPowerChild) {
+		this.managerPowerChild = managerPowerChild;
+	}
+
+	public Integer getId() {
         return id;
     }
 

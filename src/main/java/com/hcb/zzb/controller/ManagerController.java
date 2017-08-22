@@ -1,6 +1,7 @@
 package com.hcb.zzb.controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -18,7 +19,9 @@ import com.hcb.zzb.controller.base.BaseControllers;
 import com.hcb.zzb.dto.Manager;
 import com.hcb.zzb.service.IManagerService;
 import com.hcb.zzb.util.MD5Util;
+import com.sun.org.apache.bcel.internal.generic.NEW;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 @Controller
@@ -224,6 +227,65 @@ public class ManagerController extends BaseControllers {
 			json.put("description", "请检查参数格式是否正确或者参数是否完整");
 			return buildReqJsonObject(json);
 		}
+		String arr="";
+		List<Map<String,Object>> list0=new ArrayList<Map<String,Object>>();
+		 List<Integer>list=new ArrayList<Integer>();
+		
+		if (bodyInfo.get("1") != null) {
+			//
+			list.add(1);
+			 Map<String, Object>map=new HashMap<String, Object>();
+			JSONArray array = bodyInfo.getJSONArray("1");
+			String string = array.toString();
+			map.put("1", string);
+			list0.add(map);
+			//arr=arr+string;
+			//System.out.println("+++"+array.toString());
+		}
+		if(bodyInfo.get("2") != null){
+			list.add(2);
+			 Map<String, Object>map=new HashMap<String, Object>();
+			JSONArray array = bodyInfo.getJSONArray("2");
+			String string = array.toString();
+			map.put("2", string);
+			list0.add(map);
+			//arr=arr+string;
+		}
+		if(bodyInfo.get("3") != null){
+			list.add(3);
+			 Map<String, Object>map=new HashMap<String, Object>();
+			JSONArray array = bodyInfo.getJSONArray("3");
+			String string = array.toString();
+			map.put("3", string);
+			list0.add(map);
+			//arr=arr+string;
+		}
+		if(bodyInfo.get("4") != null){
+			list.add(4);
+			 Map<String, Object>map=new HashMap<String, Object>();
+			JSONArray array = bodyInfo.getJSONArray("4");
+			String string = array.toString();
+			map.put("4", string);
+			list0.add(map);
+			//arr=arr+string;
+		}
+		if(bodyInfo.get("5") != null){
+			list.add(5);
+			 Map<String, Object>map=new HashMap<String, Object>();
+			JSONArray array = bodyInfo.getJSONArray("5");
+			String string = array.toString();
+			map.put("5", string);
+			list0.add(map);
+			//arr=arr+string;
+		}
+		
+		String string = list0.toString();
+		System.out.println(string);
+		//System.out.println(arr);
+		//System.out.println(list.toString());
+		//System.out.println("===="+list);
+		String power=list.toString();
+		String powerChild=arr;
 		Manager managerF = managerService.selectByAccount(bodyInfo.getString("account"));
 		if(managerF!=null){
 			json.put("result", 1);
@@ -235,6 +297,8 @@ public class ManagerController extends BaseControllers {
 			newManager.setCreateAt(new Date());
 			newManager.setManagerStatus(bodyInfo.getInt("manager_status"));
 			newManager.setPassword(bodyInfo.getString("password"));
+			newManager.setManagerPower(power);
+			newManager.setManagerPowerChild(string);
 			int rs = 0;
 			String managerUuid = "";
 			try {
@@ -247,6 +311,7 @@ public class ManagerController extends BaseControllers {
 			if(rs == 1){
 				json.put("result", 0);
 				json.put("description", "创建成功");
+				json.put("Manager", newManager);
 			}else{
 				json.put("result", 1);
 				json.put("description", "创建失败，请重新尝试");
@@ -270,6 +335,8 @@ public class ManagerController extends BaseControllers {
 			json.put("description", "请检查参数格式是否正确或者参数是否完整");
 			return buildReqJsonObject(json);
 		}
+		
+		
 		Manager managerF = managerService.selectByPrimaryKey(bodyInfo.getInt("manager_id"));
 		// 判断修改后的账号是否已存在
 		Manager aManager = managerService.selectByAccount(bodyInfo.getString("account"));

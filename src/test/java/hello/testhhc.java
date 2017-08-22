@@ -49,9 +49,13 @@ public class testhhc {
         //body.put("id", 11);
        // body.put("operation_picture", "http://living.cto1024.com/10c7855f31113a24745cdff9213549dc.jpg");
        // body.put("is_display", 2);
-       body.put("pageIndex", 1);
-       body.put("pageSize", 5);
-        body.put("tittle", "zzzzz");
+       body.put("account", "小鱼1");
+       body.put("password", "123456");
+        body.put("contacts", "zzzzz");
+        body.put("manager_status", 1);
+        body.put("manager_status", 1);
+        body.put("1","[1,2,3,4]");
+        body.put("2","[1,2,3]");
         //body.put("content", "zxxxxxxxx");
         //body.put("return_car_time", "2017-07-30 20:40:15");
         //body.put("return_car_address", "西湖区康乐新村xxx");
@@ -95,7 +99,7 @@ public class testhhc {
    	    //新建审批条目 在审批信息表 approval_inner_base_infos中0558
    	    //返回审批uuid
    	  // String url = "http://120.26.120.57:8080/apparel/special/list";
-   	    String url = "http://localhost:8080/zzb-admin-api/MessageBase/list";
+   	    String url = "http://localhost:8080/zzb-admin-api/manager/add";
    	 //String url = "http://192.168.73.1:8080/user/phone/login";
       // String url = "http://test.appring.cn:8080/fastask/question/show"; /* * * * * * root wget http://test.appring.cn:8080/fastask/energy/timing -q -O /usr/local/time/timelog
  	    HttpPost httpPost = new HttpPost(url);

@@ -15,10 +15,11 @@
     <result column="manager_type" property="managerType" jdbcType="INTEGER" />
     <result column="manager_power" property="managerPower" jdbcType="VARCHAR" />
     <result column="creater" property="creater" jdbcType="VARCHAR" />
+    <result column="manager_power_child" property="managerPowerChild" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, create_at, update_at, delete_at, manager_uuid, account, password, contacts, contacts_phone, 
-    manager_status, manager_type, manager_power, creater
+    manager_status, manager_type, manager_power, creater,manager_power_child
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -83,12 +84,12 @@
       delete_at, manager_uuid, account, 
       password, contacts, contacts_phone, 
       manager_status, manager_type, manager_power, 
-      creater)
+      creater,manager_power_child)
     values (#{id,jdbcType=INTEGER}, #{createAt,jdbcType=TIMESTAMP}, #{updateAt,jdbcType=TIMESTAMP}, 
       #{deleteAt,jdbcType=TIMESTAMP}, #{managerUuid,jdbcType=VARCHAR}, #{account,jdbcType=VARCHAR}, 
       #{password,jdbcType=VARCHAR}, #{contacts,jdbcType=VARCHAR}, #{contactsPhone,jdbcType=VARCHAR}, 
       #{managerStatus,jdbcType=INTEGER}, #{managerType,jdbcType=INTEGER}, #{managerPower,jdbcType=VARCHAR}, 
-      #{creater,jdbcType=VARCHAR})
+      #{creater,jdbcType=VARCHAR},#{managerPowerChild,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.hcb.zzb.dto.Manager" >
     insert into manager
@@ -132,6 +133,9 @@
       <if test="creater != null" >
         creater,
       </if>
+      <if test="managerPowerChild != null" >
+        manager_power_child,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -172,6 +176,9 @@
       </if>
       <if test="creater != null" >
         #{creater,jdbcType=VARCHAR},
+      </if>
+      <if test="managerPowerChild != null" >
+        #{managerPowerChild,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -214,6 +221,9 @@
       <if test="creater != null" >
         creater = #{creater,jdbcType=VARCHAR},
       </if>
+      <if test="managerPowerChild != null" >
+        manager_power_child = #{managerPowerChild,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -230,7 +240,8 @@
       manager_status = #{managerStatus,jdbcType=INTEGER},
       manager_type = #{managerType,jdbcType=INTEGER},
       manager_power = #{managerPower,jdbcType=VARCHAR},
-      creater = #{creater,jdbcType=VARCHAR}
+      creater = #{creater,jdbcType=VARCHAR},
+      manager_power_child = #{managerPowerChild,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>
