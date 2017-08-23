@@ -319,6 +319,7 @@ public class CarModelLibraryController extends BaseControllers{
 		String carSeries=bodyInfo.getString("carSeries");
 		carBrand brd = carBrands.selectByBrand(brand);
 		carSeries carse=carSeriess.selectBySeries(carSeries);
+		
 		if(brd==null){
 			carBrand newbr=new carBrand();
 			newbr.setCreateAt(new Date());
