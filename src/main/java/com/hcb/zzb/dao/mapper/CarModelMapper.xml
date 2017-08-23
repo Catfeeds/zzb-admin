@@ -21,11 +21,13 @@
     <result column="operator_uuid" property="operatorUuid" jdbcType="VARCHAR" />
   	<result column="operationTime" property="operationTime" jdbcType="TIMESTAMP" />
   	<result column="color" property="color" jdbcType="VARCHAR" />
+  	<result column="brand_uuid" property="brandUuid" jdbcType="VARCHAR" />
+  	<result column="series_uuid" property="seriesUuid" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, create_at, update_at, delete_at, car_model_uuid, brand_model, brand, car_series, 
     model_year, transmission_case, displacement,clutch,seat_number, car_model, apply_user_uuid, apply_status, 
-    operator_uuid, operationTime, color
+    operator_uuid, operationTime, color,brand_uuid,series_uuid
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -109,7 +111,7 @@
       delete_at, car_model_uuid, brand_model, 
       brand, car_series, model_year, 
       transmission_case, displacement, clutch, seat_number, car_model, 
-      apply_user_uuid, apply_status, operator_uuid,operationTime,color
+      apply_user_uuid, apply_status, operator_uuid,operationTime,color,brand_uuid,series_uuid
       )
     values (#{id,jdbcType=INTEGER}, #{createAt,jdbcType=TIMESTAMP}, #{updateAt,jdbcType=TIMESTAMP}, 
       #{deleteAt,jdbcType=TIMESTAMP}, #{carModelUuid,jdbcType=VARCHAR}, #{brandModel,jdbcType=VARCHAR}, 
@@ -118,7 +120,8 @@
       #{seatNumber,jdbcType=INTEGER}, #{carModel,jdbcType=VARCHAR}, 
       #{applyUserUuid,jdbcType=VARCHAR}, #{applyStatus,jdbcType=INTEGER}, #{operatorUuid,jdbcType=VARCHAR},
       #{operationTime,jdbcType=TIMESTAMP},
-      #{color,jdbcType=VARCHAR})
+      #{color,jdbcType=VARCHAR},#{brandUuid,jdbcType=VARCHAR},#{seriesUuid,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.hcb.zzb.dto.CarModel" >
     insert into car_model
@@ -180,6 +183,12 @@
       <if test="color != null">
       	color,
       </if>
+      <if test="brandUuid != null">
+      	brand_uuid,
+      </if>
+      <if test="seriesUuid != null">
+      	series_uuid,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -238,6 +247,12 @@
       </if>
       <if test="color != null" >
         #{color,jdbcType=VARCHAR},
+      </if>
+      <if test="brandUuid != null" >
+        #{brandUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="seriesUuid != null" >
+        #{seriesUuid,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -298,6 +313,12 @@
       <if test="color != null" >
         color = #{color,jdbcType=VARCHAR},
       </if>
+      <if test="brandUuid != null" >
+        brand_uuid = #{brandUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="seriesUuid != null" >
+        series_uuid = #{seriesUuid,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -321,6 +342,8 @@
       operator_uuid = #{operatorUuid,jdbcType=VARCHAR},
       operationTime = #{operationTime,jdbcType=TIMESTAMP},
       color = #{color,jdbcType=VARCHAR},
+      brand_uuid = #{brandUuid,jdbcType=VARCHAR},
+      series_uuid = #{seriesUuid,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

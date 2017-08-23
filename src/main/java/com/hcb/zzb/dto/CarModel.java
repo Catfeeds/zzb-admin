@@ -42,8 +42,26 @@ public class CarModel {
     private String operatorName;//
     
     private String color;
+    private String brandUuid;
+    private String seriesUuid;
 
-    public Integer getId() {
+    public String getBrandUuid() {
+		return brandUuid;
+	}
+
+	public String getSeriesUuid() {
+		return seriesUuid;
+	}
+
+	public void setBrandUuid(String brandUuid) {
+		this.brandUuid = brandUuid;
+	}
+
+	public void setSeriesUuid(String seriesUuid) {
+		this.seriesUuid = seriesUuid;
+	}
+
+	public Integer getId() {
         return id;
     }
 

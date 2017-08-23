@@ -332,6 +332,7 @@ public class CarModelLibraryController extends BaseControllers{
 				newcarser.setCreateAt(new Date());
 				newcarser.setName(carSeries);
 				newcarser.setOperater(manager.getManagerUuid());
+				newcarser.setSeriesUuid(UUID.randomUUID().toString().replaceAll("-", ""));
 				newcarser.setBrandUuid(newbr.getBrandUuid());
 				carSeriess.insert(newcarser);
 				
@@ -350,7 +351,8 @@ public class CarModelLibraryController extends BaseControllers{
 				carModel.setSeatNumber(bodyInfo.getInt("seatNumber"));
 				carModel.setOperatorUuid(manager.getManagerUuid()==null?"":manager.getManagerUuid());
 				carModel.setOperationTime(new Date());
-				
+				carModel.setBrandUuid(newbr.getBrandUuid());
+				carModel.setSeriesUuid(newcarser.getSeriesUuid());
 				int rs1 = carModelService.insertSelective(carModel);
 				if(rs1==1) {
 					json.put("result", "0");
@@ -370,6 +372,7 @@ public class CarModelLibraryController extends BaseControllers{
 				newcarser.setName(carSeries);
 				newcarser.setOperater(manager.getManagerUuid());
 				newcarser.setBrandUuid(brandUuid);
+				newcarser.setSeriesUuid(UUID.randomUUID().toString().replaceAll("-", ""));
 				carSeriess.insert(newcarser);
 				
 				CarModel carModel=new CarModel();
@@ -387,7 +390,8 @@ public class CarModelLibraryController extends BaseControllers{
 				carModel.setSeatNumber(bodyInfo.getInt("seatNumber"));
 				carModel.setOperatorUuid(manager.getManagerUuid()==null?"":manager.getManagerUuid());
 				carModel.setOperationTime(new Date());
-				
+				carModel.setBrandUuid(brandUuid);
+				carModel.setSeriesUuid(newcarser.getSeriesUuid());
 				int rs = carModelService.insertSelective(carModel);
 				if(rs==1) {
 					json.put("result", "0");
@@ -424,7 +428,8 @@ public class CarModelLibraryController extends BaseControllers{
 					carModel.setSeatNumber(bodyInfo.getInt("seatNumber"));
 					carModel.setOperatorUuid(manager.getManagerUuid()==null?"":manager.getManagerUuid());
 					carModel.setOperationTime(new Date());
-					
+					carModel.setBrandUuid(brandUuid);
+					carModel.setSeriesUuid(carse.getSeriesUuid());
 					int rs = carModelService.insertSelective(carModel);
 					if(rs==1) {
 						json.put("result", "0");
