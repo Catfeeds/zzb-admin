@@ -1,5 +1,6 @@
 package com.hcb.zzb.controller;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -30,7 +31,6 @@ public class ArticleController extends BaseControllers{
 	IManagerService managerService;
 	@Autowired
 	ICarSevice carService;
-	
 	/**
 	 * 运营文章列表（分页）
 	 * @return
@@ -135,6 +135,7 @@ public class ArticleController extends BaseControllers{
 			json.put("description", "登录账号错误,没有查询到");
 			return buildReqJsonObject(json);
 		}
+		
 		int carID1=bodyInfo.getInt("carID1");
 		int carID2=bodyInfo.getInt("carID2");
 		int activityCarID=bodyInfo.getInt("activityCarID");

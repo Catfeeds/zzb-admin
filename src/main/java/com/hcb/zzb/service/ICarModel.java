@@ -29,4 +29,6 @@ public interface ICarModel {
 	int countByMap(Map<String, Object> map);
 	
 	CarModel selectByUuid(String uuid);
+
+	List<CarModel> selectByYear(Map<String, Object> map);
 }

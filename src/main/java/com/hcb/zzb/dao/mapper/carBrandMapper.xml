@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hcb.zzb.dao.interfaceClass.carBrandMapper">
+	<resultMap id="BaseResultMap" type="com.hcb.zzb.dto.carBrand">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="create_at" property="createAt" jdbcType="TIMESTAMP" />
+		<result column="update_at" property="updateAt" jdbcType="TIMESTAMP" />
+		<result column="delete_at" property="deleteAt" jdbcType="TIMESTAMP" />
+		<result column="brand_uuid" property="brandUuid" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="image" property="image" jdbcType="VARCHAR" />
+		<result column="brand_type" property="brandType" jdbcType="VARCHAR" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+		<result column="operater" property="operater" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, create_at, update_at, delete_at, brand_uuid, name, image, brand_type,
+		remark,
+		operater
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from car_brand
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<select id="selectAll" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from car_brand
+		
+		
+	</select>
+
+	<select id="selectByBrand" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from car_brand where name = #{brand,jdbcType=VARCHAR}
+	</select>
+	
+	
+	<select id="selectAllA" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from car_brand where brand_type ="A" ORDER BY name ,create_at DESC
+	</select>
+	<select id="selectAllB" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from car_brand where brand_type ="B" ORDER BY name ,create_at DESC
+	</select>
+	<select id="selectAllC" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from car_brand where brand_type ="C" ORDER BY name ,create_at DESC
+	</select>
+	<select id="selectAllD" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from car_brand where brand_type ="D" ORDER BY name ,create_at DESC
+	</select>
+	<select id="selectAllE" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from car_brand where brand_type ="E" ORDER BY name ,create_at DESC
+	</select>
+	<select id="selectAllF" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from car_brand where brand_type ="F" ORDER BY name ,create_at DESC
+	</select>
+	<select id="selectAllG" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from car_brand where brand_type ="G" ORDER BY name ,create_at DESC
+	</select>
+	<select id="selectAllH" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from car_brand where brand_type ="H" ORDER BY name ,create_at DESC
+	</select>
+	<select id="selectAllI" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from car_brand where brand_type ="I" ORDER BY name ,create_at DESC
+	</select>
+	<select id="selectAllJ" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from car_brand where brand_type ="J" ORDER BY name ,create_at DESC
+	</select>
+	<select id="selectAllK" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from car_brand where brand_type ="K" ORDER BY name ,create_at DESC
+	</select>
+	<select id="selectAllL" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from car_brand where brand_type ="L" ORDER BY name ,create_at DESC
+	</select>
+	<select id="selectAllM" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from car_brand where brand_type ="M" ORDER BY name ,create_at DESC
+	</select>
+	<select id="selectAllN" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from car_brand where brand_type ="N" ORDER BY name ,create_at DESC
+	</select>
+	<select id="selectAllO" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from car_brand where brand_type ="O" ORDER BY name ,create_at DESC
+	</select>
+	<select id="selectAllP" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from car_brand where brand_type ="P" ORDER BY name ,create_at DESC
+	</select>
+	<select id="selectAllQ" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from car_brand where brand_type ="Q" ORDER BY name ,create_at DESC
+	</select>
+	<select id="selectAllR" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from car_brand where brand_type ="R" ORDER BY name ,create_at DESC
+	</select>
+	<select id="selectAllS" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from car_brand where brand_type ="S" ORDER BY name ,create_at DESC
+	</select>
+	<select id="selectAllT" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from car_brand where brand_type ="T" ORDER BY name ,create_at DESC
+	</select>
+	<select id="selectAllU" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from car_brand where brand_type ="U" ORDER BY name ,create_at DESC
+	</select>
+	<select id="selectAllV" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from car_brand where brand_type ="V" ORDER BY name ,create_at DESC
+	</select>
+	<select id="selectAllW" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from car_brand where brand_type ="W" ORDER BY name ,create_at DESC
+	</select>
+
+	<select id="selectAllX" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from car_brand where brand_type ="X" ORDER BY name ,create_at DESC
+	</select>
+	<select id="selectAllY" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from car_brand where brand_type ="Y" ORDER BY name ,create_at DESC
+	</select>
+	<select id="selectAllZ" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from car_brand where brand_type ="Z" ORDER BY name ,create_at DESC
+	</select>
+
+
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from car_brand
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.hcb.zzb.dto.carBrand">
+		insert into car_brand (id, create_at, update_at,
+		delete_at, brand_uuid, name,
+		image, brand_type, remark,
+		operater)
+		values (#{id,jdbcType=INTEGER}, #{createAt,jdbcType=TIMESTAMP},
+		#{updateAt,jdbcType=TIMESTAMP},
+		#{deleteAt,jdbcType=TIMESTAMP}, #{brandUuid,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR},
+		#{image,jdbcType=VARCHAR}, #{brandType,jdbcType=VARCHAR},
+		#{remark,jdbcType=VARCHAR},
+		#{operater,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.hcb.zzb.dto.carBrand">
+		insert into car_brand
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="createAt != null">
+				create_at,
+			</if>
+			<if test="updateAt != null">
+				update_at,
+			</if>
+			<if test="deleteAt != null">
+				delete_at,
+			</if>
+			<if test="brandUuid != null">
+				brand_uuid,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			<if test="image != null">
+				image,
+			</if>
+			<if test="brandType != null">
+				brand_type,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+			<if test="operater != null">
+				operater,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="createAt != null">
+				#{createAt,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateAt != null">
+				#{updateAt,jdbcType=TIMESTAMP},
+			</if>
+			<if test="deleteAt != null">
+				#{deleteAt,jdbcType=TIMESTAMP},
+			</if>
+			<if test="brandUuid != null">
+				#{brandUuid,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="image != null">
+				#{image,jdbcType=VARCHAR},
+			</if>
+			<if test="brandType != null">
+				#{brandType,jdbcType=VARCHAR},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="operater != null">
+				#{operater,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.hcb.zzb.dto.carBrand">
+		update car_brand
+		<set>
+			<if test="createAt != null">
+				create_at = #{createAt,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateAt != null">
+				update_at = #{updateAt,jdbcType=TIMESTAMP},
+			</if>
+			<if test="deleteAt != null">
+				delete_at = #{deleteAt,jdbcType=TIMESTAMP},
+			</if>
+			<if test="brandUuid != null">
+				brand_uuid = #{brandUuid,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="image != null">
+				image = #{image,jdbcType=VARCHAR},
+			</if>
+			<if test="brandType != null">
+				brand_type = #{brandType,jdbcType=VARCHAR},
+			</if>
+			<if test="remark != null">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="operater != null">
+				operater = #{operater,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.hcb.zzb.dto.carBrand">
+		update car_brand
+		set create_at = #{createAt,jdbcType=TIMESTAMP},
+		update_at = #{updateAt,jdbcType=TIMESTAMP},
+		delete_at = #{deleteAt,jdbcType=TIMESTAMP},
+		brand_uuid = #{brandUuid,jdbcType=VARCHAR},
+		name = #{name,jdbcType=VARCHAR},
+		image = #{image,jdbcType=VARCHAR},
+		brand_type = #{brandType,jdbcType=VARCHAR},
+		remark = #{remark,jdbcType=VARCHAR},
+		operater = #{operater,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

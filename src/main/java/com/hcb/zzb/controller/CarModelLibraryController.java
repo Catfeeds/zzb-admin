@@ -16,8 +16,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.hcb.zzb.controller.base.BaseControllers;
 import com.hcb.zzb.dto.CarModel;
+import com.hcb.zzb.dto.carBrand;
+import com.hcb.zzb.dto.carSeries;
+import com.hcb.zzb.service.ICarBrand;
 import com.hcb.zzb.service.ICarModel;
-
+import com.hcb.zzb.service.ICarSeriesService;
+import com.sun.org.apache.bcel.internal.generic.NEW;
 
 import net.sf.json.JSONObject;
 @Controller
@@ -25,7 +29,10 @@ import net.sf.json.JSONObject;
 public class CarModelLibraryController extends BaseControllers{
 	@Autowired
 	ICarModel carModelService; 
-	
+	@Autowired
+	private ICarBrand carBrands;
+	@Autowired
+	private ICarSeriesService carSeriess;
 	/**
 	 * 车型库管理（车型列表）
 	 * @return
@@ -270,6 +277,7 @@ public class CarModelLibraryController extends BaseControllers{
 	 * 【车型库管理】新建车型
 	 * @return
 	 */
+	@SuppressWarnings("null")
 	@RequestMapping(value="insert",method=RequestMethod.POST)
 	@ResponseBody
 	public String newCreate() {
@@ -307,8 +315,128 @@ public class CarModelLibraryController extends BaseControllers{
 			json.put("description", "account账号错误");
 			return buildReqJsonObject(json);
 		}
+		String brand=bodyInfo.getString("brand");
+		String carSeries=bodyInfo.getString("carSeries");
+		carBrand brd = carBrands.selectByBrand(brand);
+		carSeries carse=carSeriess.selectBySeries(carSeries);
+		if(brd==null){
+			carBrand newbr=new carBrand();
+			newbr.setCreateAt(new Date());
+			newbr.setName(brand);
+			newbr.setOperater(manager.getManagerUuid());
+			newbr.setBrandUuid(UUID.randomUUID().toString().replaceAll("-", ""));
+			int rs = carBrands.insert(newbr);
+			if(rs==1){
+				carSeries newcarser=new carSeries();
+				newcarser.setCreateAt(new Date());
+				newcarser.setName(carSeries);
+				newcarser.setOperater(manager.getManagerUuid());
+				newcarser.setBrandUuid(newbr.getBrandUuid());
+				carSeriess.insert(newcarser);
+				
+				CarModel carModel=new CarModel();
+				carModel.setBrand(bodyInfo.getString("brand"));
+				carModel.setCarSeries(bodyInfo.getString("carSeries"));
+				if(bodyInfo.get("color")!=null&&!"".equals(bodyInfo.get("color"))){
+					carModel.setColor(bodyInfo.getJSONArray("color").toString());
+				}
+				carModel.setModelYear(bodyInfo.getString("modelYear"));
+				carModel.setCarModelUuid(UUID.randomUUID().toString().replaceAll("-", ""));
+				carModel.setCreateAt(new Date());
+				carModel.setApplyStatus(1);
+				carModel.setDisplacement(bodyInfo.getString("displacement"));
+				carModel.setClutch(bodyInfo.getString("clutch"));
+				carModel.setSeatNumber(bodyInfo.getInt("seatNumber"));
+				carModel.setOperatorUuid(manager.getManagerUuid()==null?"":manager.getManagerUuid());
+				carModel.setOperationTime(new Date());
+				
+				int rs1 = carModelService.insertSelective(carModel);
+				if(rs1==1) {
+					json.put("result", "0");
+					json.put("description", "新建成功");
+				}else {
+					json.put("result", "1");
+					json.put("description", "新建失败");
+				}
+				
+			}
+			
+		}else{
+			String brandUuid = brd.getBrandUuid();
+			if(carse==null){
+				carSeries newcarser=new carSeries();
+				newcarser.setCreateAt(new Date());
+				newcarser.setName(carSeries);
+				newcarser.setOperater(manager.getManagerUuid());
+				newcarser.setBrandUuid(brandUuid);
+				carSeriess.insert(newcarser);
+				
+				CarModel carModel=new CarModel();
+				carModel.setBrand(bodyInfo.getString("brand"));
+				carModel.setCarSeries(bodyInfo.getString("carSeries"));
+				if(bodyInfo.get("color")!=null&&!"".equals(bodyInfo.get("color"))){
+					carModel.setColor(bodyInfo.getJSONArray("color").toString());
+				}
+				carModel.setModelYear(bodyInfo.getString("modelYear"));
+				carModel.setCarModelUuid(UUID.randomUUID().toString().replaceAll("-", ""));
+				carModel.setCreateAt(new Date());
+				carModel.setApplyStatus(1);
+				carModel.setDisplacement(bodyInfo.getString("displacement"));
+				carModel.setClutch(bodyInfo.getString("clutch"));
+				carModel.setSeatNumber(bodyInfo.getInt("seatNumber"));
+				carModel.setOperatorUuid(manager.getManagerUuid()==null?"":manager.getManagerUuid());
+				carModel.setOperationTime(new Date());
+				
+				int rs = carModelService.insertSelective(carModel);
+				if(rs==1) {
+					json.put("result", "0");
+					json.put("description", "新建成功");
+				}else {
+					json.put("result", "1");
+					json.put("description", "新建失败");
+				}
+				
+				
+			}else{
+				//TODO
+				Map<String, Object>map=new HashMap<String, Object>();
+				map.put("year", bodyInfo.getString("modelYear"));
+				map.put("carSeries", bodyInfo.getString("carSeries"));
+				List<CarModel> list=carModelService.selectByYear(map);
+				if(list.size()>0){
+					json.put("result", "1");
+					json.put("description", "车型已存在添加，请填写新的车型");
+					return buildReqJsonInteger(1, json);
+				}else{
+					CarModel carModel=new CarModel();
+					carModel.setBrand(bodyInfo.getString("brand"));
+					carModel.setCarSeries(bodyInfo.getString("carSeries"));
+					if(bodyInfo.get("color")!=null&&!"".equals(bodyInfo.get("color"))){
+						carModel.setColor(bodyInfo.getJSONArray("color").toString());
+					}
+					carModel.setModelYear(bodyInfo.getString("modelYear"));
+					carModel.setCarModelUuid(UUID.randomUUID().toString().replaceAll("-", ""));
+					carModel.setCreateAt(new Date());
+					carModel.setApplyStatus(1);
+					carModel.setDisplacement(bodyInfo.getString("displacement"));
+					carModel.setClutch(bodyInfo.getString("clutch"));
+					carModel.setSeatNumber(bodyInfo.getInt("seatNumber"));
+					carModel.setOperatorUuid(manager.getManagerUuid()==null?"":manager.getManagerUuid());
+					carModel.setOperationTime(new Date());
+					
+					int rs = carModelService.insertSelective(carModel);
+					if(rs==1) {
+						json.put("result", "0");
+						json.put("description", "新建成功");
+					}else {
+						json.put("result", "1");
+						json.put("description", "新建失败");
+					}
+				}
+			}
+		}
 		
-		CarModel carModel=new CarModel();
+	/*	CarModel carModel=new CarModel();
 		carModel.setBrand(bodyInfo.getString("brand"));
 		carModel.setCarSeries(bodyInfo.getString("carSeries"));
 		if(bodyInfo.get("color")!=null&&!"".equals(bodyInfo.get("color"))){
@@ -331,7 +459,7 @@ public class CarModelLibraryController extends BaseControllers{
 		}else {
 			json.put("result", "1");
 			json.put("description", "新建失败");
-		}
+		}*/
 		return buildReqJsonObject(json);
 		
 	}

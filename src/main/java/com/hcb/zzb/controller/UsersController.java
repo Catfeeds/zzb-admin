@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.aliyun.oss.model.Owner;
 import com.hcb.zzb.controller.base.BaseControllers;
 import com.hcb.zzb.dto.Car;
 import com.hcb.zzb.dto.Orders;
+import com.hcb.zzb.dto.OwnerPo;
 import com.hcb.zzb.dto.UserCredit;
 import com.hcb.zzb.dto.Users;
 import com.hcb.zzb.service.ICarSevice;
@@ -90,7 +92,7 @@ public class UsersController extends BaseControllers{
 				return buildReqJsonObject(json);
 			}
 			//List<Users> list=usersService.selectUsersByMap(map);
-			List<Users> list=usersService.selectUsers(map);
+		/*	List<Users> list=usersService.selectUsers(map);
 			Map<String, Object> mappp=new HashMap<>();
 			mappp.put("list", list);
 			List<Map<String, Object>>list2=new ArrayList<Map<String, Object>>();
@@ -136,7 +138,66 @@ public class UsersController extends BaseControllers{
 			}else {
 				json.put("result", "1");
 				json.put("description", "未查询到数据");
+			}*/
+			
+			
+			List<Users> list=usersService.selectUsers(map);
+			//Map<String, Object> mappp=new HashMap<>();
+			//mappp.put("list", list);
+			//List<Map<String, Object>>list2=new ArrayList<Map<String, Object>>();
+			//list2.add(mappp);
+			int consume=0;//消费次数
+			Float money;//消费金额
+			if(!list.isEmpty()) {
+				for (Users user : list) {
+					Map<String, Object> map2=new HashMap<>();
+					if(user!=null){
+						String userUuid=user.getUserUuid();
+						if(userUuid!=null){
+							 consume=orderService.selectCountByConsume(userUuid);
+							 money=orderService.selectMoneyByConsume(userUuid);
+							 user.setMoney(money);
+							 user.setConsume(consume);
+							 user.setProfit(0f);
+							 user.setProfitRate(0f);
+							 user.setConsumeIntegration(consume);
+							 user.setGrade(0);
+							 user.setCashbalance(0f);
+							 user.setGivebalance(0f);
+							 /*map2.put("consume", consume);
+							 map2.put("money", money);
+							 map2.put("profit", 0);
+							 map2.put("profitRate", 0);
+							 map2.put("consumeIntegration", 0);//消费积分
+							 map2.put("Grade", 0);//会员等级
+							 map2.put("cashbalance", 0);//现金余额
+							 map2.put("givebalance", 0);//赠送余额
+*/						}else{
+							//map2.put("consume", 0);
+							//map2.put("money", 0f);
+							//map2.put("profit", 0f);//利润
+							//map2.put("profitRate", 0);//比例
+							//map2.put("consumeIntegration", 0);//消费积分
+							//map2.put("Grade", 0);//会员等级
+							//map2.put("cashbalance", 0);//现金余额
+							//map2.put("givebalance", 0);//赠送余额
+						}
+						
+					}
+					//list2.add(map2);
+				}
+				System.out.println(list);
+				json.put("result", "0");
+				json.put("description", "查询成功");
+				json.put("total", total);
+				json.put("page", pageIndex);
+				json.put("userList", list);
+				//json.put("userList1", list2);
+			}else {
+				json.put("result", "1");
+				json.put("description", "未查询到数据");
 			}
+			
 		}
 		return buildReqJsonObject(json);
 	}
@@ -199,10 +260,10 @@ public class UsersController extends BaseControllers{
 				return buildReqJsonObject(json);
 			}
 			List<Users> list=usersService.selectUsersOwnerByMap(map);
-			Map<String, Object> mapppp=new HashMap<>();
-			mapppp.put("list", list);
-			List<Map<String, Object>>list2=new ArrayList<Map<String, Object>>();
-			list2.add(mapppp);
+			//Map<String, Object> mapppp=new HashMap<>();
+			//mapppp.put("list", list);
+			//List<Map<String, Object>>list2=new ArrayList<Map<String, Object>>();
+			//list2.add(mapppp);
 			int carnum1=0;//有效车辆数
 			int carnum2=0;//历史车辆数
 			int sureordercount;//接单次数
@@ -217,37 +278,47 @@ public class UsersController extends BaseControllers{
 							List<Car> car=carService.selectByCarBand(userUuid);
 							carnum1=carService.selectNum1(userUuid);
 							carnum2=carService.selectNum2(userUuid);
-							 map2.put("car", car);
-							 map2.put("carnum", carnum1);
-							 map2.put("historycarnum", carnum2);
-							 map2.put("sureordercount", sureordercount);
-							 map2.put("GDP", 0);//订单GDP
-							 map2.put("avg", 0);//平台分佣、
-							 map2.put("chajialirun", 0);//差价利润
-							 map2.put("ketixianjiner", 0);///可提现金额
-							 map2.put("cashbalance", 0);//提现中金额
-							 map2.put("alreadybalance", 0);//已提现金额
+							 //订单GDP
+							//平台分佣、
+							 //差价利润
+							 ///可提现金额
+							 //提现中金额
+							//已提现金额
+							 OwnerPo ownerPo=new OwnerPo();
+							 ownerPo.setAlreadybalance(0);
+							 ownerPo.setAvg(0f);
+							 ownerPo.setCarnum1(carnum1);
+							 ownerPo.setCarnum2(carnum2);
+							 ownerPo.setCars(car);
+							 ownerPo.setCashbalance(0f);
+							 ownerPo.setChajialirun(0f);
+							 ownerPo.setGdp(0f);
+							 ownerPo.setKetixianjiner(0f);
+							 ownerPo.setSureordercount(sureordercount);
+							 user.setOwnerPo(ownerPo);
 						}else{
 							 //map2.put("car", "");
-							 map2.put("carnum", 0);
-							 map2.put("historycarnum", 0);
-							 map2.put("sureordercount", 0);
-							 map2.put("GDP", 0);//订单GDP
-							 map2.put("avg", 0);//平台分佣、
-							 map2.put("chajialirun", 0);//差价利润
-							 map2.put("ketixianjiner", 0);///可提现金额
-							 map2.put("cashbalance", 0);//提现中金额
-							 map2.put("alreadybalance", 0);//已提现金额
+							 //map2.put("carnum", 0);
+							 //map2.put("historycarnum", 0);
+							 //map2.put("sureordercount", 0);
+							 //map2.put("GDP", 0);//订单GDP
+							 //map2.put("avg", 0);//平台分佣、
+							 //map2.put("chajialirun", 0);//差价利润
+							 //map2.put("ketixianjiner", 0);///可提现金额
+							 //map2.put("cashbalance", 0);//提现中金额
+							 //map2.put("alreadybalance", 0);//已提现金额
 							}
 					}
-					list2.add(map2);
+					//list2.add(map2);
 				}
+				
+				System.out.println(list);
 				json.put("result", "0");
 				json.put("description", "查询成功");
 				json.put("total", total);
 				json.put("page", pageIndex);
-				//json.put("userList", list);
-				json.put("userList1", list2);
+				json.put("userList", list);
+				//json.put("userList1", list2);
 			}else {
 				json.put("result", "1");
 				json.put("description", "未查询到数据");

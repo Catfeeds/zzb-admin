@@ -47,6 +47,14 @@
     where brand = #{brand,jdbcType=VARCHAR}
   </select>
   
+  <select id="selectByYear" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List" />
+    from car_model
+    where car_series = #{carSeries,jdbcType=VARCHAR} and model_year = #{year,jdbcType=VARCHAR}
+  </select>
+  
+  
   <select id="selectByApplyId" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />

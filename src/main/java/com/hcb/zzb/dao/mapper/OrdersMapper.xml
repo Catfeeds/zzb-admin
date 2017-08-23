@@ -126,7 +126,7 @@
   </select>
   
   <select id="selectHighMoney" resultType="java.lang.Float" >
-    SELECT SUM(total_price) s FROM orders WHERE  order_status=6  GROUP BY DAY(create_at)  ORDER BY  s DESC 
+    SELECT SUM(total_price) s FROM orders WHERE  order_status=6  GROUP BY DAY(create_at)  ORDER BY  s DESC limit 1
   </select>
   
   <select id="selectPoolMoney" resultType="java.lang.Float" >

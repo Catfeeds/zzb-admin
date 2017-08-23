@@ -311,5 +311,92 @@ public class Users {
 	public void setDeposit(Float deposit) {
 		this.deposit = deposit;
 	}
+	
+	//注意：下面的set不是po的属性值 为了展现数据方便 ，才进行设置
+	 
+	 private Integer consume;
+	 private Float money;
+	 private Float profit;
+	 private Float profitRate;
+	 private Integer consumeIntegration;
+	 private Integer Grade;
+	 private Float cashbalance;
+	 private Float givebalance;
+
+	public Integer getConsume() {
+		return consume;
+	}
+
+	public Float getMoney() {
+		return money;
+	}
+
+	public Float getProfit() {
+		return profit;
+	}
+
+	public Float getProfitRate() {
+		return profitRate;
+	}
+
+	public Integer getConsumeIntegration() {
+		return consumeIntegration;
+	}
+
+	public Integer getGrade() {
+		return Grade;
+	}
+
+	public Float getCashbalance() {
+		return cashbalance;
+	}
+
+	public Float getGivebalance() {
+		return givebalance;
+	}
+
+	public void setConsume(Integer consume) {
+		this.consume = consume;
+	}
+
+	public void setMoney(Float money) {
+		this.money = money;
+	}
+
+	public void setProfit(Float profit) {
+		this.profit = profit;
+	}
+
+	public void setProfitRate(Float profitRate) {
+		this.profitRate = profitRate;
+	}
+
+	public void setConsumeIntegration(Integer consumeIntegration) {
+		this.consumeIntegration = consumeIntegration;
+	}
+
+	public void setGrade(Integer grade) {
+		Grade = grade;
+	}
+
+	public void setCashbalance(Float cashbalance) {
+		this.cashbalance = cashbalance;
+	}
+
+	public void setGivebalance(Float givebalance) {
+		this.givebalance = givebalance;
+	}
+	//车主注入
+	private OwnerPo ownerPo;
+
+	public OwnerPo getOwnerPo() {
+		return ownerPo;
+	}
+
+	public void setOwnerPo(OwnerPo ownerPo) {
+		this.ownerPo = ownerPo;
+	}
+	
+	 
     
 }

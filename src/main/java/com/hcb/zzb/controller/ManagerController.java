@@ -229,26 +229,36 @@ public class ManagerController extends BaseControllers {
 		}
 		String arr="";
 		List<Map<String,Object>> list0=new ArrayList<Map<String,Object>>();
-		 List<Integer>list=new ArrayList<Integer>();
+		List<Integer>list=new ArrayList<Integer>();
+		//List<String>list1=new ArrayList<String>();
+		
 		
 		if (bodyInfo.get("1") != null) {
 			//
+			Map<String, Object>map=new HashMap<String, Object>();
 			list.add(1);
-			 Map<String, Object>map=new HashMap<String, Object>();
-			JSONArray array = bodyInfo.getJSONArray("1");
-			String string = array.toString();
+			//JSONArray array = bodyInfo.getJSONArray("1");
+			String string = bodyInfo.getString("1");
+			//String string = array.toString();
 			map.put("1", string);
-			list0.add(map);
+			JSONObject mapjson = JSONObject.fromObject(map);
+			
+			//list1.add(string);
+			//JSONObject mapjson = JSONObject.fromObject(list1);
+			list0.add(mapjson);
 			//arr=arr+string;
 			//System.out.println("+++"+array.toString());
 		}
 		if(bodyInfo.get("2") != null){
 			list.add(2);
 			 Map<String, Object>map=new HashMap<String, Object>();
-			JSONArray array = bodyInfo.getJSONArray("2");
-			String string = array.toString();
+			//JSONArray array = bodyInfo.getJSONArray("2");
+			 String string = bodyInfo.getString("2");
+			//String string = array.toString();
 			map.put("2", string);
-			list0.add(map);
+			JSONObject mapjson = JSONObject.fromObject(map);
+			list0.add(mapjson);
+			//list0.add(map);
 			//arr=arr+string;
 		}
 		if(bodyInfo.get("3") != null){
@@ -257,25 +267,31 @@ public class ManagerController extends BaseControllers {
 			JSONArray array = bodyInfo.getJSONArray("3");
 			String string = array.toString();
 			map.put("3", string);
-			list0.add(map);
+			JSONObject mapjson = JSONObject.fromObject(map);
+			list0.add(mapjson);
+			//list0.add(map);
 			//arr=arr+string;
 		}
 		if(bodyInfo.get("4") != null){
 			list.add(4);
-			 Map<String, Object>map=new HashMap<String, Object>();
+			Map<String, Object>map=new HashMap<String, Object>();
 			JSONArray array = bodyInfo.getJSONArray("4");
 			String string = array.toString();
 			map.put("4", string);
-			list0.add(map);
+			JSONObject mapjson = JSONObject.fromObject(map);
+			list0.add(mapjson);
+			//list0.add(map);
 			//arr=arr+string;
 		}
 		if(bodyInfo.get("5") != null){
 			list.add(5);
-			 Map<String, Object>map=new HashMap<String, Object>();
+			Map<String, Object>map=new HashMap<String, Object>();
 			JSONArray array = bodyInfo.getJSONArray("5");
 			String string = array.toString();
 			map.put("5", string);
-			list0.add(map);
+			JSONObject mapjson = JSONObject.fromObject(map);
+			list0.add(mapjson);
+			//list0.add(map);
 			//arr=arr+string;
 		}
 		
@@ -317,7 +333,11 @@ public class ManagerController extends BaseControllers {
 				json.put("description", "创建失败，请重新尝试");
 			}
 		}
-		return buildReqJsonObject(json);
+		String a = buildReqJsonObject(json);
+		a = a.replace("\"[", "[");
+		a = a.replace("]\"", "]");
+		return a;
+		//return buildReqJsonObject(json);
 	}
 	
 	@RequestMapping(value="update",method = RequestMethod.POST)

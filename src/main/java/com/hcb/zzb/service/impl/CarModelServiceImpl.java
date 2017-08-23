@@ -87,4 +87,10 @@ public class CarModelServiceImpl implements ICarModel {
 		return carModelMapper.selectByUuid(uuid);
 	}
 
+	@Override
+	public List<CarModel> selectByYear(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return carModelMapper.selectByYear(map);
+	}
+
 }

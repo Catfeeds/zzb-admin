@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hcb.zzb.dao.interfaceClass.carSeriesMapper">
+	<resultMap id="BaseResultMap" type="com.hcb.zzb.dto.carSeries">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="create_at" property="createAt" jdbcType="TIMESTAMP" />
+		<result column="update_at" property="updateAt" jdbcType="TIMESTAMP" />
+		<result column="delete_at" property="deleteAt" jdbcType="TIMESTAMP" />
+		<result column="series_uuid" property="seriesUuid" jdbcType="VARCHAR" />
+		<result column="brand_uuid" property="brandUuid" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="series_type" property="seriesType" jdbcType="INTEGER" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+		<result column="operater" property="operater" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, create_at, update_at, delete_at, series_uuid, brand_uuid, name,
+		series_type,
+		remark, operater
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from car_series
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+
+	<select id="selectBySeries" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from car_series
+		where name = #{carSeries,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectByGuochan" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from car_series
+		where series_type=2 and brand_uuid = #{brand_uuid,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectByJinkou" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from car_series
+		where series_type=1 and brand_uuid = #{brand_uuid,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectByBrandUuid" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from car_series
+		where delete_at is null
+		and brand_uuid=#{brandUuid,jdbcType=VARCHAR}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from car_series
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.hcb.zzb.dto.carSeries">
+		insert into car_series (id, create_at, update_at,
+		delete_at, series_uuid, brand_uuid,
+		name, series_type, remark,
+		operater)
+		values (#{id,jdbcType=INTEGER}, #{createAt,jdbcType=TIMESTAMP},
+		#{updateAt,jdbcType=TIMESTAMP},
+		#{deleteAt,jdbcType=TIMESTAMP}, #{seriesUuid,jdbcType=VARCHAR}, #{brandUuid,jdbcType=VARCHAR},
+		#{name,jdbcType=VARCHAR}, #{seriesType,jdbcType=INTEGER},
+		#{remark,jdbcType=VARCHAR},
+		#{operater,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.hcb.zzb.dto.carSeries">
+		insert into car_series
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="createAt != null">
+				create_at,
+			</if>
+			<if test="updateAt != null">
+				update_at,
+			</if>
+			<if test="deleteAt != null">
+				delete_at,
+			</if>
+			<if test="seriesUuid != null">
+				series_uuid,
+			</if>
+			<if test="brandUuid != null">
+				brand_uuid,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			<if test="seriesType != null">
+				series_type,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+			<if test="operater != null">
+				operater,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="createAt != null">
+				#{createAt,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateAt != null">
+				#{updateAt,jdbcType=TIMESTAMP},
+			</if>
+			<if test="deleteAt != null">
+				#{deleteAt,jdbcType=TIMESTAMP},
+			</if>
+			<if test="seriesUuid != null">
+				#{seriesUuid,jdbcType=VARCHAR},
+			</if>
+			<if test="brandUuid != null">
+				#{brandUuid,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="seriesType != null">
+				#{seriesType,jdbcType=INTEGER},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="operater != null">
+				#{operater,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.hcb.zzb.dto.carSeries">
+		update car_series
+		<set>
+			<if test="createAt != null">
+				create_at = #{createAt,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateAt != null">
+				update_at = #{updateAt,jdbcType=TIMESTAMP},
+			</if>
+			<if test="deleteAt != null">
+				delete_at = #{deleteAt,jdbcType=TIMESTAMP},
+			</if>
+			<if test="seriesUuid != null">
+				series_uuid = #{seriesUuid,jdbcType=VARCHAR},
+			</if>
+			<if test="brandUuid != null">
+				brand_uuid = #{brandUuid,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="seriesType != null">
+				series_type = #{seriesType,jdbcType=INTEGER},
+			</if>
+			<if test="remark != null">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="operater != null">
+				operater = #{operater,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.hcb.zzb.dto.carSeries">
+		update car_series
+		set create_at = #{createAt,jdbcType=TIMESTAMP},
+		update_at = #{updateAt,jdbcType=TIMESTAMP},
+		delete_at = #{deleteAt,jdbcType=TIMESTAMP},
+		series_uuid = #{seriesUuid,jdbcType=VARCHAR},
+		brand_uuid = #{brandUuid,jdbcType=VARCHAR},
+		name = #{name,jdbcType=VARCHAR},
+		series_type = #{seriesType,jdbcType=INTEGER},
+		remark = #{remark,jdbcType=VARCHAR},
+		operater = #{operater,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>
