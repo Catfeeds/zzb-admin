@@ -70,7 +70,8 @@ public class ArticleServiceImpl implements IArticleService {
 	@Override
 	public int insertSelective(Article record) {
 		// TODO Auto-generated method stub
-		return articleMapper.insertSelective(record);
+		articleMapper.insertSelective(record);
+		return record.getId();
 	}
 
 	@Override

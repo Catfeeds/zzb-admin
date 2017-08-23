@@ -101,6 +101,46 @@ public class ArticleController extends BaseControllers{
 	}
 	
 	/**
+	 * 新建文章时（增加推荐车辆时输入车辆名字，根据名字模糊查询出所有车辆供选择）
+	 * @return
+	 */
+	@RequestMapping(value="toSerchCar",method=RequestMethod.POST)
+	@ResponseBody
+	public String getCars(){
+		JSONObject json=new JSONObject();
+		if(sign==1||sign==2) {
+			json.put("result", "1");
+			json.put("description", "请检查参数格式是否正确或者参数是否完整");
+			return buildReqJsonInteger(1, json);
+		}
+		//JSONObject headInfo=JSONObject.fromObject(headString);
+		JSONObject bodyInfo=JSONObject.fromObject(bodyString);
+		if(bodyInfo.get("carName")==null){
+			json.put("result", "1");
+			json.put("description", "请检查参数是否完整或者正确");
+			return buildReqJsonObject(json);
+		}
+		if(bodyInfo.get("carName").equals("")){
+			json.put("result", "1");
+			json.put("description", "请检查参数是否正确");
+			return buildReqJsonObject(json);
+		}
+		List<Car> list=new ArrayList<>();
+		Map<String, Object> map=new HashMap<>();
+		map.put("carName", bodyInfo.getString("carName"));
+		list = carService.selectCarsByName(map);
+		if(!list.isEmpty()){
+			json.put("result", "0");
+			json.put("description", "查询成功");
+			json.put("list", list);
+		}else{
+			json.put("result", "1");
+			json.put("description", "没有查询到");
+		}
+		return buildReqJsonObject(json);
+	}
+	
+	/**
 	 * 新建文章
 	 * @return
 	 */
@@ -164,8 +204,19 @@ public class ArticleController extends BaseControllers{
 		article.setCreater(manager.getManagerUuid());
 		article.setActivityCat(activityCarID);
 		
-		int rs = articleService.insertSelective(article);
-		if(rs==1) {
+		int id = articleService.insertSelective(article);
+		Article article2 = articleService.selectByPrimaryKey(id);
+		if(bodyInfo.getInt("articleType")==1){
+			article2.setLink("http://app.zzbcar.com/zzb-java/toActivePage?articleUuid="+article2.getArticleUuid());
+		}else if(bodyInfo.getInt("articleType")==2){
+			article2.setLink("http://app.zzbcar.com/zzb-java/tofindPage?articleUuid="+article2.getArticleUuid());
+		}else{
+			json.put("result", "1");
+			json.put("description", "参数articleType文章类型必须为1或者2");
+			return buildReqJsonObject(json);
+		}
+		int rs =articleService.updateByPrimaryKeySelective(article2);
+		if(id>0 && rs ==1) {
 			json.put("result", "0");
 			json.put("description", "新建文章成功");
 		}else {
@@ -310,6 +361,15 @@ public class ArticleController extends BaseControllers{
 		article.setArticlePicture(bodyInfo.getString("articlePicture"));
 		article.setCarIdList(carID1+","+carID2);
 		article.setActivityCat(bodyInfo.getInt("activityCarID"));
+		if(bodyInfo.getInt("articleType")==1){
+			article.setLink("http://app.zzbcar.com/zzb-java/toActivePage?articleUuid="+article.getArticleUuid());
+		}else if(bodyInfo.getInt("articleType")==2){
+			article.setLink("http://app.zzbcar.com/zzb-java/tofindPage?articleUuid="+article.getArticleUuid());
+		}else{
+			json.put("result", "1");
+			json.put("description", "参数articleType文章类型必须为1或者2");
+			return buildReqJsonObject(json);
+		}
 		int rs = articleService.updateByPrimaryKeySelective(article);
 		if(rs==1) {
 			json.put("result", "0");

@@ -133,4 +133,10 @@ CarMapper carMapper;
 		// TODO Auto-generated method stub
 		return carMapper.selectNum2(userUuid);
 	}
+
+	@Override
+	public List<Car> selectCarsByName(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return carMapper.selectCarsByName(map);
+	}
 }

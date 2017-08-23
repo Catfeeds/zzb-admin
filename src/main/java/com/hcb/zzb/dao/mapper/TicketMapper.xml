@@ -16,10 +16,11 @@
     <result column="ticket_status" property="ticketStatus" jdbcType="INTEGER" />
     <result column="user_uuid" property="userUuid" jdbcType="VARCHAR" />
     <result column="deal_way" property="dealWay" jdbcType="INTEGER" />
+    <result column="pictures" property="pictures" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, create_at, update_at, delete_at, ticket_uuid, order_number, address, money, points, 
-    illegal_time, illegal_code, ticket_status, user_uuid,deal_way
+    illegal_time, illegal_code, ticket_status, user_uuid,deal_way,pictures
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -121,12 +122,13 @@
       delete_at, ticket_uuid, order_number, 
       address, money, points, 
       illegal_time, illegal_code, ticket_status, 
-      user_uuid,deal_way)
+      user_uuid,deal_way,pictures)
     values (#{id,jdbcType=INTEGER}, #{createAt,jdbcType=TIMESTAMP}, #{updateAt,jdbcType=TIMESTAMP}, 
       #{deleteAt,jdbcType=TIMESTAMP}, #{ticketUuid,jdbcType=VARCHAR}, #{orderNumber,jdbcType=VARCHAR}, 
       #{address,jdbcType=VARCHAR}, #{money,jdbcType=REAL}, #{points,jdbcType=INTEGER}, 
       #{illegalTime,jdbcType=TIMESTAMP}, #{illegalCode,jdbcType=VARCHAR}, #{ticketStatus,jdbcType=INTEGER}, 
-      #{userUuid,jdbcType=VARCHAR}, #{dealWay,jdbcType=INTEGER})
+      #{userUuid,jdbcType=VARCHAR}, #{dealWay,jdbcType=INTEGER},
+      #{pictures,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.hcb.zzb.dto.Ticket" >
     insert into ticket
@@ -173,6 +175,9 @@
       <if test="dealWay != null" >
         deal_way,
       </if>
+       <if test="pictures != null" >
+        pictures,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -216,6 +221,9 @@
       </if>
       <if test="dealWay != null" >
         #{dealWay,jdbcType=INTEGER},
+      </if>
+      <if test="pictures != null" >
+        #{pictures,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -261,6 +269,9 @@
       <if test="dealWay != null" >
         deal_way = #{dealWay,jdbcType=INTEGER},
       </if>
+      <if test="pictures != null" >
+        pictures = #{pictures,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -278,7 +289,8 @@
       illegal_code = #{illegalCode,jdbcType=VARCHAR},
       ticket_status = #{ticketStatus,jdbcType=INTEGER},
       user_uuid = #{userUuid,jdbcType=VARCHAR},
-      deal_way = #{dealWay,jdbcType=INTEGER}
+      deal_way = #{dealWay,jdbcType=INTEGER},
+      pictures = #{pictures,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

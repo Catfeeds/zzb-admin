@@ -33,6 +33,8 @@ public class Ticket {
 
     private Integer dealWay;
     
+    private String pictures;
+    
     public Integer getDealWay() {
 		return dealWay;
 	}
@@ -151,6 +153,14 @@ public class Ticket {
 
 	public void setUserName(String userName) {
 		this.userName = userName;
+	}
+
+	public String getPictures() {
+		return pictures;
+	}
+
+	public void setPictures(String pictures) {
+		this.pictures = pictures;
 	}
     
 }

@@ -135,6 +135,51 @@ public class TicketController extends BaseControllers{
 	}
 	
 	/**
+	 * 上传罚单图片修改保存
+	 * @return
+	 */
+	@RequestMapping(value="updatePicture",method=RequestMethod.POST)
+	@ResponseBody
+	public String updatePicture(){
+		JSONObject json=new JSONObject();
+		if(sign==1||sign==2) {
+			json.put("result", "1");
+			json.put("description", "请检查参数格式是否正确或者参数是否完整");
+			return buildReqJsonInteger(1, json);
+		}
+		JSONObject bodyInfo=JSONObject.fromObject(bodyString);
+		if(bodyInfo.get("id")==null||bodyInfo.get("pictures")==null){
+			json.put("result", "1");
+			json.put("description", "请检查参数是否完整或者正确");
+			return buildReqJsonObject(json);
+		}
+		if("".equals(bodyInfo.get("id"))||"".equals(bodyInfo.get("pictures"))){
+			json.put("result", "1");
+			json.put("description", "请检查参数是否正确");
+			return buildReqJsonObject(json);
+		}
+		Ticket ticket = ticketService.selectByPrimaryKey(bodyInfo.getInt("id"));
+		if(ticket==null){
+			json.put("result", "1");
+			json.put("description", "id不正确，没有查询到");
+			return buildReqJsonObject(json);
+		}else{
+			String pictures = bodyInfo.getJSONArray("pictures").toString();
+			ticket.setPictures(pictures);
+			int rs =ticketService.updateByPrimaryKeySelective(ticket);
+			if(rs==1){
+				json.put("result", "0");
+				json.put("description", "修改成功");
+			}else{
+				json.put("result", "0");
+				json.put("description", "修改失败");
+			}
+		}
+		return buildReqJsonObject(json);
+	}
+	
+	
+	/**
 	 * 新建罚单
 	 * @return
 	 */

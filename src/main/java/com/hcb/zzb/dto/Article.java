@@ -39,6 +39,8 @@ public class Article {
     
     private Integer forwardTime;
     
+    private String link;
+    
     public Integer getId() {
         return id;
     }
@@ -182,4 +184,13 @@ public class Article {
 	public void setForwardTime(Integer forwardTime) {
 		this.forwardTime = forwardTime;
 	}
+
+	public String getLink() {
+		return link;
+	}
+
+	public void setLink(String link) {
+		this.link = link;
+	}
+	
 }

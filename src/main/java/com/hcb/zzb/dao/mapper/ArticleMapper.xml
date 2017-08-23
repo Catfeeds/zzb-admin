@@ -19,6 +19,8 @@
     <result column="activity_end_time" property="activityEndTime" jdbcType="TIMESTAMP" />
   	<result column="browse_time" property="browseTime" jdbcType="INTEGER"/>
   	<result column="forward_time" property="forwardTime" jdbcType="INTEGER"/>
+  	<result column="link" property="link" jdbcType="VARCHAR" />
+  	
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="com.hcb.zzb.dto.Article" extends="BaseResultMap" >
     <result column="article_content" property="articleContent" jdbcType="LONGVARCHAR" />
@@ -26,7 +28,7 @@
   <sql id="Base_Column_List" >
     id, create_at, update_at, delete_at, article_uuid, tittle, article_type, article_picture, 
     car_id_list, creater, is_display, activity_cat, activity_price, activity_start_time, 
-    activity_end_time,browse_time,forward_time
+    activity_end_time,browse_time,forward_time,link
   </sql>
   <sql id="Blob_Column_List" >
     article_content
@@ -116,15 +118,16 @@
       article_type, article_picture, car_id_list, 
       creater, is_display, activity_cat, 
       activity_price, activity_start_time, activity_end_time, 
-      article_content,browse_time,forward_time)
+      article_content,browse_time,forward_time,link)
     values (#{id,jdbcType=INTEGER}, #{createAt,jdbcType=TIMESTAMP}, #{updateAt,jdbcType=TIMESTAMP}, 
       #{deleteAt,jdbcType=TIMESTAMP}, #{articleUuid,jdbcType=VARCHAR}, #{tittle,jdbcType=VARCHAR}, 
       #{articleType,jdbcType=INTEGER}, #{articlePicture,jdbcType=VARCHAR}, #{carIdList,jdbcType=VARCHAR}, 
       #{creater,jdbcType=VARCHAR}, #{isDisplay,jdbcType=INTEGER}, #{activityCat,jdbcType=INTEGER}, 
       #{activityPrice,jdbcType=REAL}, #{activityStartTime,jdbcType=TIMESTAMP}, #{activityEndTime,jdbcType=TIMESTAMP}, 
-      #{articleContent,jdbcType=LONGVARCHAR},#{browseTime,jdbcType=INTEGER},#{forwardTime,jdbcType=INTEGER})
+      #{articleContent,jdbcType=LONGVARCHAR},#{browseTime,jdbcType=INTEGER},#{forwardTime,jdbcType=INTEGER}),
+      #{link,jdbcType=VARCHAR}
   </insert>
-  <insert id="insertSelective" parameterType="com.hcb.zzb.dto.Article" >
+  <insert id="insertSelective" useGeneratedKeys="true" keyColumn="id" keyProperty="id" parameterType="com.hcb.zzb.dto.Article" >
     insert into article
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -180,6 +183,9 @@
       </if>
       <if test="forwardTime != null">
       	forward_time,
+      </if>
+      <if test="link != null">
+      	link,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -237,7 +243,9 @@
       <if test="forwardTime != null">
       	#{forwardTime,jdbcType=INTEGER},
       </if>
-      
+      <if test="link != null" >
+        #{link,jdbcType=VARCHAR},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.hcb.zzb.dto.Article" >
@@ -294,6 +302,9 @@
       <if test="forwardTime != null">
       	forward_time=#{forwardTime,jdbcType=INTEGER},
       </if>
+      <if test="link != null" >
+        link = #{link,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -315,7 +326,8 @@
       activity_end_time = #{activityEndTime,jdbcType=TIMESTAMP},
       article_content = #{articleContent,jdbcType=LONGVARCHAR},
       browse_time=#{browseTime,jdbcType=INTEGER},
-      forward_time=#{forwardTime,jdbcType=INTEGER}
+      forward_time=#{forwardTime,jdbcType=INTEGER},
+      link = #{link,jdbcType=VARCHAR}
       
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -336,7 +348,9 @@
       activity_start_time = #{activityStartTime,jdbcType=TIMESTAMP},
       activity_end_time = #{activityEndTime,jdbcType=TIMESTAMP},
       browse_time=#{browseTime,jdbcType=INTEGER},
-      forward_time=#{forwardTime,jdbcType=INTEGER}
+      forward_time=#{forwardTime,jdbcType=INTEGER},
+      link = #{link,jdbcType=VARCHAR}
+      
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

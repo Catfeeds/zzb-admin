@@ -54,4 +54,6 @@ public interface CarMapper {
 	int selectNum1(String userUuid);
 
 	int selectNum2(String userUuid);
+	
+	List<Car> selectCarsByName(Map<String, Object> map);
 }
