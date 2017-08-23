@@ -53,9 +53,10 @@ public class testhhc {
        body.put("password", "123456");
         body.put("contacts", "zzzzz");
         body.put("manager_status", 1);
-        body.put("manager_status", 1);
-        body.put("1","['awda','分数除法如果','突然很烫火锅','集合竞价就行']");
-        body.put("2","['日了','马甸桥','顶多算是彻底的','呵呵呵']");
+        body.put("1","['awda','分数除法','突然很烫','集合就行']");
+        body.put("2","['除非受到','马甸桥','顶多算','呵呵呵']");
+        body.put("4","['不要同货','与工费','顶多的','呵呵呵']");
+        body.put("5","['原封国行','山东出概','顶多算的','呵呵呵']");
         //body.put("content", "zxxxxxxxx");
         //body.put("return_car_time", "2017-07-30 20:40:15");
         //body.put("return_car_address", "西湖区康乐新村xxx");

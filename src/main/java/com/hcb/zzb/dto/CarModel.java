@@ -44,8 +44,17 @@ public class CarModel {
     private String color;
     private String brandUuid;
     private String seriesUuid;
+    private String brandImage;
 
-    public String getBrandUuid() {
+    public String getBrandImage() {
+		return brandImage;
+	}
+
+	public void setBrandImage(String brandImage) {
+		this.brandImage = brandImage;
+	}
+
+	public String getBrandUuid() {
 		return brandUuid;
 	}
 

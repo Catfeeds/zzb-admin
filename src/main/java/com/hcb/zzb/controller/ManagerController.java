@@ -229,14 +229,14 @@ public class ManagerController extends BaseControllers {
 		}
 		String arr="";
 		List<Map<String,Object>> list0=new ArrayList<Map<String,Object>>();
-		List<Integer>list=new ArrayList<Integer>();
+		//List<Integer>list=new ArrayList<Integer>();
 		//List<String>list1=new ArrayList<String>();
 		
 		
 		if (bodyInfo.get("1") != null) {
 			//
 			Map<String, Object>map=new HashMap<String, Object>();
-			list.add(1);
+			//list.add(1);
 			//JSONArray array = bodyInfo.getJSONArray("1");
 			String string = bodyInfo.getString("1");
 			//String string = array.toString();
@@ -250,7 +250,7 @@ public class ManagerController extends BaseControllers {
 			//System.out.println("+++"+array.toString());
 		}
 		if(bodyInfo.get("2") != null){
-			list.add(2);
+			//list.add(2);
 			 Map<String, Object>map=new HashMap<String, Object>();
 			//JSONArray array = bodyInfo.getJSONArray("2");
 			 String string = bodyInfo.getString("2");
@@ -262,7 +262,7 @@ public class ManagerController extends BaseControllers {
 			//arr=arr+string;
 		}
 		if(bodyInfo.get("3") != null){
-			list.add(3);
+			//list.add(3);
 			 Map<String, Object>map=new HashMap<String, Object>();
 			JSONArray array = bodyInfo.getJSONArray("3");
 			String string = array.toString();
@@ -273,7 +273,7 @@ public class ManagerController extends BaseControllers {
 			//arr=arr+string;
 		}
 		if(bodyInfo.get("4") != null){
-			list.add(4);
+			//list.add(4);
 			Map<String, Object>map=new HashMap<String, Object>();
 			JSONArray array = bodyInfo.getJSONArray("4");
 			String string = array.toString();
@@ -284,7 +284,7 @@ public class ManagerController extends BaseControllers {
 			//arr=arr+string;
 		}
 		if(bodyInfo.get("5") != null){
-			list.add(5);
+			//list.add(5);
 			Map<String, Object>map=new HashMap<String, Object>();
 			JSONArray array = bodyInfo.getJSONArray("5");
 			String string = array.toString();
@@ -300,8 +300,8 @@ public class ManagerController extends BaseControllers {
 		//System.out.println(arr);
 		//System.out.println(list.toString());
 		//System.out.println("===="+list);
-		String power=list.toString();
-		String powerChild=arr;
+		//String power=list.toString();
+		//String powerChild=arr;
 		Manager managerF = managerService.selectByAccount(bodyInfo.getString("account"));
 		if(managerF!=null){
 			json.put("result", 1);
@@ -313,7 +313,7 @@ public class ManagerController extends BaseControllers {
 			newManager.setCreateAt(new Date());
 			newManager.setManagerStatus(bodyInfo.getInt("manager_status"));
 			newManager.setPassword(bodyInfo.getString("password"));
-			newManager.setManagerPower(power);
+			//newManager.setManagerPower(power);
 			newManager.setManagerPowerChild(string);
 			int rs = 0;
 			String managerUuid = "";
@@ -334,8 +334,13 @@ public class ManagerController extends BaseControllers {
 			}
 		}
 		String a = buildReqJsonObject(json);
+		//a = a.replace("\"[", "[");
+		//a = a.replace("]\"", "]");
+		
 		a = a.replace("\"[", "[");
 		a = a.replace("]\"", "]");
+		a = a.replaceAll("\\\\", "");
+
 		return a;
 		//return buildReqJsonObject(json);
 	}

@@ -294,6 +294,7 @@ public class CarModelLibraryController extends BaseControllers{
 				||bodyInfo.get("modelYear")==null
 				||bodyInfo.get("displacement")==null
 				||bodyInfo.get("seatNumber")==null
+				||bodyInfo.get("brandImage") == null
 				||bodyInfo.get("clutch")==null) {
 			json.put("result", "1");
 			json.put("description", "请检查参数是否正确或完整");
@@ -305,6 +306,7 @@ public class CarModelLibraryController extends BaseControllers{
 				||"".equals(bodyInfo.get("modelYear"))
 				||"".equals(bodyInfo.get("displacement"))
 				||"".equals(bodyInfo.get("seatNumber"))
+				||"".equals(bodyInfo.get("brandImage"))
 				||"".equals(bodyInfo.get("clutch"))) {
 			json.put("result", "1");
 			json.put("description", "请检查参数是否正确");
@@ -326,6 +328,7 @@ public class CarModelLibraryController extends BaseControllers{
 			newbr.setName(brand);
 			newbr.setOperater(manager.getManagerUuid());
 			newbr.setBrandUuid(UUID.randomUUID().toString().replaceAll("-", ""));
+			newbr.setImage(bodyInfo.getString("brandImage"));
 			int rs = carBrands.insert(newbr);
 			if(rs==1){
 				carSeries newcarser=new carSeries();
@@ -353,6 +356,7 @@ public class CarModelLibraryController extends BaseControllers{
 				carModel.setOperationTime(new Date());
 				carModel.setBrandUuid(newbr.getBrandUuid());
 				carModel.setSeriesUuid(newcarser.getSeriesUuid());
+				carModel.setBrandImage(bodyInfo.getString("brandImage"));
 				int rs1 = carModelService.insertSelective(carModel);
 				if(rs1==1) {
 					json.put("result", "0");
@@ -365,6 +369,7 @@ public class CarModelLibraryController extends BaseControllers{
 			}
 			
 		}else{
+			
 			String brandUuid = brd.getBrandUuid();
 			if(carse==null){
 				carSeries newcarser=new carSeries();
@@ -392,6 +397,7 @@ public class CarModelLibraryController extends BaseControllers{
 				carModel.setOperationTime(new Date());
 				carModel.setBrandUuid(brandUuid);
 				carModel.setSeriesUuid(newcarser.getSeriesUuid());
+				carModel.setBrandImage(bodyInfo.getString("brandImage"));
 				int rs = carModelService.insertSelective(carModel);
 				if(rs==1) {
 					json.put("result", "0");
@@ -430,6 +436,7 @@ public class CarModelLibraryController extends BaseControllers{
 					carModel.setOperationTime(new Date());
 					carModel.setBrandUuid(brandUuid);
 					carModel.setSeriesUuid(carse.getSeriesUuid());
+					carModel.setBrandImage(bodyInfo.getString("brandImage"));
 					int rs = carModelService.insertSelective(carModel);
 					if(rs==1) {
 						json.put("result", "0");
