@@ -350,14 +350,23 @@ public class CarModelLibraryController extends BaseControllers{
 			newbr.setBrandType(Br);
 			int rs = carBrands.insert(newbr);
 			if(rs==1){
+				//重置uuid开始
+				carBrand brand2 = carBrands.selectByUuid(newbr.getBrandUuid());
+				brand2.setBrandUuid(String.valueOf(brand2.getId()));
+				carBrands.updateByPrimaryKey(brand2);
+				//重置uuid结束
 				carSeries newcarser=new carSeries();
 				newcarser.setCreateAt(new Date());
 				newcarser.setName(carSeries);
 				newcarser.setOperater(manager.getManagerUuid());
 				newcarser.setSeriesUuid(UUID.randomUUID().toString().replaceAll("-", ""));
-				newcarser.setBrandUuid(newbr.getBrandUuid());
+				newcarser.setBrandUuid(String.valueOf(brand2.getId()));
 				carSeriess.insert(newcarser);
-				
+				//重置uuid
+				carSeries Series = carSeriess.selectByUuid(newcarser.getSeriesUuid());
+				Series.setSeriesUuid(String.valueOf(Series.getId()));
+				carSeriess.updateByPrimaryKey(Series);
+				//重置uuid结束
 				CarModel carModel=new CarModel();
 				carModel.setBrand(bodyInfo.getString("brand"));
 				carModel.setCarSeries(bodyInfo.getString("carSeries"));
@@ -373,8 +382,8 @@ public class CarModelLibraryController extends BaseControllers{
 				carModel.setSeatNumber(bodyInfo.getInt("seatNumber"));
 				carModel.setOperatorUuid(manager.getManagerUuid()==null?"":manager.getManagerUuid());
 				carModel.setOperationTime(new Date());
-				carModel.setBrandUuid(newbr.getBrandUuid());
-				carModel.setSeriesUuid(newcarser.getSeriesUuid());
+				carModel.setBrandUuid(String.valueOf(brand2.getId()));
+				carModel.setSeriesUuid(String.valueOf(Series.getId()));
 				carModel.setBrandImage(image);
 				int rs1 = carModelService.insertSelective(carModel);
 				if(rs1==1) {
@@ -395,10 +404,12 @@ public class CarModelLibraryController extends BaseControllers{
 				newcarser.setCreateAt(new Date());
 				newcarser.setName(carSeries);
 				newcarser.setOperater(manager.getManagerUuid());
-				newcarser.setBrandUuid(brandUuid);
+				newcarser.setBrandUuid(String.valueOf(brd.getId()));
 				newcarser.setSeriesUuid(UUID.randomUUID().toString().replaceAll("-", ""));
-				carSeriess.insert(newcarser);
-				
+				carSeriess.insert(newcarser);  //String.valueOf(newcarser.getId())
+				carSeries series = carSeriess.selectByUuid(newcarser.getSeriesUuid());
+				series.setSeriesUuid(String.valueOf(series.getId()));
+				carSeriess.updateByPrimaryKey(series);
 				CarModel carModel=new CarModel();
 				carModel.setBrand(bodyInfo.getString("brand"));
 				carModel.setCarSeries(bodyInfo.getString("carSeries"));
@@ -414,8 +425,9 @@ public class CarModelLibraryController extends BaseControllers{
 				carModel.setSeatNumber(bodyInfo.getInt("seatNumber"));
 				carModel.setOperatorUuid(manager.getManagerUuid()==null?"":manager.getManagerUuid());
 				carModel.setOperationTime(new Date());
-				carModel.setBrandUuid(brandUuid);
-				carModel.setSeriesUuid(newcarser.getSeriesUuid());
+				
+				carModel.setBrandUuid(String.valueOf(brd.getId()));
+				carModel.setSeriesUuid(String.valueOf(series.getId()));
 				carModel.setBrandImage(image);
 				int rs = carModelService.insertSelective(carModel);
 				if(rs==1) {
@@ -453,8 +465,9 @@ public class CarModelLibraryController extends BaseControllers{
 					carModel.setSeatNumber(bodyInfo.getInt("seatNumber"));
 					carModel.setOperatorUuid(manager.getManagerUuid()==null?"":manager.getManagerUuid());
 					carModel.setOperationTime(new Date());
-					carModel.setBrandUuid(brandUuid);
-					carModel.setSeriesUuid(carse.getSeriesUuid());
+					//TODO
+					carModel.setBrandUuid(String.valueOf(brd.getId()));
+					carModel.setSeriesUuid(String.valueOf(carse.getId()));
 					carModel.setBrandImage(image);
 					int rs = carModelService.insertSelective(carModel);
 					if(rs==1) {
