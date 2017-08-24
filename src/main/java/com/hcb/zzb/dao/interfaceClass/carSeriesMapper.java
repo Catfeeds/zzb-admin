@@ -25,4 +25,6 @@ public interface carSeriesMapper {
 	List<carSeries> selectByBrandUuid(String brandUuid);
 
 	carSeries selectBySeries(String carSeries);
+
+	carSeries selectByUuid(String seriesUuid);
 }

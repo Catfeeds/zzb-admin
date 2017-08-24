@@ -39,6 +39,12 @@
 		from car_brand where name = #{brand,jdbcType=VARCHAR}
 	</select>
 	
+	<select id="selectByUuid" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from car_brand where delete_at is null and brand_uuid = #{brandUuid,jdbcType=VARCHAR}
+	</select>
+	
 	
 	<select id="selectAllA" resultMap="BaseResultMap">
 		select

@@ -48,4 +48,6 @@ public interface ICarBrand {
 	List<carBrand> selectAllA();
 
 	carBrand selectByBrand(String brand);
+
+	carBrand selectByUuid(String brandUuid);
 }
