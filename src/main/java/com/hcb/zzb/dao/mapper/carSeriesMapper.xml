@@ -33,6 +33,14 @@
 		from car_series
 		where name = #{carSeries,jdbcType=VARCHAR}
 	</select>
+	
+	<select id="selectByUuid" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from car_series
+		where series_uuid = #{seriesUuid,jdbcType=VARCHAR}
+	</select>
 
 	<select id="selectByGuochan" resultMap="BaseResultMap"
 		parameterType="java.lang.String">

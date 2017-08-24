@@ -216,4 +216,10 @@ public class CarBrandImpl implements ICarBrand {
 		return carBrandMappers.selectByBrand(brand);
 	}
 
+	@Override
+	public carBrand selectByUuid(String brandUuid) {
+		// TODO Auto-generated method stub
+		return carBrandMappers.selectByUuid(brandUuid);
+	}
+
 }

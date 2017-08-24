@@ -74,4 +74,10 @@ public class CarSeriesServiceImpl implements ICarSeriesService {
 		return carSeriesMappers.selectBySeries(carSeries);
 	}
 
+	@Override
+	public carSeries selectByUuid(String seriesUuid) {
+		// TODO Auto-generated method stub
+		return carSeriesMappers.selectByUuid(seriesUuid);
+	}
+
 }

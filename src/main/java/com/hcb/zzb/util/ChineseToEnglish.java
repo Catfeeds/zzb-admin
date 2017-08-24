@@ -56,7 +56,10 @@ public class ChineseToEnglish {
                 convert += word;  
             }  
         }  
-        return convert;  
+        //
+        String upperCase = convert.toUpperCase();
+        String sh = upperCase.substring(0, 1);
+        return sh;  
     }  
   
     // 将字符串转移为ASCII码  

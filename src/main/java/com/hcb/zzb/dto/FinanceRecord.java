@@ -152,5 +152,15 @@ public class FinanceRecord {
 	public void setPayWay(Integer payWay) {
 		this.payWay = payWay;
 	}
-    
+    //用于封装平台列表数据
+	private platformPo plat;
+
+	public platformPo getPlat() {
+		return plat;
+	}
+
+	public void setPlat(platformPo plat) {
+		this.plat = plat;
+	}
+	
 }
