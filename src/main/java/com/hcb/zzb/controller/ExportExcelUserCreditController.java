@@ -75,7 +75,7 @@ public class ExportExcelUserCreditController<T> extends BaseControllers{
 		}
 		map.put("start", start);
 		map.put("end", count);
-		
+		map.put("orderBy", 2);
 		SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd");
 		List<Users> list=userService.selectUsersByMap(map);
 		List<UserCreditExport> exportList=new ArrayList<>();
@@ -83,9 +83,9 @@ public class ExportExcelUserCreditController<T> extends BaseControllers{
 		List<UserCredit> userCreditList=new ArrayList<>();
 		for (Users users : list) {
 			UserCredit userCre=new UserCredit();
-			userCre.setUserId(users.getId());
-			userCre.setUserUuid(users.getUserUuid());
-			userCre.setUserName(users.getUserName());
+			userCre.setUserId(users.getId()==null?0:users.getId());
+			userCre.setUserUuid(users.getUserUuid()==null?"":users.getUserUuid());
+			userCre.setUserName(users.getUserName()==null?"":users.getUserName());
 			
 			//身份信用
 			if(users.getAvater()!=null&&users.getUserName()!=null&&users.getUserPhone()!=null
@@ -109,9 +109,9 @@ public class ExportExcelUserCreditController<T> extends BaseControllers{
 			}
 			userCre.setOutScore(outScore);
 			//用车行为
-			userCre.setUseCarScore(users.getVehicleBehavior());
+			userCre.setUseCarScore(users.getVehicleBehavior()==null?0:users.getVehicleBehavior());
 			//状态
-			if(users.getUserStatus()==2) {
+			if(users.getUserStatus()==null||users.getUserStatus()==2) {
 				userCre.setCreditStatus("拉黑");
 			}else {
 				if(users.getCreditScore()==null||users.getCreditScore()<60) {
@@ -125,9 +125,12 @@ public class ExportExcelUserCreditController<T> extends BaseControllers{
 				}
 			}
 			//修改用户信用积分（用户信用积分=身份信用+外部信用+用车行为）
-			users.setCreditScore(userCre.getIdentityScore()+userCre.getOutScore()+userCre.getUseCarScore());
+			int sco1=userCre.getIdentityScore()==null?0:userCre.getIdentityScore();
+			int sco2=userCre.getOutScore()==null?0:userCre.getOutScore();
+			int sco3=userCre.getUseCarScore()==null?0:userCre.getUseCarScore();
+			users.setCreditScore(sco1+sco2+sco3);
 			userService.updateByPrimaryKeySelective(users);
-			userCre.setCreditScore(users.getCreditScore());
+			userCre.setCreditScore(users.getCreditScore()==null?0:users.getCreditScore());
 			
 			userCreditList.add(userCre);	
 		}
@@ -136,13 +139,13 @@ public class ExportExcelUserCreditController<T> extends BaseControllers{
 		for (UserCredit userCredit : userCreditList) {
 			UserCreditExport uce=new UserCreditExport();
 			uce.setSerialNumber(i);
-			uce.setUserName(userCredit.getUserName());
-			uce.setUserID(userCredit.getUserId());
-			uce.setCreditScore(userCredit.getCreditScore());
-			uce.setIdentity(userCredit.getIdentityScore());
-			uce.setOutCredit(userCredit.getOutScore());
-			uce.setUseCarScore(userCredit.getUseCarScore());
-			uce.setStatus(userCredit.getCreditStatus());
+			uce.setUserName(userCredit.getUserName()==null?"":userCredit.getUserName());
+			uce.setUserID(userCredit.getUserId()==null?0:userCredit.getUserId());
+			uce.setCreditScore(userCredit.getCreditScore()==null?0:userCredit.getCreditScore());
+			uce.setIdentity(userCredit.getIdentityScore()==null?0:userCredit.getIdentityScore());
+			uce.setOutCredit(userCredit.getOutScore()==null?0:userCredit.getOutScore());
+			uce.setUseCarScore(userCredit.getUseCarScore()==null?0:userCredit.getUseCarScore());
+			uce.setStatus(userCredit.getCreditStatus()==null?"":userCredit.getCreditStatus());
 			
 			exportList.add(uce);
 			i++;
@@ -157,8 +160,8 @@ public class ExportExcelUserCreditController<T> extends BaseControllers{
     		Date date = new Date();
     		String fileName = format.format(date);
     		
-    		String path = "/opt/avater/"+fileName+".xls";
-    		//String path="E:/"+fileName+".xls";
+    		//String path = "/opt/avater/"+fileName+".xls";
+    		String path="E:/"+fileName+".xls";
             OutputStream out = new FileOutputStream(path);   
             ex.exportExcel(headers, exportList, out);  
             out.close();   

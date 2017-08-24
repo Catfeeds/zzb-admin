@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -39,37 +38,32 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.model.ObjectMetadata;
 import com.hcb.zzb.controller.base.BaseControllers;
-import com.hcb.zzb.dto.Car;
-import com.hcb.zzb.dto.Users;
-import com.hcb.zzb.dto.export.OrderExport;
-import com.hcb.zzb.service.ICarSevice;
-import com.hcb.zzb.service.IOrderService;
-import com.hcb.zzb.service.IUsersService;
+import com.hcb.zzb.dto.MessageBase;
+import com.hcb.zzb.dto.export.MessageBaseExport;
+import com.hcb.zzb.service.ImessageBaseService;
 import com.hcb.zzb.util.Config;
 
 import net.sf.json.JSONObject;
 @Controller
-public class ExportExcelOrderController<T> extends BaseControllers {
+public class ExportExcelMessageBaseController<T> extends BaseControllers{
 	@Autowired
-	IOrderService orderService;
-	@Autowired
-	IUsersService userService;
-	@Autowired
-	private ICarSevice carService;
-	
-	@RequestMapping(value="exportExcelOrder",method=RequestMethod.POST)
+	private ImessageBaseService messageBaseService;
+	/**
+	 * 导出系统推送消息
+	 * @return
+	 */
+	@RequestMapping(value="exportExcelMessageBase",method=RequestMethod.POST)
 	@ResponseBody
-	public String exportExcelOrder() {
+	public String exportMes(){
 		JSONObject json=new JSONObject();
 		if(sign==1||sign==2) {
 			json.put("result", "1");
 			json.put("description", "请检查参数格式是否正确或者参数是否完整");
 			return buildReqJsonInteger(1, json);
 		}
-		
 		Integer start=0;
 		Map<String, Object> map=new HashMap<>();
-		int count =orderService.countselectByMapLimit(map);
+		int count = messageBaseService.countByMap(map);
 		if(count==0) {
 			json.put("result", "1");
 			json.put("description", "没有数据");
@@ -78,106 +72,26 @@ public class ExportExcelOrderController<T> extends BaseControllers {
 		map.put("start", start);
 		map.put("end", count);
 		map.put("orderBy", 2);
+		List<MessageBase> list = new ArrayList<MessageBase>();
+		list=messageBaseService.searchByMap(map);
 		
+		List<MessageBaseExport> exportList=new ArrayList<>();
 		SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd");
-		SimpleDateFormat formats=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		List<Map<String,Object>> list= orderService.selectByMapLimit(map);
-		List<Map<String,Object>> newList=new ArrayList<>();
-		List<OrderExport> exportList=new ArrayList<>();
-		
-		if(list!=null&&!list.isEmpty()) {
-			for (Map<String, Object> map2 : list) {
-				try {
-					map2.put("useCarTime", getDatePoor(format.parse(map2.get("returnCarTime").toString()),format.parse(map2.get("takeCarTime").toString())));
-					//Car car=(Car)map2.get("carUuid");
-					String carUuid=(String)map2.get("carUuid");
-					Car car = carService.selectByUuid(carUuid);
-					String carOwnerUuid=(String)map2.get("carOwnerUuid");
-					String userUuid=(String)map2.get("userUuid");
-					Users user=userService.selectByUserUuid(userUuid);
-					Users user_owner=userService.selectByUserOwnerUuid(carOwnerUuid);
-					if(user_owner==null){
-						//车主
-						map2.put("user_owner_name", "");//姓名
-						map2.put("user_phone", "");//电话号
-					}else{
-						//车主
-						map2.put("user_owner_name", user_owner.getUserName()==null?"":user_owner.getUserName());//姓名
-						map2.put("user_phone", user_owner.getUserPhone()==null?"":user_owner.getUserPhone());//电话号
-					}
-					if(user==null){
-						//车友
-						map2.put("user_name", "");//车友名字
-						map2.put("phone", "");//电话号
-					}else{
-						//车友
-						map2.put("user_name", user.getUserName()==null?"":user.getUserName());//车友名字
-						map2.put("phone", user.getUserPhone()==null?"":user.getUserPhone());//电话号
-					}
-					if(car==null){
-						map2.put("car_series", "");//车系
-						map2.put("license_plate_number", "");//车牌号
-						map2.put("banner", "");//图片
-					}else{
-						map2.put("car_series", car.getCarSeries()==null?"":car.getCarSeries());//车系
-						map2.put("license_plate_number", car.getLicensePlateNumber()==null?"":car.getLicensePlateNumber());//车牌号
-						map2.put("banner", car.getBanner()==null?"":car.getBanner());//图片
-					}
-					
-					newList.add(map2);	
-					
-				} catch (ParseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-			
-			//json.put("orderList", list);
-		}
-		
 		int i=1;
-		for (Map<String,Object> orders : newList) {
-			OrderExport oe=new OrderExport();
-			oe.setSerialNumber(i);
-			oe.setOrderNumber(orders.get("orderNumber")==null?"":orders.get("orderNumber").toString());
-			oe.setUserName(orders.get("userName")==null?"":orders.get("userName").toString());
-			oe.setCarOwnerName(orders.get("user_owner_name")==null?"":orders.get("user_owner_name").toString());
-			oe.setCarUuid(orders.get("carUuid")==null?"":orders.get("carUuid").toString());
-			oe.setUsetime(orders.get("takeCarTime")==null?"":orders.get("takeCarTime").toString());
-			oe.setUseCarTime(orders.get("useCarTime")==null?"":orders.get("useCarTime").toString());
-			oe.setMoney(orders.get("TotalPrice")==null?0:Float.parseFloat(orders.get("TotalPrice").toString()));
-			oe.setDeposit(orders.get("deposit")==null?0:Float.parseFloat(orders.get("deposit").toString()));
-			oe.setTackCarAddress(orders.get("takeCarAddress")==null?"":orders.get("takeCarAddress").toString());
-			oe.setReturnCarAddress(orders.get("returnCarTime")==null?"":orders.get("returnCarTime").toString());
-			if(orders.get("orderStatus")==null||orders.get("orderStatus").equals(1)) {
-				oe.setStatus("未接单");
-			}else if(orders.get("orderStatus").equals(2)) {
-				oe.setStatus("拒绝接单");
-			}else if(orders.get("orderStatus").equals(3)) {
-				oe.setStatus("接单未取车");
-			}else if(orders.get("orderStatus").equals(4)) {
-				oe.setStatus("接单已取车");
-			}else if(orders.get("orderStatus").equals(5)) {
-				oe.setStatus("确认还车未收车");
-			}else if(orders.get("orderStatus").equals(6)) {
-				oe.setStatus("已收车");
-			}else if(orders.get("orderStatus").equals(7)) {
-				oe.setStatus("已取消");
-			}else if(orders.get("orderStatus").equals(8)) {
-				oe.setStatus("已退款");
-			}else{
-				oe.setStatus("未知");
-			}
-			
-		
-			exportList.add(oe);
+		for (MessageBase messageBase : list) {
+			MessageBaseExport me=new MessageBaseExport();
+			me.setSerialNumber(i);
+			me.setTitle(messageBase.getTittle()==null?"":messageBase.getTittle());
+			me.setContent(messageBase.getContent()==null?"":messageBase.getContent());
+			me.setTime(messageBase.getCreateAt()==null?"":format.format(messageBase.getCreateAt()));
+			exportList.add(me);
 			i++;
 		}
 		
-		ExportExcelOrderController<OrderExport> ex=new ExportExcelOrderController<OrderExport>();
-		String[] headers =  { "序号", "订单号", "租客","车东","车辆","使用时间","使用时长","租金","押金","取车地点", "还车地点","状态"};
-		String avatar = "";
+		ExportExcelMessageBaseController<MessageBaseExport> ex=new ExportExcelMessageBaseController<MessageBaseExport>();
+		String[] headers =  { "序号", "标题", "内容","注册时间"};
 		
+		String avatar = "";
 		try  
         {         
     		Date date = new Date();
@@ -216,21 +130,22 @@ public class ExportExcelOrderController<T> extends BaseControllers {
 		return buildReqJsonObject(json);
 	}
 	
+	
 	public void exportExcel(Collection<T> dataset, OutputStream out)  
     {  
-        exportExcel("订单列表", null, dataset, out, "yyyy-MM-dd");  
+        exportExcel("系统推送消息", null, dataset, out, "yyyy-MM-dd");  
     }  
   
     public void exportExcel(String[] headers, Collection<T> dataset,  
             OutputStream out)  
     {  
-        exportExcel("订单列表", headers, dataset, out, "yyyy-MM-dd");  
+        exportExcel("系统推送消息", headers, dataset, out, "yyyy-MM-dd");  
     }  
   
     public void exportExcel(String[] headers, Collection<T> dataset,  
             OutputStream out, String pattern)  
     {  
-        exportExcel("订单列表", headers, dataset, out, pattern);  
+        exportExcel("系统推送消息", headers, dataset, out, pattern);  
     }  
 	
 	
@@ -419,25 +334,5 @@ public class ExportExcelOrderController<T> extends BaseControllers {
 
 	private String getBucketName() {
 		return Config.getString("bucketName");
-	}
-	
-	
-	public static String getDatePoor(Date endDate, Date nowDate) {
-		 
-	    long nd = 1000 * 24 * 60 * 60;
-	    long nh = 1000 * 60 * 60;
-	    long nm = 1000 * 60;
-	    long ns = 1000;
-	    // 获得两个时间的毫秒时间差异
-	    long diff = endDate.getTime() - nowDate.getTime();
-	    // 计算差多少天
-	    long day = diff / nd;
-	    // 计算差多少小时
-	    long hour = diff % nd / nh;
-	    // 计算差多少分钟
-	    long min = diff % nd % nh / nm;
-	    // 计算差多少秒//输出结果
-	    long sec = diff % nd % nh % nm / ns;
-	    return day + "天" + hour + "小时" + min + "分钟" + sec + "秒";
 	}
 }

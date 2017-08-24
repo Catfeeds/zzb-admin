@@ -40,6 +40,7 @@ import com.aliyun.oss.model.ObjectMetadata;
 import com.hcb.zzb.controller.base.BaseControllers;
 import com.hcb.zzb.dto.Users;
 import com.hcb.zzb.dto.export.UserExport;
+import com.hcb.zzb.service.IOrderService;
 import com.hcb.zzb.service.IUsersService;
 import com.hcb.zzb.util.Config;
 
@@ -48,6 +49,8 @@ import net.sf.json.JSONObject;
 public class ExportExcelUserInfoController<T> extends BaseControllers{
 	@Autowired
 	IUsersService userService;
+	@Autowired
+	IOrderService orderService;
 	
 	@RequestMapping(value="exportExcelUserInfo",method=RequestMethod.POST)
 	@ResponseBody
@@ -69,34 +72,89 @@ public class ExportExcelUserInfoController<T> extends BaseControllers{
 		}
 		map.put("start", start);
 		map.put("end", count);
-		
+		map.put("orderBy", 2);
 		SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd");
 		List<Users> list=userService.selectUsersByMap(map);
+		
+		int consume=0;//消费次数
+		Float money;//消费金额
+		if(!list.isEmpty()) {
+			for (Users user : list) {
+				Map<String, Object> map2=new HashMap<>();
+				if(user!=null){
+					String userUuid=user.getUserUuid();
+					if(userUuid!=null){
+						 consume=orderService.selectCountByConsume(userUuid);
+						 money=orderService.selectMoneyByConsume(userUuid);
+						 user.setMoney(money);
+						 user.setConsume(consume);
+						 user.setProfit(0f);
+						 user.setProfitRate(0f);
+						 user.setConsumeIntegration(consume);
+						 user.setGrade(0);
+						 user.setCashbalance(0f);
+						 user.setGivebalance(0f);
+						 /*map2.put("consume", consume);
+						 map2.put("money", money);
+						 map2.put("profit", 0);
+						 map2.put("profitRate", 0);
+						 map2.put("consumeIntegration", 0);//消费积分
+						 map2.put("Grade", 0);//会员等级
+						 map2.put("cashbalance", 0);//现金余额
+						 map2.put("givebalance", 0);//赠送余额
+*/						}else{
+						//map2.put("consume", 0);
+						//map2.put("money", 0f);
+						//map2.put("profit", 0f);//利润
+						//map2.put("profitRate", 0);//比例
+						//map2.put("consumeIntegration", 0);//消费积分
+						//map2.put("Grade", 0);//会员等级
+						//map2.put("cashbalance", 0);//现金余额
+						//map2.put("givebalance", 0);//赠送余额
+					}
+					
+				}
+				
+			}
+			
+		}
+		
 		List<UserExport> exportList=new ArrayList<>();
 		
 		int i=1;
 		for (Users users : list) {
 			UserExport ue=new UserExport();
 			ue.setSerialNumber(i);
-			ue.setUserID(users.getId());
-			ue.setUserName(users.getUserName());
-			if(users.getIdType()==null) {
-				ue.setIdType("未知");
-			}else if(users.getIdType()==1) {
-				ue.setIdType("身份证");
-			}else if(users.getIdType()==2) {
-				ue.setIdType("驾照");
-			}else {
-				ue.setIdType("未知");
+			ue.setUserID(users.getId()==null?0:users.getId());
+			ue.setUserName(users.getUserName()==null?"":users.getUserName());
+			ue.setPhone(users.getUserPhone()==null?"":users.getUserPhone());
+			String sex="";
+			if(users.getGender()==null||users.getGender()==1){
+				sex="男";
+			}else{
+				sex="女";
 			}
+			ue.setSex(sex);
+			ue.setDriverAge(users.getDriving()==null?0:users.getDriving());
 			ue.setDate(users.getCreateAt()==null?"未知":format.format(users.getCreateAt()));
-			
+			ue.setLastTime(users.getUpdateAt()==null?"--":format.format(users.getUpdateAt()));
+			ue.setLoginTimes(users.getLoginCount()==null?0:users.getLoginCount());
+			ue.setXiaofeiTimes(users.getConsume()==null?0:users.getConsume());
+			ue.setXiaofeiMoney(users.getMoney()==null?0:users.getMoney());
+			ue.setLilun(users.getProfit()==null?"":users.getProfit().toString());
+			ue.setLilunLv(users.getProfitRate()==null?"":users.getProfitRate().toString());
+			ue.setCreditScore(users.getCreditScore()==null?0:users.getCreditScore());
+			ue.setXiaofeiJifen(users.getConsumeIntegration()==null?0:users.getConsumeIntegration());
+			ue.setLevel(users.getGrade()==null?0:users.getGrade());
+			ue.setBalance(users.getBalance()==null?0:users.getBalance());
+			ue.setxBalance(users.getCashbalance()==null?0:users.getCashbalance());
+			ue.setsBalance(users.getGivebalance()==null?0:users.getGivebalance());
 			exportList.add(ue);
 			i++;
 		}
 		
 		ExportExcelUserInfoController<UserExport> ex=new ExportExcelUserInfoController<UserExport>();
-		String[] headers =  { "序号", "用户ID", "姓名","身份证/驾驶证", "注册时间"};
+		String[] headers =  { "序号","ID","姓名","手机","性别","驾龄","注册时间","最后一次登录时间","登录次数","消费次数","消费金额","利润","利润率","信用分","消费积分","会员等级","账户余额","现金余额","赠送余额"};
 		String avatar = "";
 		
 		try  

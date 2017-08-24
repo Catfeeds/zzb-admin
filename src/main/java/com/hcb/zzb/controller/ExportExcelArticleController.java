@@ -73,6 +73,7 @@ public class ExportExcelArticleController<T> extends BaseControllers{
 		}
 		map.put("start", start);
 		map.put("end", count);
+		map.put("orderBy", 2);
 		List<Article> list=articleService.selectByMapLimit(map);
 		List<ArticleExport> exportList=new ArrayList<>();
 		SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd");

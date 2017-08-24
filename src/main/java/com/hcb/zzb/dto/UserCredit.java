@@ -13,7 +13,7 @@ public class UserCredit {
 	private int useCarScore;//用车行为得分
 	private String creditStatus;//信用状态 60-70一般；70-90良好；90-100优秀
 	
-	public int getUserId() {
+	public Integer getUserId() {
 		return userId;
 	}
 	public void setUserId(int userId) {
@@ -31,25 +31,25 @@ public class UserCredit {
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
-	public int getCreditScore() {
+	public Integer getCreditScore() {
 		return creditScore;
 	}
 	public void setCreditScore(int creditScore) {
 		this.creditScore = creditScore;
 	}
-	public int getIdentityScore() {
+	public Integer getIdentityScore() {
 		return identityScore;
 	}
 	public void setIdentityScore(int identityScore) {
 		this.identityScore = identityScore;
 	}
-	public int getOutScore() {
+	public Integer getOutScore() {
 		return outScore;
 	}
 	public void setOutScore(int outScore) {
 		this.outScore = outScore;
 	}
-	public int getUseCarScore() {
+	public Integer getUseCarScore() {
 		return useCarScore;
 	}
 	public void setUseCarScore(int useCarScore) {
