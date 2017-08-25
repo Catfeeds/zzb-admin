@@ -6,12 +6,12 @@ public class OwnerPo {
 	 private Integer carnum1;
 	 private Integer carnum2;
 	 private Integer sureordercount;
-	 private float gdp;
-	 private float avg;
-	 private float chajialirun;
-	 private float ketixianjiner;
-	 private float cashbalance;
-	 private float alreadybalance;
+	 private Float gdp;
+	 private Float avg;
+	 private Float chajialirun;
+	 private Float ketixianjiner;
+	 private Float cashbalance;
+	 private Float alreadybalance;
 	 private List<Car> cars;
 	public Integer getCarnum1() {
 		return carnum1;
@@ -22,22 +22,22 @@ public class OwnerPo {
 	public Integer getSureordercount() {
 		return sureordercount;
 	}
-	public float getGdp() {
+	public Float getGdp() {
 		return gdp;
 	}
-	public float getAvg() {
+	public Float getAvg() {
 		return avg;
 	}
-	public float getChajialirun() {
+	public Float getChajialirun() {
 		return chajialirun;
 	}
-	public float getKetixianjiner() {
+	public Float getKetixianjiner() {
 		return ketixianjiner;
 	}
-	public float getCashbalance() {
+	public Float getCashbalance() {
 		return cashbalance;
 	}
-	public float getAlreadybalance() {
+	public Float getAlreadybalance() {
 		return alreadybalance;
 	}
 	public List<Car> getCars() {

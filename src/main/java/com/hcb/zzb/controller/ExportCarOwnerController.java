@@ -1,5 +1,8 @@
 package com.hcb.zzb.controller;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
@@ -7,6 +10,7 @@ import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -31,6 +35,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.aliyun.oss.OSSClient;
+import com.aliyun.oss.model.ObjectMetadata;
 import com.hcb.zzb.controller.base.BaseControllers;
 import com.hcb.zzb.dto.Car;
 import com.hcb.zzb.dto.OwnerPo;
@@ -131,8 +137,101 @@ public class ExportCarOwnerController<T> extends BaseControllers {
 			ce.setSerialNumber(i);
 			ce.setId(users.getId()==null?"0":users.getId()+"");
 			ce.setName(users.getUserName()==null?"":users.getUserName());
+			ce.setPhone(users.getUserPhone()==null?"":users.getUserPhone());
+			if(users.getGender()!=null){
+				if(users.getGender()==1){
+					ce.setSex("男");
+				}else if(users.getGender()==2){
+					ce.setSex("女");
+				}else{
+					ce.setSex("");
+				}
+			}else{
+				ce.setSex("");
+			}
+			OwnerPo owner= users.getOwnerPo();
+			if(owner!=null){
+				List<Car> carList=owner.getCars();
+				String brands="";
+				if(carList!=null&&!carList.isEmpty()){
+					for (Car car2 : carList) {
+						brands=brands+(car2.getBrand()==null?"":car2.getBrand());
+					}
+					ce.setCarBrand(brands);
+				}else{
+					ce.setCarBrand("");
+				}
+				ce.setValidCarQuantity(owner.getCarnum1()==null?"0":owner.getCarnum1()+"");
+				ce.setHistoryCarQuantity(owner.getCarnum2()==null?"0":owner.getCarnum2()+"");
+				ce.setOrderQuantity(owner.getSureordercount()==null?"0":owner.getSureordercount()+"");
+				ce.setOrderGDP(owner.getGdp()==null?"0":owner.getGdp()+"");
+				ce.setPlatformBrokerage(owner.getAvg()==null?"0":owner.getAvg()+"");
+				ce.setProfit(owner.getChajialirun()==null?"0":owner.getChajialirun()+"");
+				ce.setCanWithdrawMoney(owner.getKetixianjiner()==null?"0":owner.getKetixianjiner()+"");
+				ce.setWithdrawingMoney(owner.getCashbalance()==null?"0":owner.getCashbalance()+"");
+				ce.setWithdrawnMoney(owner.getAlreadybalance()==null?"0":owner.getAlreadybalance()+"");
+			}else{
+				ce.setCarBrand("");
+				ce.setValidCarQuantity("0");
+				ce.setHistoryCarQuantity("0");
+				ce.setOrderQuantity("0");
+				ce.setOrderGDP("0");
+				ce.setPlatformBrokerage("0");
+				ce.setProfit("0");
+				ce.setCanWithdrawMoney("0");
+				ce.setWithdrawingMoney("0");
+				ce.setWithdrawnMoney("0");
+			}
+			ce.setRegisterTime(users.getCreateAt()==null?"":format.format(users.getCreateAt()));
+			ce.setLastLoginTime(users.getUpdateAt()==null?"":format.format(users.getUpdateAt()));
+			ce.setLoginQuantity(users.getLoginCount()==null?"":users.getLoginCount()+"");
+			ce.setCreditScore(users.getCreditScore()==null?"":users.getCreditScore()+"");
+			ce.setBalance(users.getBalance()==null?"0":users.getBalance()+"");
+			
+			exportList.add(ce);
+			i++;
 		}
-		return "";
+		
+		ExportCarOwnerController<CarOwnerExport> ex=new ExportCarOwnerController<CarOwnerExport>();
+		String[] headers =  {"序号","ID","姓名","手机","性别","车辆品牌","有效车辆数","历史车辆数","注册时间","最后一次登陆时间","登录次数","接单次数","订单GDP","平台分佣","差价利润","信用分","账户余额","可提现金额","提现中金额","已提现金额"};
+		String avatar = "";
+		
+		try  
+        {         
+    		Date date = new Date();
+    		String fileName = format.format(date);
+    		
+    		String path = "/opt/avater/"+fileName+".xls";
+    		//String path="E:/"+fileName+".xls";
+            OutputStream out = new FileOutputStream(path);   
+            ex.exportExcel(headers, exportList, out);  
+            out.close();   
+            File file = new File(path);  
+            
+            OSSClient ossClient = new OSSClient(this.getEndPoint(), this.getAccessKeyId(), this.getAccessKeySecret());
+			// 上传文件
+			ObjectMetadata	metadata = new ObjectMetadata();
+			metadata.setContentType("xls");
+			ossClient.putObject(this.getBucketName(), fileName+".xls", 
+					file, metadata);
+			// 关闭client
+			ossClient.shutdown(); 
+			avatar = "http://"+this.getBucketName()+".oss-cn-hangzhou.aliyuncs.com/"+fileName+".xls";
+           
+        } catch (FileNotFoundException e) {  
+        	json.put("result", "1");
+			json.put("description", e.getMessage());
+			return buildReqJsonObject(json);
+        } catch (IOException e) {  
+        	json.put("result", "1");
+			json.put("description", e.getMessage());
+			return buildReqJsonObject(json);
+        }
+		
+		json.put("result", "0");
+		json.put("description", "导出成功");
+		json.put("fileUrl", avatar);
+		return buildReqJsonObject(json);
 	}
 	
 	
