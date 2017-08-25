@@ -101,7 +101,8 @@ public class CarController extends BaseControllers{
 		List<Car> list = carService.selectByMapLimit(map);
 		List<Map<String, Object>> listlist=new ArrayList<Map<String, Object>>();
 		Map<String, Object> mapppp=new HashMap<String, Object>();
-		mapppp.put("list", list);
+		///mapppp.put("list", list);
+		///listlist.add(mapppp);
 		int ordercount;//
 		if(!list.isEmpty()) {
 			for (Car car : list) {
@@ -109,6 +110,9 @@ public class CarController extends BaseControllers{
 				if(car!=null){
 					String uuid = car.getUserUuid();
 					String carUuid = car.getCarUuid();
+					mappp.put("car", car);
+					mappp.put("user_uuid", uuid);
+					mappp.put("car_uuid",carUuid );
 					ordercount=orderService.selectCount(carUuid);//订单数
 					Map<String, Object> mapp=new HashMap<>();
 					mapp.put("user_uuid", uuid);
@@ -191,6 +195,17 @@ public class CarController extends BaseControllers{
 		}
 		Car car = carService.selectByUuid(bodyInfo.getString("carUuid"));
 		if(car!=null) {
+			String userUuid = car.getUserUuid();
+			Users user = userService.selectByUserUuid(userUuid);
+			String name="";
+			if(user!=null){
+				name=user.getUserName();
+			}
+			else{
+				name="";
+			}
+			car.setUserName(name);
+			json.put("userName", car.getUserName());
 			json.put("result", "0");
 			json.put("description", "查询成功");
 			json.put("car", car);
