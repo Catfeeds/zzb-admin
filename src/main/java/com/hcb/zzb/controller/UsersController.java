@@ -160,8 +160,13 @@ public class UsersController extends BaseControllers{
 							 user.setConsume(consume);
 							 user.setProfit(0f);
 							 user.setProfitRate(0f);
-							 user.setConsumeIntegration(consume);
-							 user.setGrade(0);
+							 //消费积分=该用户下总计充值并消费金额
+							  String sstr=String.valueOf(Math.floor(money));
+							 int parseInt = Integer.parseInt(sstr);
+							 user.setConsumeIntegration(parseInt);
+							 //会员等级=订单数（1单连续30天，算30单） / 5单。说明：即5个订单为1级。500天订单为100级
+							 int grade= consume/5;
+							 user.setGrade(grade);
 							 user.setCashbalance(0f);
 							 user.setGivebalance(0f);
 							 /*map2.put("consume", consume);
