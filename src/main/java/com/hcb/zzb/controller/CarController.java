@@ -138,7 +138,8 @@ public class CarController extends BaseControllers{
 					mappp.put("rate", 0);
 					mappp.put("hot", 0);
 					mappp.put("price", 0f);
-					mappp.put("ordercount", ordercount);
+					int collec=car.getCollection()==null?0:car.getCollection();
+					mappp.put("ordercount", ordercount*10+collec*1);
 				}else{
 					//json.put("updatetime", new Date());
 					//json.put("user", user);//用户ID（绑定+超链）

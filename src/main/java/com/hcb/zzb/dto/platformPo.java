@@ -16,6 +16,13 @@ public class platformPo {
 	private String city;
 	private String orderNumber;
 	private Integer orderStatus;
+	private Integer depositStatus;
+	public Integer getDepositStatus() {
+		return depositStatus;
+	}
+	public void setDepositStatus(Integer depositStatus) {
+		this.depositStatus = depositStatus;
+	}
 	private Date takeCarTime;
 	private Date payTime;
 	private Integer payType;
