@@ -1,8 +1,5 @@
 package com.hcb.zzb.controller;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
@@ -10,7 +7,6 @@ import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -35,130 +31,127 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.aliyun.oss.OSSClient;
-import com.aliyun.oss.model.ObjectMetadata;
 import com.hcb.zzb.controller.base.BaseControllers;
-import com.hcb.zzb.dto.Article;
-import com.hcb.zzb.dto.export.ArticleExport;
-import com.hcb.zzb.service.IArticleService;
+import com.hcb.zzb.dto.Car;
+import com.hcb.zzb.dto.OwnerPo;
+import com.hcb.zzb.dto.Users;
+import com.hcb.zzb.dto.export.CarOwnerExport;
+import com.hcb.zzb.service.ICarSevice;
+import com.hcb.zzb.service.IOrderService;
+import com.hcb.zzb.service.IUsersService;
 import com.hcb.zzb.util.Config;
 
 import net.sf.json.JSONObject;
+
 @Controller
-public class ExportExcelArticleController<T> extends BaseControllers{
+public class ExportCarOwnerController<T> extends BaseControllers {
 	@Autowired
-	IArticleService articleService;
-	
-	/**
-	 * 导出运营文章列表
-	 * @return
-	 */
-	@RequestMapping(value="exportExcelArticle",method=RequestMethod.POST)
+	private IUsersService usersService;
+	@Autowired
+	private ICarSevice carService;
+	@Autowired
+	private IOrderService orderService;
+	@RequestMapping(value="exportCarOwnerList",method=RequestMethod.POST)
 	@ResponseBody
-	public String exportExcelArticle() {
+	public String exportCarOwnerList(){
 		JSONObject json=new JSONObject();
 		if(sign==1||sign==2) {
 			json.put("result", "1");
 			json.put("description", "请检查参数格式是否正确或者参数是否完整");
 			return buildReqJsonInteger(1, json);
 		}
+		Map<String, Object> map=new HashMap<String, Object>();
+		int start=0;
+		map.put("start", start);
+		int count=usersService.countUsersOwnerByMap(map);
 		
-		Integer start=0;
-		Map<String, Object> map=new HashMap<>();
-		int count = articleService.countSelectByMapLimit(map);
 		if(count==0) {
 			json.put("result", "1");
-			json.put("description", "没有数据");
+			json.put("description", "未查询到数据");
 			return buildReqJsonObject(json);
 		}
-		map.put("start", start);
 		map.put("end", count);
 		map.put("orderBy", 2);
-		List<Article> list=articleService.selectByMapLimit(map);
-		List<ArticleExport> exportList=new ArrayList<>();
-		SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd");
-		int i=1;
-		for (Article article : list) {
-			ArticleExport ae=new ArticleExport();
-			ae.setSerialNumber(i);
-			ae.setTitle(article.getTittle()==null?"":article.getTittle());
-			ae.setContent(article.getArticleContent()==null?"":article.getArticleContent());
-			if(article.getArticleType()==null){
-				ae.setStatus("");
-			}else{
-				if(article.getArticleType()==1) {
-					ae.setStatus("超值体验");
-				}else if(article.getArticleType()==2) {
-					ae.setStatus("发现");
-				}else {
-					ae.setStatus("");
+		List<Users> list=usersService.selectUsersOwnerByMap(map);
+		//Map<String, Object> mapppp=new HashMap<>();
+		//mapppp.put("list", list);
+		//List<Map<String, Object>>list2=new ArrayList<Map<String, Object>>();
+		//list2.add(mapppp);
+		int carnum1=0;//有效车辆数
+		int carnum2=0;//历史车辆数
+		int sureordercount;//接单次数
+		//Float money;//消费金额
+		for (Users user : list) {
+			//Map<String, Object> map2=new HashMap<>();
+			if(user!=null){
+				String userUuid=user.getUserUuid();
+				if(userUuid!=null){
+					sureordercount=orderService.selectSureOrder(userUuid);
+					List<Car> car=carService.selectByCarBand(userUuid);
+					carnum1=carService.selectNum1(userUuid);
+					carnum2=carService.selectNum2(userUuid);
+					 //订单GDP
+					//平台分佣、
+					 //差价利润
+					 ///可提现金额
+					 //提现中金额
+					//已提现金额
+					 OwnerPo ownerPo=new OwnerPo();
+					 ownerPo.setAlreadybalance(0);
+					 ownerPo.setAvg(0f);
+					 ownerPo.setCarnum1(carnum1);
+					 ownerPo.setCarnum2(carnum2);
+					 ownerPo.setCars(car);
+					 ownerPo.setCashbalance(0f);
+					 ownerPo.setChajialirun(0f);
+					 ownerPo.setGdp(0f);
+					 ownerPo.setKetixianjiner(0f);
+					 ownerPo.setSureordercount(sureordercount);
+					 user.setOwnerPo(ownerPo);
+				}else{
+					 //map2.put("car", "");
+					 //map2.put("carnum", 0);
+					 //map2.put("historycarnum", 0);
+					 //map2.put("sureordercount", 0);
+					 //map2.put("GDP", 0);//订单GDP
+					 //map2.put("avg", 0);//平台分佣、
+					 //map2.put("chajialirun", 0);//差价利润
+					 //map2.put("ketixianjiner", 0);///可提现金额
+					 //map2.put("cashbalance", 0);//提现中金额
+					 //map2.put("alreadybalance", 0);//已提现金额
 				}
 			}
-			ae.setBrowseTime(article.getBrowseTime()==null?0:article.getBrowseTime());
-			ae.setForwardTime(article.getForwardTime()==null?0:article.getForwardTime());
-			ae.setDate(article.getCreateAt()==null?"":format.format(article.getCreateAt()));
-			exportList.add(ae);
-			i++;
 		}
 		
-		ExportExcelArticleController<ArticleExport> ex=new ExportExcelArticleController<ArticleExport>();
-		String[] headers =  { "序号", "标题", "内容","状态","浏览次数","转发次数", "发表时间"};
-		String avatar = "";
-		
-		try  
-        {         
-    		Date date = new Date();
-    		String fileName = format.format(date);
-    		
-    		String path = "/opt/avater/"+fileName+".xls";
-    		//String path="E:/"+fileName+".xls";
-            OutputStream out = new FileOutputStream(path);   
-            ex.exportExcel(headers, exportList, out);  
-            out.close();   
-            File file = new File(path);  
-            
-            OSSClient ossClient = new OSSClient(this.getEndPoint(), this.getAccessKeyId(), this.getAccessKeySecret());
-			// 上传文件
-			ObjectMetadata	metadata = new ObjectMetadata();
-			metadata.setContentType("xls");
-			ossClient.putObject(this.getBucketName(), fileName+".xls", 
-					file, metadata);
-			// 关闭client
-			ossClient.shutdown(); 
-			avatar = "http://"+this.getBucketName()+".oss-cn-hangzhou.aliyuncs.com/"+fileName+".xls";
-           
-        } catch (FileNotFoundException e) {  
-        	json.put("result", "1");
-			json.put("description", e.getMessage());
-			return buildReqJsonObject(json);
-        } catch (IOException e) {  
-        	json.put("result", "1");
-			json.put("description", e.getMessage());
-			return buildReqJsonObject(json);
-        }
-		
-		json.put("result", "0");
-		json.put("description", "导出成功");
-		json.put("fileUrl", avatar);
-		return buildReqJsonObject(json);
+		SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd");
+		List<CarOwnerExport> exportList=new ArrayList<>();
+		int i=1;
+		for (Users users : list) {
+			CarOwnerExport ce=new CarOwnerExport();
+			ce.setSerialNumber(i);
+			ce.setId(users.getId()==null?"0":users.getId()+"");
+			ce.setName(users.getUserName()==null?"":users.getUserName());
+		}
+		return "";
 	}
+	
 	
 	
 	public void exportExcel(Collection<T> dataset, OutputStream out)  
     {  
-        exportExcel("运营文章列表", null, dataset, out, "yyyy-MM-dd");  
+        exportExcel("车东信息列表", null, dataset, out, "yyyy-MM-dd");  
     }  
   
     public void exportExcel(String[] headers, Collection<T> dataset,  
             OutputStream out)  
     {  
-        exportExcel("运营文章列表", headers, dataset, out, "yyyy-MM-dd");  
+        exportExcel("车东信息列表", headers, dataset, out, "yyyy-MM-dd");  
     }  
   
     public void exportExcel(String[] headers, Collection<T> dataset,  
             OutputStream out, String pattern)  
     {  
-        exportExcel("运营文章列表", headers, dataset, out, pattern);  
+        exportExcel("车东信息列表", headers, dataset, out, pattern);  
     }  
 	
 	

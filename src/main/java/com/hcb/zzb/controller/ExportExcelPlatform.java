@@ -312,8 +312,8 @@ public class ExportExcelPlatform<T> extends BaseControllers{
     		Date date = new Date();
     		String fileName = format.format(date);
     		
-    		//String path = "/opt/avater/"+fileName+".xls";
-    		String path="E:/"+fileName+".xls";
+    		String path = "/opt/avater/"+fileName+".xls";
+    		//String path="E:/"+fileName+".xls";
             OutputStream out = new FileOutputStream(path);   
             ex.exportExcel(headers, exportList, out);  
             out.close();   

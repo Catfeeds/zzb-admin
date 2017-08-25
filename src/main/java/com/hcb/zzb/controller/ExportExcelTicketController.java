@@ -44,9 +44,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.model.ObjectMetadata;
 import com.hcb.zzb.controller.base.BaseControllers;
+import com.hcb.zzb.dto.Orders;
 import com.hcb.zzb.dto.Ticket;
 import com.hcb.zzb.dto.Users;
 import com.hcb.zzb.dto.export.TicketExport;
+import com.hcb.zzb.service.IOrderService;
 import com.hcb.zzb.service.ITicketService;
 import com.hcb.zzb.service.IUsersService;
 import com.hcb.zzb.util.Config;
@@ -58,7 +60,8 @@ public class ExportExcelTicketController<T> extends BaseControllers{
 	ITicketService ticketService;
 	@Autowired
 	IUsersService userService;
-	
+	@Autowired
+	IOrderService orderService;
 	
 	
 	/**
@@ -86,9 +89,27 @@ public class ExportExcelTicketController<T> extends BaseControllers{
 		}
 		map.put("start", start);
 		map.put("end", count);	
-		
+		map.put("orderBy", 2);
 		List<Map<String, Object>> list=new ArrayList<>();
 		list=ticketService.selectTicketsLimit(map);
+		for (Map<String, Object> map2 : list) {
+			String userUuid=(String)map2.get("userUuid");
+			String ordernumber=(String)map2.get("orderNumber");
+			Orders orders= orderService.selectByordernumber(ordernumber);
+			if(orders!=null){
+				String carOwnerUuid = orders.getCarOwnerUuid();
+				Users userOwner = userService.selectByUserUuid(carOwnerUuid);
+				map2.put("userOwner", userOwner);
+			}else{
+				map2.put("userOwner", "");
+			}
+			Users user = userService.selectByUserUuid(userUuid);
+			if(user!=null){
+				map2.put("user", user);
+			}else{
+				map2.put("user", "");
+			}
+		}
 		List<TicketExport> exportList=new ArrayList<>();
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		int i=1;
@@ -102,17 +123,43 @@ public class ExportExcelTicketController<T> extends BaseControllers{
 			}else {
 				ticketExp.setUserName("");
 			}
-			ticketExp.setAddress(ticket.get("address")==null?"":ticket.get("address").toString());
-			ticketExp.setMoney(ticket.get("moeny")==null?0:Float.parseFloat(ticket.get("moeny").toString()));
+			if(ticket.get("userOwner")!=null&&!ticket.get("userOwner").equals("")){
+				Users carOwner=(Users) ticket.get("userOwner");
+				if(carOwner!=null){
+					ticketExp.setCarOwner(carOwner.getUserName()==null?"":carOwner.getUserName());
+				}else{
+					ticketExp.setCarOwner("");
+				}
+			}else{
+				ticketExp.setCarOwner("");
+			}
+			
+			
+			//ticketExp.setAddress(ticket.get("address")==null?"":ticket.get("address").toString());
+			ticketExp.setAddress(ticket.get("illegalCode")==null?"":ticket.get("illegalCode").toString());
+			ticketExp.setMoney(ticket.get("money")==null?"0":ticket.get("money").toString());
 			ticketExp.setPoints(ticket.get("points")==null?0:Integer.parseInt(ticket.get("points").toString()));
-			ticketExp.setTime(ticket.get("illegalTime")==null?"":format.format(ticket.get("illegalTime")));
+			//处理方式 1：自负 2：委托
+			if(ticket.get("points")!=null){
+				if(ticket.get("points").equals(1)){
+					ticketExp.setDisposeWay("自负");
+				}else if(ticket.get("points").equals(2)){
+					ticketExp.setDisposeWay("委托");
+				}else{
+					ticketExp.setDisposeWay("");
+				}
+			}else{
+				ticketExp.setDisposeWay("");
+			}
+			//ticketExp.setTime(ticket.get("illegalTime")==null?"":format.format(ticket.get("illegalTime")));
 		
 			exportList.add(ticketExp);
 			i++;
 		}
 		
 		ExportExcelTicketController<TicketExport> ex=new ExportExcelTicketController<TicketExport>();
-		String[] headers =  { "序号", "订单号", "用户", "地点", "罚款", "扣分","时间"};  
+	  //String[] headers =  { "序号", "订单号", "用户","车主","违章信息","罚款","扣分","处理方式","时间"};
+		String[] headers =  { "序号", "订单号", "用户","车主","违章信息","罚款","扣分","处理方式",};
 		String avatar = "";
 		try  
 	        {         
@@ -120,6 +167,7 @@ public class ExportExcelTicketController<T> extends BaseControllers{
 	    		String fileName = format.format(date);
 	    		
 	    		String path = "/opt/avater/"+fileName+".xls";
+	    		//String path = "E:/"+fileName+".xls";
 	            OutputStream out = new FileOutputStream(path);   
 	            ex.exportExcel(headers, exportList, out);  
 	            out.close();   

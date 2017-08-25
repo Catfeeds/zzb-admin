@@ -43,15 +43,26 @@ import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.model.ObjectMetadata;
 import com.hcb.zzb.util.Config;
 import com.hcb.zzb.controller.base.BaseControllers;
+import com.hcb.zzb.dto.BrowseLog;
 import com.hcb.zzb.dto.Car;
+import com.hcb.zzb.dto.Users;
 import com.hcb.zzb.dto.export.CarExport;
+import com.hcb.zzb.service.IBrowseLogService;
 import com.hcb.zzb.service.ICarSevice;
+import com.hcb.zzb.service.IOrderService;
+import com.hcb.zzb.service.IUsersService;
 
 import net.sf.json.JSONObject;
 @Controller
 public class ExportExcelCarController<T> extends BaseControllers{
 	@Autowired
 	ICarSevice carService;
+	@Autowired
+	private IUsersService userService;
+	@Autowired
+	IOrderService orderService;
+	@Autowired
+	private IBrowseLogService browseLogService;
 	/**
 	 * 导出车辆列表
 	 * @param req
@@ -72,32 +83,110 @@ public class ExportExcelCarController<T> extends BaseControllers{
 		JSONObject bodyInfo=JSONObject.fromObject(bodyString);
 		Integer start=0;
 		Map<String, Object> map=new HashMap<>();
-		if(bodyInfo.get("modelCharacter")!=null&&!"".equals(bodyInfo.get("modelCharacter"))) {
-			map.put("modelCharacter", bodyInfo.getString("modelCharacter"));
-		}
 		int count=carService.countSelectByMapLimit(map);
 		map.put("start", start);
 		map.put("end", count);
+		map.put("orderBy", 2);
 		List<Car> list=new ArrayList<>();
 		list = carService.selectByMapLimit(map);
+		List<Map<String, Object>> listlist=new ArrayList<Map<String, Object>>();
+		Map<String, Object> mapppp=new HashMap<String, Object>();
+		///mapppp.put("list", list);
+		///listlist.add(mapppp);
+		int ordercount;//
+		if(!list.isEmpty()) {
+			for (Car car : list) {
+				Map<String, Object> mappp=new HashMap<String, Object>();
+				if(car!=null){
+					String uuid = car.getUserUuid();
+					String carUuid = car.getCarUuid();
+					mappp.put("car", car);
+					mappp.put("user_uuid", uuid);
+					mappp.put("car_uuid",carUuid );
+					ordercount=orderService.selectCount(carUuid);//订单数
+					Map<String, Object> mapp=new HashMap<>();
+					mapp.put("user_uuid", uuid);
+					mapp.put("car_uuid",carUuid );
+					BrowseLog browseLogg=browseLogService.selectByUserIdAndCarId(mapp);
+					if(browseLogg==null){
+						//json.put("updatetime", new Date());//最后登录时间
+						//json.put("updatetime", new Date());//最后登录时间
+						mappp.put("updatetime", new Date());
+					}else{
+						//json.put("updatetime", browseLogg.getUpdateAt());
+						mappp.put("updatetime", browseLogg.getUpdateAt());
+					}
+					Users user = userService.selectByUserOwnerUuid(uuid);
+					//json.put("user", user);//用户ID（绑定+超链）
+					//json.put("status", 1);//状态（服务中、等待接单、离线中、失联中——可定义最好）
+					//json.put("rate", 0);////差价利润
+					//json.put("hot", 0);//需求热度
+					//json.put("price", 0f);//上架价格（需审核，并且需定义到服役时间）
+					//json.put("ordercount", ordercount);//订单数
+					mappp.put("user", user);
+					mappp.put("status", 1);
+					mappp.put("rate", 0);
+					mappp.put("hot", 0);
+					mappp.put("price", 0f);
+					mappp.put("ordercount", ordercount);
+				}else{
+					//json.put("updatetime", new Date());
+					//json.put("user", user);//用户ID（绑定+超链）
+					//json.put("status", 1);//状态（服务中、等待接单、离线中、失联中——可定义最好）
+					//json.put("rate", 0);////差价利润
+					//json.put("hot", 0);//需求热度
+					//json.put("price", 0f);//上架价格（需审核，并且需定义到服役时间）
+					//json.put("ordercount", 0);//订单数
+					mappp.put("user", "");
+					mappp.put("status", 1);
+					mappp.put("rate", 0);
+					mappp.put("hot", 0);
+					mappp.put("price", 0f);
+					mappp.put("ordercount", 0);
+				}
+				listlist.add(mappp);
+			}
+		}
 		List<CarExport> exportList=new ArrayList<>();
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		int i=1;
-		for (Car car : list) {
+		for (Map<String,Object> mapCar : listlist) {
 			CarExport carEx=new CarExport();
 			carEx.setSerialNumber(i);
-			carEx.setCarId(car.getId());
-			carEx.setModelCharacter(car.getModelCharacter()==null?"":car.getModelCharacter());
-			carEx.setOrderQuantity(car.getOrderQuantity()==null?0:car.getOrderQuantity());
-			carEx.setTicketQuantity(0);
-			carEx.setStatus("");
+			
+			Users user=(Users) mapCar.get("user");
+			if(user!=null){
+				carEx.setUserId(user.getId()+"");
+			}else{
+				carEx.setUserId("");
+			}
+			carEx.setLastLoginTime(mapCar.get("updatetime")==null?"":format.format(mapCar.get("updatetime")));
+			Car car =(Car) mapCar.get("car");
+			if(car!=null){
+				carEx.setCarId(car.getId()==null?"":car.getId()+"");
+				carEx.setModelCharacter(car.getModelCharacter()==null?"":car.getModelCharacter());
+				carEx.setColor(car.getColor()==null?"":car.getColor());
+				carEx.setAddress(car.getAddress()==null?"":car.getAddress());
+			}else{
+				carEx.setCarId("");
+				carEx.setModelCharacter("");
+				carEx.setColor("");
+				carEx.setAddress("");
+			}
+			carEx.setHot(mapCar.get("hot")==null?"":mapCar.get("hot").toString());
+			carEx.setStatus(mapCar.get("status")==null?"":mapCar.get("status").toString());
+			carEx.setOrderQuantity(mapCar.get("ordercount")==null?"":mapCar.get("ordercount").toString());
+			carEx.setProfit(mapCar.get("rate")==null?"":mapCar.get("rate").toString());
+			carEx.setPrice(mapCar.get("price")==null?"":mapCar.get("price").toString());
 			
 			exportList.add(carEx);
 			i++;
 		}
 		
 		ExportExcelCarController<CarExport> ex=new ExportExcelCarController<CarExport>();
-		String[] headers =  { "序号", "车辆ID", "车型", "接单量", "罚单数量", "状态"};
+		//String[] headers =  { "序号", "车辆ID", "车型", "接单量", "罚单数量", "状态"};
+		String[] headers={"序号","车辆ID","用户ID","最后登录时间","车型","颜色","取车位置","需求热度","状态","订单数","差价利润","上架价格"};
+		
 		String avatar = "";
 		try  
         {         
