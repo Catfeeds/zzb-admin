@@ -363,32 +363,36 @@ public class TicketController extends BaseControllers{
 			return buildReqJsonInteger(1, json);
 		}
 		JSONObject bodyInfo=JSONObject.fromObject(bodyString);
-		if(bodyInfo.get("ticketUuid")==null||bodyInfo.get("ticketStatus")==null) {
+		if(bodyInfo.get("ticketUuid")==null||bodyInfo.get("ticketStatus")==null||bodyInfo.get("dealWay")==null) {
 			json.put("result", "1");
 			json.put("description", "请检查参数是否完整");
 			return buildReqJsonObject(json);
 		}
-		if("".equals(bodyInfo.get("ticketUuid"))||"".equals(bodyInfo.get("ticketStatus"))) {
+		if("".equals(bodyInfo.get("dealWay"))||"".equals(bodyInfo.get("ticketUuid"))||"".equals(bodyInfo.get("ticketStatus"))) {
 			json.put("result", "1");
 			json.put("description", "请检查参数是否正确");
 			return buildReqJsonObject(json);
 		}
 		ModelMap model=new ModelMap();
-		Ticket ticket=ticketService.selectByTicketUuid(bodyInfo.getString("ticketUuid"));	
-		if(ticket!=null) {
-			ticket.setTicketStatus(bodyInfo.getInt("ticketStatus"));
-			int rs=ticketService.updateByPrimaryKeySelective(ticket);
-			if(rs==1) {
-				model.put("result", "0");
-				model.put("description", "修改状态成功");
+		
+			Ticket ticket=ticketService.selectByTicketUuid(bodyInfo.getString("ticketUuid"));	
+			if(ticket!=null) {
+				ticket.setTicketStatus(bodyInfo.getInt("ticketStatus"));
+				ticket.setDealWay(bodyInfo.getInt("dealWay"));
+				int rs=ticketService.updateByPrimaryKeySelective(ticket);
+				if(rs==1) {
+					model.put("result", "0");
+					model.put("description", "修改状态成功");
+				}else {
+					model.put("result", "1");
+					model.put("description", "修改状态失败");
+				}
 			}else {
 				model.put("result", "1");
-				model.put("description", "修改状态失败");
+				model.put("description", "操作失败，没有查询到该罚单");
 			}
-		}else {
-			model.put("result", "1");
-			model.put("description", "操作失败，没有查询到该罚单");
-		}
+		
+		
 		return buildReqJsonObject(model);
 	}
 	
