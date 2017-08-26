@@ -21,4 +21,6 @@ public interface IBankCardService {
 	public List<BankCard> selectByUserUuid(Map<String, Object> map);
     
 	public int selectByUserUuidCount(String userUuid);
+
+	public List<BankCard> selectByUserUuid(String userUuid);
 }

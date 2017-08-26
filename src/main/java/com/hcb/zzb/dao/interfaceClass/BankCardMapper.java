@@ -21,4 +21,6 @@ public interface BankCardMapper {
     List<BankCard> selectByUserUuid(Map<String, Object> map);
     
     int selectByUserUuidCount(String userUuid);
+
+	List<BankCard> selectByUserUuid1(String userUuid);
 }

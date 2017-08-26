@@ -61,4 +61,10 @@ public class BankCardServiceImpl implements IBankCardService{
 		return bankCardMapper.selectByUserUuidCount(userUuid);
 	}
 
+	@Override
+	public List<BankCard> selectByUserUuid(String userUuid) {
+		// TODO Auto-generated method stub
+		return bankCardMapper.selectByUserUuid1(userUuid);
+	}
+
 }

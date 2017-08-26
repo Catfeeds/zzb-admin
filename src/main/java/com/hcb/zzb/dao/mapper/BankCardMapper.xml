@@ -32,6 +32,12 @@
     from bank_card
     where user_uuid=#{userUuid,jdbcType=VARCHAR} limit #{pageIndex},#{pageSize}
   </select>
+  <select id="selectByUserUuid1" resultMap="BaseResultMap" parameterType="java.lang.String">
+  	select 
+    <include refid="Base_Column_List" />
+    from bank_card
+    where delete_at is null and user_uuid=#{userUuid,jdbcType=VARCHAR}
+  </select>
   <select id="selectByUserUuidCount" resultType="int" parameterType="java.lang.String">
   	select count(1)
   	from bank_card

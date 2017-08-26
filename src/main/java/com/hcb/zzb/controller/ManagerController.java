@@ -227,80 +227,13 @@ public class ManagerController extends BaseControllers {
 			json.put("description", "请检查参数格式是否正确或者参数是否完整");
 			return buildReqJsonObject(json);
 		}
-		String arr="";
+		
 		List<Map<String,Object>> list0=new ArrayList<Map<String,Object>>();
-		//List<Integer>list=new ArrayList<Integer>();
-		//List<String>list1=new ArrayList<String>();
-		
-		
-		if (bodyInfo.get("1") != null) {
-			//
-			Map<String, Object>map=new HashMap<String, Object>();
-			//list.add(1);
-			//JSONArray array = bodyInfo.getJSONArray("1");
-			String string = bodyInfo.getString("1");
-			//String string = array.toString();
-			map.put("1", string);
-			JSONObject mapjson = JSONObject.fromObject(map);
-			
-			//list1.add(string);
-			//JSONObject mapjson = JSONObject.fromObject(list1);
-			list0.add(mapjson);
-			//arr=arr+string;
-			//System.out.println("+++"+array.toString());
+		String string="" ;
+		if(bodyInfo.get("power") != null){
+			string=bodyInfo.getJSONObject("power").toString();
 		}
-		if(bodyInfo.get("2") != null){
-			//list.add(2);
-			 Map<String, Object>map=new HashMap<String, Object>();
-			//JSONArray array = bodyInfo.getJSONArray("2");
-			 String string = bodyInfo.getString("2");
-			//String string = array.toString();
-			map.put("2", string);
-			JSONObject mapjson = JSONObject.fromObject(map);
-			list0.add(mapjson);
-			//list0.add(map);
-			//arr=arr+string;
-		}
-		if(bodyInfo.get("3") != null){
-			//list.add(3);
-			 Map<String, Object>map=new HashMap<String, Object>();
-			JSONArray array = bodyInfo.getJSONArray("3");
-			String string = array.toString();
-			map.put("3", string);
-			JSONObject mapjson = JSONObject.fromObject(map);
-			list0.add(mapjson);
-			//list0.add(map);
-			//arr=arr+string;
-		}
-		if(bodyInfo.get("4") != null){
-			//list.add(4);
-			Map<String, Object>map=new HashMap<String, Object>();
-			JSONArray array = bodyInfo.getJSONArray("4");
-			String string = array.toString();
-			map.put("4", string);
-			JSONObject mapjson = JSONObject.fromObject(map);
-			list0.add(mapjson);
-			//list0.add(map);
-			//arr=arr+string;
-		}
-		if(bodyInfo.get("5") != null){
-			//list.add(5);
-			Map<String, Object>map=new HashMap<String, Object>();
-			JSONArray array = bodyInfo.getJSONArray("5");
-			String string = array.toString();
-			map.put("5", string);
-			JSONObject mapjson = JSONObject.fromObject(map);
-			list0.add(mapjson);
-			//list0.add(map);
-			//arr=arr+string;
-		}
-		
-		String string = list0.toString();
 		System.out.println(string);
-		//System.out.println(arr);
-		//System.out.println(list.toString());
-		//System.out.println("===="+list);
-		//String power=list.toString();
 		//String powerChild=arr;
 		Manager managerF = managerService.selectByAccount(bodyInfo.getString("account"));
 		if(managerF!=null){
@@ -360,7 +293,10 @@ public class ManagerController extends BaseControllers {
 			json.put("description", "请检查参数格式是否正确或者参数是否完整");
 			return buildReqJsonObject(json);
 		}
-		
+		String string="" ;
+		if(bodyInfo.get("power") != null){
+			string=bodyInfo.getJSONObject("power").toString();
+		}
 		
 		Manager managerF = managerService.selectByPrimaryKey(bodyInfo.getInt("manager_id"));
 		// 判断修改后的账号是否已存在
@@ -378,6 +314,7 @@ public class ManagerController extends BaseControllers {
 			managerF.setUpdateAt(new Date());
 			managerF.setManagerStatus(bodyInfo.getInt("manager_status"));
 			managerF.setPassword(bodyInfo.getString("password"));
+			managerF.setManagerPowerChild(string);
 			int rs = 0;
 			try {
 				rs = managerService.updateByPrimaryKeySelective(managerF);

@@ -477,6 +477,66 @@ public class Car {
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
-    
+    //为了展示数据，不为实体car的属性
+	//驾驶时长 int time;
+	//驾驶车型数 int modelNum;
+	//历史总成交 int totalNum;
+	//驾驶次数 int driverCount;
+	//平均响应时间 int res ;
+	//平均接单量 int avg;
+	 private Integer time;
+	 private Integer modelNum;
+	 private Integer totalNum;
+	 private Integer driverCount;
+	 private Integer res;
+	 private Integer avg;
+	public Integer getTime() {
+		return time;
+	}
+
+	public void setTime(Integer time) {
+		this.time = time;
+	}
+
+	public Integer getModelNum() {
+		return modelNum;
+	}
+
+	public void setModelNum(Integer modelNum) {
+		this.modelNum = modelNum;
+	}
+
+	public Integer getTotalNum() {
+		return totalNum;
+	}
+
+	public void setTotalNum(Integer totalNum) {
+		this.totalNum = totalNum;
+	}
+
+	public Integer getDriverCount() {
+		return driverCount;
+	}
+
+	public void setDriverCount(Integer driverCount) {
+		this.driverCount = driverCount;
+	}
+
+	public Integer getRes() {
+		return res;
+	}
+
+	public void setRes(Integer res) {
+		this.res = res;
+	}
+
+	public Integer getAvg() {
+		return avg;
+	}
+
+	public void setAvg(Integer avg) {
+		this.avg = avg;
+	}
+	
     
 }

@@ -1,6 +1,7 @@
 package com.hcb.zzb.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -189,8 +190,8 @@ public class PlatformConfigController extends BaseControllers{
 						if(user!=null){
 							//json.put("user", user);
 							//map2.put("user", user);
-							newpo.setUserName(user.getUserName());
-							newpo.setPhone(user.getUserPhone());
+							newpo.setUserName(user.getUserName()==null?"":user.getUserName());
+							newpo.setPhone(user.getUserPhone()==null?"":user.getUserPhone());
 						}else{
 							//json.put("user", "");
 							//map2.put("user", user);
@@ -200,8 +201,8 @@ public class PlatformConfigController extends BaseControllers{
 						if(userOwner!=null){
 							//json.put("userOwner", userOwner);
 							//map2.put("userOwner", userOwner);
-							newpo.setOwnerName(userOwner.getUserName());
-							newpo.setOwnerPhone(userOwner.getUserPhone());
+							newpo.setOwnerName(userOwner.getUserName()==null?"":userOwner.getUserName());
+							newpo.setOwnerPhone(userOwner.getUserPhone()==null?"":userOwner.getUserPhone());
 						}else{
 							//json.put("userOwner", "");
 							//map2.put("userOwner", "");
@@ -215,8 +216,8 @@ public class PlatformConfigController extends BaseControllers{
 							//json.put("city", car.getCity());
 							//map2.put("carBrand", car.getBrand());
 							//map2.put("city", car.getCity());
-							newpo.setCarBrand(car.getBrand());
-							newpo.setCity(car.getCity());
+							newpo.setCarBrand(car.getBrand()==null?"":car.getBrand());
+							newpo.setCity(car.getCity()==null?"":car.getCity());
 						}
 						//（预定成功，服务中，已还车，已结案）
 						//if(orderStatus==3){}
@@ -236,8 +237,8 @@ public class PlatformConfigController extends BaseControllers{
 						map2.put("deposit", String.valueOf(order.getDeposit()==null?"":order.getDeposit()));*/
 						newpo.setOrderNumber(order.getOrderNumber()==null?"":order.getOrderNumber());
 						newpo.setOrderStatus(order.getOrderStatus()==null?0:order.getOrderStatus());
-						newpo.setTakeCarTime(order.getTakeCarTime());
-						newpo.setPayTime(order.getPayTime());
+						newpo.setTakeCarTime(order.getTakeCarTime()==null?new Date():order.getTakeCarTime());
+						newpo.setPayTime(order.getPayTime()==null?new Date():order.getPayTime());
 						newpo.setPayType(order.getPayType()==null?1:order.getPayType());
 						newpo.setTotalPrice(order.getTotalPrice()==null?0f:order.getTotalPrice());
 						newpo.setDeposit(order.getDeposit()==null?0f:order.getDeposit());
