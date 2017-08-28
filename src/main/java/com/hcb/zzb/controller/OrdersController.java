@@ -357,17 +357,28 @@ public class OrdersController extends BaseControllers{
 		}
 		Orders order = orderService.selectByOrdersUuid(bodyInfo.getString("order_uuid"));
 		if(order!=null) {
+			
+			String carOwnerUuid = order.getCarOwnerUuid();
+			if(carOwnerUuid==null) {
+				json.put("result", "1");
+				json.put("description", "错误,该订单没有车主uuid");
+				return buildReqJsonObject(json);
+			}
 			if(order.getTakeCarTime()==null) {
 				json.put("result", "1");
 				json.put("description", "错误,该订单没有取车时间");
 				return buildReqJsonObject(json);
 			}
+			//用户
 			Users user = userService.selectByUserUuid(order.getUserUuid());
 			if(user==null) {
 				json.put("result", "1");
 				json.put("description", "错误,该订单的用户不存在");
 				return buildReqJsonObject(json);
 			}
+			//车主
+			Users carOwner = userService.selectByUserOwnerUuid(carOwnerUuid);
+			
 			Date beginTime=new Date();
 			Date endTime=order.getTakeCarTime();
 			long min=(endTime.getTime()-beginTime.getTime())/1000 / 60 ;
@@ -401,7 +412,8 @@ public class OrdersController extends BaseControllers{
 			float userBalance = user.getBalance()==null?0:user.getBalance();
 			user .setBalance(userBalance+(deposit-penalty));
 			userService.updateByPrimaryKeySelective(user);
-			
+			carOwner.setBalance(carOwner.getBalance()+penalty);
+			userService.updateByPrimaryKey(carOwner);
 			//收支明细
 			FinanceRecord finance1=new FinanceRecord();
 			finance1.setCreateAt(new Date());

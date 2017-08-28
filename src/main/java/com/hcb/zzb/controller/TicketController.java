@@ -299,6 +299,7 @@ public class TicketController extends BaseControllers{
 			model.put("points", ticket.getPoints());
 			model.put("illegalCode", ticket.getIllegalCode());
 			model.put("ticketStatus", ticket.getTicketStatus());
+			model.put("pictures", ticket.getPictures()==null?"":ticket.getPictures());
 		}else {
 			model.put("result", "1");
 			model.put("description", "查询失败");

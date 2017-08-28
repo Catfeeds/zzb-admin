@@ -132,7 +132,7 @@ public class PlatformConfigController extends BaseControllers{
 				for (FinanceRecord financeRecord : todayIncomeList) {
 					todayIncomeTotal= todayIncomeTotal + financeRecord.getMoney();
 				}
-				
+				todayIncomeTotal=0*todayIncomeTotal;
 				model.put("income", (float)(Math.round(todayIncomeTotal*100))/100);
 			}else {
 				model.put("income", 0);
@@ -243,7 +243,10 @@ public class PlatformConfigController extends BaseControllers{
 						newpo.setTotalPrice(order.getTotalPrice()==null?0f:order.getTotalPrice());
 						newpo.setDeposit(order.getDeposit()==null?0f:order.getDeposit());
 						newpo.setDepositStatus(order.getDepositStatus()==null?0:order.getDepositStatus());
-						financeRecord.setPlat(newpo);
+						if(newpo!=null){
+							financeRecord.setPlat(newpo);
+						}
+						
 					}
 					//listlist.add(map2);
 				}
