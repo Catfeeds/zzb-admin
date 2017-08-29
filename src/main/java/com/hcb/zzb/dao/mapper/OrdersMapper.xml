@@ -130,7 +130,7 @@
   </select>
   
   <select id="selectPoolMoney" resultType="java.lang.Float" >
-    SELECT SUM(total_price) FROM orders WHERE delete_at IS NULL AND  deposit_status=2
+    SELECT SUM(deposit) FROM orders WHERE delete_at IS NULL AND  deposit_status=2
   </select>
   
   <select id="selectCountByUserUuid" resultType="int" parameterType="java.lang.String" >
