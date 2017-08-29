@@ -138,7 +138,8 @@ public class PlatformConfigController extends BaseControllers{
 				model.put("income", 0);
 			}	
 			//平台账户今日支出
-			Map<String, Object> tmap1=new HashMap<>();
+			//////
+			/*Map<String, Object> tmap1=new HashMap<>();
 			tmap1.put("recordType", 4);//记录类型；1：充值；2：提现；3：订单；4：平台收费
 			tmap1.put("financeType", 2);//1收入 2支出
 			List<FinanceRecord> todayExpenditureList= financeRecordService.selectIncomeAndExpenditureByToday(tmap1);
@@ -151,8 +152,23 @@ public class PlatformConfigController extends BaseControllers{
 				
 			}else {
 				model.put("expenditure", 0);
-			}
+			}*/
+			//////////
 			
+			Map<String, Object> tmap1=new HashMap<>();
+			//tmap1.put("recordType", 4);//记录类型；1：充值；2：提现；3：订单；4：平台收费
+			tmap1.put("financeType", 2);//1收入 2支出
+			List<FinanceRecord> todayExpenditureList= financeRecordService.selectOutcomeAndExpenditureByToday(tmap1);
+			if(todayExpenditureList!=null&&!todayExpenditureList.isEmpty()) {
+				float todayExpenditureTotal = 0;
+				for (FinanceRecord financeRecord : todayExpenditureList) {
+					todayExpenditureTotal = todayExpenditureTotal + financeRecord.getMoney();
+				}
+				model.put("expenditure", (float)(Math.round(todayExpenditureTotal*100))/100);
+				
+			}else {
+				model.put("expenditure", 0);
+			}
 			/*PlatformConfig platform = platformConfigService.selectByPrimaryKey(39);
 			if(platform==null) {
 				json.put("result", "1");

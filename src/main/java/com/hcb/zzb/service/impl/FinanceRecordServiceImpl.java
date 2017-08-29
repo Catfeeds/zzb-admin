@@ -97,4 +97,10 @@ public class FinanceRecordServiceImpl implements IFinanceRecordService{
 		return financeRecordMapper.countSelectByRecordType(map);
 	}
 
+	@Override
+	public List<FinanceRecord> selectOutcomeAndExpenditureByToday(Map<String, Object> tmap1) {
+		// TODO Auto-generated method stub
+		return financeRecordMapper.selectOutcomeAndExpenditureByToday(tmap1);
+	}
+
 }
