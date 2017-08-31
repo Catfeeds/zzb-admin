@@ -103,4 +103,10 @@ public class FinanceRecordServiceImpl implements IFinanceRecordService{
 		return financeRecordMapper.selectOutcomeAndExpenditureByToday(tmap1);
 	}
 
+	@Override
+	public Float selectMoney(String orderUuid) {
+		// TODO Auto-generated method stub
+		return financeRecordMapper.selectMoney(orderUuid);
+	}
+
 }

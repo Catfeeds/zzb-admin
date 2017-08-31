@@ -23,11 +23,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.hcb.zzb.controller.base.BaseControllers;
 import com.hcb.zzb.dto.Car;
 import com.hcb.zzb.dto.FinanceRecord;
+import com.hcb.zzb.dto.Manager;
 import com.hcb.zzb.dto.Orders;
 import com.hcb.zzb.dto.PlatformConfig;
 import com.hcb.zzb.dto.Users;
 import com.hcb.zzb.service.ICarSevice;
 import com.hcb.zzb.service.IFinanceRecordService;
+import com.hcb.zzb.service.IManagerService;
 import com.hcb.zzb.service.IOrderService;
 import com.hcb.zzb.service.IPlatformConfigService;
 import com.hcb.zzb.service.ITicketService;
@@ -49,6 +51,8 @@ public class OrdersController extends BaseControllers{
 	private IFinanceRecordService financeRecordService;
 	@Autowired
 	private ICarSevice carService;
+	@Autowired
+	IManagerService managerService;
 	/**
 	 * 订单列表（分页）
 	 * @return
@@ -62,6 +66,7 @@ public class OrdersController extends BaseControllers{
 			json.put("description", "请检查参数格式是否正确或者参数是否完整");
 			return buildReqJsonInteger(1, json);
 		}
+		JSONObject headInfo=JSONObject.fromObject(headString);
 		JSONObject bodyInfo=JSONObject.fromObject(bodyString);
 		if(bodyInfo.get("pageIndex")==null||bodyInfo.get("pageSize")==null) {
 			json.put("result", "1");
@@ -96,6 +101,18 @@ public class OrdersController extends BaseControllers{
 		}else {
 			map.put("orderBy", 2);
 		}
+		String orderNum = bodyInfo.getString("orderNumber");
+		Orders order = orderService.selectByOrderNumber(orderNum);
+		Float mon=0f;
+		if(order!=null){
+			String orderUuid = order.getOrderUuid();
+			/*Map<String, Object> mapp=new HashMap<>();
+			map.put("orderUuid", orderUuid);
+			map.put("orderRecordType", 3);
+			map.put("financeType", 2);
+			map.put("payType", 5);*/
+			mon=financeRecordService.selectMoney(orderUuid);
+		}
 		int count=orderService.countselectByMapLimit(map);
 		if(count==0) {
 			json.put("result", "1");
@@ -103,6 +120,7 @@ public class OrdersController extends BaseControllers{
 			return buildReqJsonObject(json);
 		}
 		int total=count%pageSize==0?count/pageSize:count/pageSize+1;
+		Manager manager = managerService.selectByAccount(headInfo.getString("account"));
 		List<Map<String, Object>> list=orderService.selectByMapLimit(map);
 		//List<Map<String, Object>> orderList=new ArrayList<Map<String, Object>>();
 		SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -114,6 +132,8 @@ public class OrdersController extends BaseControllers{
 			for (Map<String, Object> map2 : list) {
 				try {
 					map2.put("useCarTime", getDatePoor(format.parse(map2.get("returnCarTime").toString()),format.parse(map2.get("takeCarTime").toString())));
+					map2.put("createName", manager.getAccount());
+					map2.put("money", mon);
 					//Car car=(Car)map2.get("carUuid");
 					String carUuid=(String)map2.get("carUuid");
 					Car car = carService.selectByUuid(carUuid);
@@ -538,7 +558,7 @@ public class OrdersController extends BaseControllers{
 				finance1.setOrderUuid(order.getOrderUuid());
 				finance1.setRecordType(5);//记录类型；1：充值；2：提现；3：订单；4：平台收费
 				finance1.setUserUuid(order.getCarOwnerUuid());
-				finance1.setPayType(5);//支付方式：1：余额；2：支付宝；3：微信；4：银行卡
+				finance1.setPayType(5);//支付方式：1：余额；2：支付宝；3：微信；4：银行卡5:系统 
 				finance1.setPayWay(3);;//支付渠道：1:APP; 2:H5 3:系统 
 				financeRecordService.insertSelective(finance1);
 				

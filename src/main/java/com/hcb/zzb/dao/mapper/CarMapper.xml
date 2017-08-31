@@ -77,7 +77,7 @@
     select 
     <include refid="Base_Column_List" />
     from car
-    where delete_at is null and user_uuid = #{useruuid,jdbcType=VARCHAR}
+    where delete_at is null AND car_status=2 and user_uuid = #{useruuid,jdbcType=VARCHAR}
   </select>
   <select id="selectByCity" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -152,12 +152,12 @@
   <select id="selectNum1" resultType="int" parameterType="java.lang.String">
   	select count(1)
   	from car
-  	where car_status=2 AND user_uuid=#{userUuid,jdbcType=VARCHAR} 
+  	where delete_at is null and car_status=2 AND user_uuid=#{userUuid,jdbcType=VARCHAR} 
   </select>
   <select id="selectNum2" resultType="int" parameterType="java.lang.String">
   	select count(1)
   	from car
-  	where user_uuid=#{userUuid,jdbcType=VARCHAR} 
+  	where delete_at is null and user_uuid=#{userUuid,jdbcType=VARCHAR} 
   </select>
   
   <select id="selectByMapLimit" resultMap="BaseResultMap" parameterType="java.util.HashMap">
