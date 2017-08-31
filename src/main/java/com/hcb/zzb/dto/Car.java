@@ -87,7 +87,17 @@ public class Car {
 
     private String leaseTime;
 
-    private Integer orderTotalQuantity;
+    private Integer isSail;
+    
+    public Integer getIsSail() {
+		return isSail;
+	}
+
+	public void setIsSail(Integer isSail) {
+		this.isSail = isSail;
+	}
+
+	private Integer orderTotalQuantity;
     private Float orderRate;
     private Integer carUseType;
     private Integer closeSubway;

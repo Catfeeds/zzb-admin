@@ -764,8 +764,9 @@ public class UsersController extends BaseControllers{
 		}
 		Users user=usersService.selectByUserUuid(bodyInfo.getString("user_uuid"));
 		if(user!=null) {
-			if(user.getUserStatus()!=null) {
-				if(user.getUserStatus()==2&&bodyInfo.getInt("user_status")==2) {
+				/*
+				 * if(user.getUserStatus()!=null) {
+				 * if(user.getUserStatus()==2&&bodyInfo.getInt("user_status")==2) {
 					json.put("result", "1");
 					json.put("description", "用户已拉黑,请不要重复拉黑");
 					return buildReqJsonObject(json);
@@ -775,7 +776,23 @@ public class UsersController extends BaseControllers{
 					json.put("description", "用户已激活,请不要重复激活");
 					return buildReqJsonObject(json);
 				}
+				}
+				*/
+				//徐进现代吗
+			
+			if(bodyInfo.getInt("user_status")==2){
+				String userUuid = user.getUserUuid();
+				List<Car> cars = carService.selectByUserUuid(userUuid);
+				if(cars.size()>0){
+					for (Car car : cars) {
+						if(car!=null){
+							car.setIsSail(1);
+							carService.updateByPrimaryKey(car);
+						}
+					}
+				}
 			}
+			
 			user.setUserStatus(bodyInfo.getInt("user_status"));
 			int rs=0;
 			rs=usersService.updateByPrimaryKeySelective(user);
