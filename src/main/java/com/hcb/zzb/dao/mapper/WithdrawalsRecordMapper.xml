@@ -76,6 +76,12 @@
 		</if>
 	</select>
 	
+	<select id="selectAlreadyMoney" resultType="java.lang.Float" parameterType="java.lang.String">
+		select SUM(money)
+		from withdrawals_record
+		where delete_at is null
+		AND apply_uuid=#{applyUuuid,jdbcType=VARCHAR} AND apply_status=2
+	</select>
 	
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
 		delete from withdrawals_record

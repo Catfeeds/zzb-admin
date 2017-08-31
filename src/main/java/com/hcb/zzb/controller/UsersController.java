@@ -26,6 +26,7 @@ import com.hcb.zzb.service.IBankCardService;
 import com.hcb.zzb.service.ICarSevice;
 import com.hcb.zzb.service.IOrderService;
 import com.hcb.zzb.service.IUsersService;
+import com.hcb.zzb.service.IWithdrawalsRecordService;
 import com.hcb.zzb.util.DateUtil;
 
 import net.sf.json.JSONObject;
@@ -40,6 +41,8 @@ public class UsersController extends BaseControllers{
 	IOrderService orderService;
 	@Autowired
 	IBankCardService bankCardService;
+	@Autowired
+	private IWithdrawalsRecordService withdrawalsRecordService;
 	/**
 	 * 用户信息列表
 	 * @return
@@ -164,6 +167,7 @@ public class UsersController extends BaseControllers{
 							 consume=orderService.selectCountByConsume(userUuid);
 							 money=orderService.selectMoneyByConsume(userUuid);
 							 String mone="";
+							 int mm;
 							 if(money==null){
 								//消费积分=该用户下总计充值并消费金额
 								  //String sstr=String.valueOf(Math.floor(money));
@@ -185,7 +189,7 @@ public class UsersController extends BaseControllers{
 							 //会员等级=订单数（1单连续30天，算30单） / 5单。说明：即5个订单为1级。500天订单为100级
 							 int grade= consume/5;
 							 user.setGrade(grade);
-							 user.setCashbalance(0f);
+							 user.setCashbalance(user.getBalance()==null?0f:user.getBalance());
 							 user.setGivebalance(0f);
 							 /*map2.put("consume", consume);
 							 map2.put("money", money);
@@ -307,16 +311,20 @@ public class UsersController extends BaseControllers{
 							 ///可提现金额
 							 //提现中金额
 							//已提现金额
+							Float alreadymoney=withdrawalsRecordService.selectAlreadyMoney(userUuid);
+							if(alreadymoney==null){
+								alreadymoney=0f;
+							}
 							 OwnerPo ownerPo=new OwnerPo();
-							 ownerPo.setAlreadybalance(0);
+							 ownerPo.setAlreadybalance(alreadymoney);
 							 ownerPo.setAvg(0f);
 							 ownerPo.setCarnum1(carnum1);
 							 ownerPo.setCarnum2(carnum2);
 							 ownerPo.setCars(car);
-							 ownerPo.setCashbalance(0f);
+							 ownerPo.setCashbalance(user.getFrozenBalance());
 							 ownerPo.setChajialirun(0f);
 							 ownerPo.setGdp(0f);
-							 ownerPo.setKetixianjiner(0f);
+							 ownerPo.setKetixianjiner(user.getBalance());
 							 ownerPo.setSureordercount(sureordercount);
 							 user.setOwnerPo(ownerPo);
 						}else{
