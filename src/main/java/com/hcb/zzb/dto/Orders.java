@@ -38,6 +38,15 @@ public class Orders {
 	private String damageDsp;
 
 	private String damagePicture;
+	private String createChange;
+
+	public String getCreateChange() {
+		return createChange;
+	}
+
+	public void setCreateChange(String createChange) {
+		this.createChange = createChange;
+	}
 
 	private Float compensateMoney;
 
@@ -54,6 +63,15 @@ public class Orders {
 	private Float otherPrice;
 
 	private Float totalPrice;
+	private Float transfer;
+
+	public Float getTransfer() {
+		return transfer;
+	}
+
+	public void setTransfer(Float transfer) {
+		this.transfer = transfer;
+	}
 
 	private Date payTime;
 

@@ -482,6 +482,20 @@ public class UsersController extends BaseControllers{
 		}
 		Users user=usersService.selectByUserUuid(bodyInfo.getString("user_uuid"));
 		if(user!=null) {
+			
+			if(bodyInfo.getInt("user_status")==4){
+				String userUuid = user.getUserUuid();
+				List<Car> cars = carService.selectByUserUuid(userUuid);
+				if(cars.size()>0){
+					for (Car car : cars) {
+						if(car!=null){
+							car.setIsSail(1);
+							carService.updateByPrimaryKey(car);
+						}
+					}
+				}
+			}
+			
 			user.setUserStatus(bodyInfo.getInt("user_status"));
 			int rs=0;
 			rs=usersService.updateByPrimaryKeySelective(user);
@@ -780,7 +794,7 @@ public class UsersController extends BaseControllers{
 				*/
 				//徐进现代吗
 			
-			if(bodyInfo.getInt("user_status")==2){
+			/*if(bodyInfo.getInt("user_status")==2){
 				String userUuid = user.getUserUuid();
 				List<Car> cars = carService.selectByUserUuid(userUuid);
 				if(cars.size()>0){
@@ -791,11 +805,15 @@ public class UsersController extends BaseControllers{
 						}
 					}
 				}
-			}
-			
-			user.setUserStatus(bodyInfo.getInt("user_status"));
+			}*/
 			int rs=0;
-			rs=usersService.updateByPrimaryKeySelective(user);
+			if(bodyInfo.getInt("user_status")==2){
+				user.setUserStatus(bodyInfo.getInt("user_status"));
+				rs=usersService.updateByPrimaryKeySelective(user);
+			}else{
+				user.setUserStatus(bodyInfo.getInt("user_status"));
+				rs=usersService.updateByPrimaryKeySelective(user);
+			}
 			if(rs==1) {
 				json.put("result", "0");
 				json.put("description", "操作成功");

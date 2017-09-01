@@ -49,14 +49,13 @@ public class testhhc {
         //body.put("id", 11);
        // body.put("operation_picture", "http://living.cto1024.com/10c7855f31113a24745cdff9213549dc.jpg");
        // body.put("is_display", 2);
-       body.put("account", "小鱼aa");
-       body.put("password", "123456");
-        body.put("contacts", "zzzzz");
-        body.put("manager_status", 1);
-        body.put("1","['awda','分数除法','突然很烫','集合就行']");
-        body.put("2","['除非受到','马甸桥','顶多算','呵呵呵']");
-        body.put("4","['不要同货','与工费','顶多的','呵呵呵']");
-        body.put("5","['原封国行','山东出概','顶多算的','呵呵呵']");
+       body.put("pageIndex", 1);
+       body.put("pageSize", 20);
+       body.put("money", 0.01);
+       //body.put("orderNumber", "D20170831152124102049");
+      
+
+
         //body.put("content", "zxxxxxxxx");
         //body.put("return_car_time", "2017-07-30 20:40:15");
         //body.put("return_car_address", "西湖区康乐新村xxx");
@@ -88,6 +87,7 @@ public class testhhc {
         body.put("model", "3");
         body.put("driving_license_photo", "2");
         body.put("order_uuid", "675cd2063021e7a100d8536196dcb7f0");*/
+       body.put("order_uuid", "fab59fc3bf9f1355ed21da2d72f14ca3");
         
         map.put("body",body);
   
@@ -100,7 +100,7 @@ public class testhhc {
    	    //新建审批条目 在审批信息表 approval_inner_base_infos中0558
    	    //返回审批uuid
    	  // String url = "http://120.26.120.57:8080/apparel/special/list";
-   	    String url = "http://localhost:8080/zzb-admin-api/manager/add";
+   	    String url = "http://localhost:8080/zzb-admin-api/order/transferOrder";
    	 //String url = "http://192.168.73.1:8080/user/phone/login";
       // String url = "http://test.appring.cn:8080/fastask/question/show"; /* * * * * * root wget http://test.appring.cn:8080/fastask/energy/timing -q -O /usr/local/time/timelog
  	    HttpPost httpPost = new HttpPost(url);

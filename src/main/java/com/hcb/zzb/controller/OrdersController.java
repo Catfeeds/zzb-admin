@@ -101,18 +101,18 @@ public class OrdersController extends BaseControllers{
 		}else {
 			map.put("orderBy", 2);
 		}
-		String orderNum = bodyInfo.getString("orderNumber");
-		Orders order = orderService.selectByOrderNumber(orderNum);
+		//String orderNum = bodyInfo.getString("orderNumber");
+		//Orders order = orderService.selectByOrderNumber(orderNum);
 		Float mon=0f;
-		if(order!=null){
+		/*if(order!=null){
 			String orderUuid = order.getOrderUuid();
-			/*Map<String, Object> mapp=new HashMap<>();
+			Map<String, Object> mapp=new HashMap<>();
 			map.put("orderUuid", orderUuid);
 			map.put("orderRecordType", 3);
 			map.put("financeType", 2);
-			map.put("payType", 5);*/
+			map.put("payType", 5);
 			mon=financeRecordService.selectMoney(orderUuid);
-		}
+		}*/
 		int count=orderService.countselectByMapLimit(map);
 		if(count==0) {
 			json.put("result", "1");
@@ -132,8 +132,8 @@ public class OrdersController extends BaseControllers{
 			for (Map<String, Object> map2 : list) {
 				try {
 					map2.put("useCarTime", getDatePoor(format.parse(map2.get("returnCarTime").toString()),format.parse(map2.get("takeCarTime").toString())));
-					map2.put("createName", manager.getAccount());
-					map2.put("money", mon);
+					//map2.put("createName", manager.getAccount());
+					//map2.put("money", mon);
 					//Car car=(Car)map2.get("carUuid");
 					String carUuid=(String)map2.get("carUuid");
 					Car car = carService.selectByUuid(carUuid);
@@ -495,6 +495,7 @@ public class OrdersController extends BaseControllers{
 			json.put("description", "请检查参数格式是否正确或者参数是否完整");
 			return buildReqJsonInteger(1, json);
 		}
+		JSONObject headInfo=JSONObject.fromObject(headString);
 		JSONObject bodyInfo=JSONObject.fromObject(bodyString);
 		if(bodyInfo.get("order_uuid")==null) {
 			json.put("result", "1");
@@ -529,6 +530,7 @@ public class OrdersController extends BaseControllers{
 				json.put("description", "错误,该订单的用户不存在");
 				return buildReqJsonObject(json);
 			}
+			Manager manager = managerService.selectByAccount(headInfo.getString("account"));
 			Users userOwner = userService.selectByUserUuid(order.getCarOwnerUuid());
 			if(userOwner==null){
 				json.put("result", "1");
@@ -547,20 +549,34 @@ public class OrdersController extends BaseControllers{
 				Float float2 = Float.valueOf(total.toString());
 				userOwner.setBalance(float2);
 				userService.updateByPrimaryKeySelective(userOwner);
-				
+				Float transfer=order.getTransfer();
+				String createChange = order.getCreateChange();
+				if(order.getTransfer()==null){
+					transfer=0f;
+				}
+				order.setTransfer(transfer+float1);
+				if(createChange==null){
+					order.setCreateChange(manager.getAccount());
+					//String ss=order.getCreateChange();
+					//System.out.println(ss);
+				}else{
+					order.setCreateChange(manager.getAccount()+","+createChange);
+				}
+				//String ss=order.getCreateChange();
+				orderService.updateByPrimaryKey(order);
 				//收支明细
-				FinanceRecord finance1=new FinanceRecord();
+				/*FinanceRecord finance1=new FinanceRecord();
 				finance1.setCreateAt(new Date());
 				finance1.setFinanceRecordUuid(UUID.randomUUID().toString().replaceAll("-", ""));
 				finance1.setFinanceType(2);//交易类型；1：收入；2：支出
-				//finance1.setMoney(deposit-penalty);
+				finance1.setMoney(float1);
 				finance1.setOrderRecordType(3);//订单记录类型；1：押金；2：租车费用；3：赔偿费用;
 				finance1.setOrderUuid(order.getOrderUuid());
-				finance1.setRecordType(5);//记录类型；1：充值；2：提现；3：订单；4：平台收费
+				finance1.setRecordType(5);//记录类型；1：充值；2：提现；3：订单；4：平台收费5:系统 
 				finance1.setUserUuid(order.getCarOwnerUuid());
 				finance1.setPayType(5);//支付方式：1：余额；2：支付宝；3：微信；4：银行卡5:系统 
 				finance1.setPayWay(3);;//支付渠道：1:APP; 2:H5 3:系统 
-				financeRecordService.insertSelective(finance1);
+				financeRecordService.insertSelective(finance1);*/
 				
 				
 				//平台账户减去

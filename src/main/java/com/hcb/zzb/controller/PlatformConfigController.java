@@ -259,6 +259,8 @@ public class PlatformConfigController extends BaseControllers{
 						newpo.setTotalPrice(order.getTotalPrice()==null?0f:order.getTotalPrice());
 						newpo.setDeposit(order.getDeposit()==null?0f:order.getDeposit());
 						newpo.setDepositStatus(order.getDepositStatus()==null?0:order.getDepositStatus());
+						newpo.setTransfer(order.getTransfer()==null?0f:order.getTransfer());
+						newpo.setCreateChange(order.getCreateChange()==null?"":order.getCreateChange());
 						if(newpo!=null){
 							financeRecord.setPlat(newpo);
 						}

@@ -16,9 +16,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.hcb.zzb.controller.base.BaseControllers;
+import com.hcb.zzb.dto.Manager;
 import com.hcb.zzb.dto.PushInfo;
 import com.hcb.zzb.dto.Users;
 import com.hcb.zzb.dto.WithdrawalsRecord;
+import com.hcb.zzb.service.IManagerService;
 import com.hcb.zzb.service.IPushInfoService;
 import com.hcb.zzb.service.IUsersService;
 import com.hcb.zzb.service.IWithdrawalsRecordService;
@@ -35,7 +37,8 @@ public class WithdrawalsRecordController extends BaseControllers{
 	private IUsersService userService;
 	@Autowired
 	private IPushInfoService pushInfoService;
-	
+	@Autowired
+	IManagerService managerService;
 	/**
 	 * 提现记录列表
 	 * @return
@@ -49,6 +52,7 @@ public class WithdrawalsRecordController extends BaseControllers{
 			json.put("description", "请检查参数格式是否正确或者参数是否完整");
 			return buildReqJsonInteger(1, json);
 		}
+		JSONObject headInfo=JSONObject.fromObject(headString);
 		JSONObject bodyInfo=JSONObject.fromObject(bodyString);
 		if(bodyInfo.get("pageIndex")==null||bodyInfo.get("pageSize")==null) {
 			json.put("result", "1");
@@ -88,6 +92,7 @@ public class WithdrawalsRecordController extends BaseControllers{
 		}else {
 			map.put("orderBy", 2);
 		}
+		Manager manager = managerService.selectByAccount(headInfo.getString("account"));
 		int count = withdrawalsRecordService.countSelectByMapLimit(map);
 		if(count==0) {
 			json.put("result", "1");
@@ -121,7 +126,6 @@ public class WithdrawalsRecordController extends BaseControllers{
 			for (WithdrawalsRecord withdrawalsRecord : newlist) {
 				
 				Users user =userService.selectByUserUuid(withdrawalsRecord.getApplyUuid());
-
 				Map<String, Object> nmap=new HashMap<>();
 				nmap.put("withdrawalsRecordUuid", withdrawalsRecord.getWithdrawalsRecordUuid());
 				nmap.put("id", withdrawalsRecord.getId());
@@ -135,6 +139,12 @@ public class WithdrawalsRecordController extends BaseControllers{
 				nmap.put("handleTime", withdrawalsRecord.getHandleTime()==null?"":new SimpleDateFormat().format(withdrawalsRecord.getHandleTime()));
 				nmap.put("handleDsp", withdrawalsRecord.getHandleDsp()==null?"":withdrawalsRecord.getHandleDsp());
 				nmap.put("status", withdrawalsRecord.getApplyStatus()==null?1:withdrawalsRecord.getApplyStatus());
+				if(withdrawalsRecord.getHandleUuid()!=null){
+					Manager nana = managerService.selectByAccountUuid(withdrawalsRecord.getHandleUuid());
+					if(nana!=null){
+						nmap.put("createName", nana.getAccount());
+					}
+				}
 				lists.add(nmap);
 			}
 			
@@ -242,7 +252,7 @@ public class WithdrawalsRecordController extends BaseControllers{
 			return buildReqJsonInteger(1, json);
 		}
 		JSONObject bodyInfo=JSONObject.fromObject(bodyString);
-		
+		JSONObject headInfo=JSONObject.fromObject(headString);
 		if(bodyInfo.get("id")==null) {
 			json.put("result", "1");
 			json.put("description", "请检查参数是否正确或者完整");

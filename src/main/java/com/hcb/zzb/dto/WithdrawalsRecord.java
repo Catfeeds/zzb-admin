@@ -32,8 +32,18 @@ public class WithdrawalsRecord {
     private Date handleTime;
 
     private String handleDsp;
+    private String createName;
+    
 
-    public Integer getId() {
+    public String getCreateName() {
+		return createName;
+	}
+
+	public void setCreateName(String createName) {
+		this.createName = createName;
+	}
+
+	public Integer getId() {
         return id;
     }
 
