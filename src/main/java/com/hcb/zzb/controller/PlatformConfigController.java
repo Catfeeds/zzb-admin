@@ -99,13 +99,21 @@ public class PlatformConfigController extends BaseControllers{
 		ModelMap model=new ModelMap();
 		//总营收（历史成功订单总数）
 		Float totalmoney =orderService.selectMoney();
+		if(totalmoney==null){
+			totalmoney=0f;
+		}
 		model.put("totalmoney", 0 * totalmoney);
 		//历史新高（日期-金额）
 		Float highmoney =orderService.selectHighMoney();
-		
+		if(highmoney==null){
+			highmoney=0f;
+		}
 		model.put("highmoney", 0 * highmoney);
 		//押金池，
 		Float poolmoney =orderService.selectPoolMoney();
+		if(poolmoney==null){
+			poolmoney=0f;
+		}
 		model.put("poolmoney", poolmoney);
 		//平台账户收支明细列表
 		//订单状态（预定成功，服务中，已还车，已结案）
