@@ -482,8 +482,10 @@ public class UsersController extends BaseControllers{
 		}
 		Users user=usersService.selectByUserUuid(bodyInfo.getString("user_uuid"));
 		if(user!=null) {
-			
+			int rs=0;
 			if(bodyInfo.getInt("user_status")==4){
+				user.setUserStatus(bodyInfo.getInt("user_status"));
+				rs=usersService.updateByPrimaryKeySelective(user);
 				String userUuid = user.getUserUuid();
 				List<Car> cars = carService.selectByUserUuid(userUuid);
 				if(cars.size()>0){
@@ -494,11 +496,25 @@ public class UsersController extends BaseControllers{
 						}
 					}
 				}
+			}else if(bodyInfo.getInt("user_status")==2){
+				user.setUserStatus(bodyInfo.getInt("user_status"));
+				rs=usersService.updateByPrimaryKeySelective(user);
+					String userUuid = user.getUserUuid();
+					List<Car> cars = carService.selectByUserUuid(userUuid);
+					if(cars.size()>0){
+						for (Car car : cars) {
+							if(car!=null){
+								car.setIsSail(1);
+								carService.updateByPrimaryKey(car);
+							}
+						}
+					}
+			}else{
+				user.setUserStatus(bodyInfo.getInt("user_status"));
+				rs=usersService.updateByPrimaryKeySelective(user);
 			}
-			
-			user.setUserStatus(bodyInfo.getInt("user_status"));
-			int rs=0;
-			rs=usersService.updateByPrimaryKeySelective(user);
+			//user.setUserStatus(bodyInfo.getInt("user_status"));
+			//rs=usersService.updateByPrimaryKeySelective(user);
 			if(rs==1) {
 				json.put("result", "0");
 				json.put("description", "操作成功");
@@ -661,6 +677,10 @@ public class UsersController extends BaseControllers{
 			json.put("description", "请检查参数格式是否正确");
 			return buildReqJsonObject(json);
 		}
+		
+		
+		
+		
 		Users user=usersService.selectByUserUuid(bodyInfo.getString("user_uuid"));
 		List<Car> carList=carService.selectByUserUuid(bodyInfo.getString("user_uuid"));
 		ModelMap model=new ModelMap();
@@ -807,16 +827,22 @@ public class UsersController extends BaseControllers{
 				}
 			}*/
 			int rs=0;
+			System.out.println("----------------------------------1");
 			if(bodyInfo.getInt("user_status")==2){
+				System.out.println("----------------------------------2");
 				user.setUserStatus(bodyInfo.getInt("user_status"));
 				rs=usersService.updateByPrimaryKeySelective(user);
+				System.out.println("----------------------------------3");
 					String userUuid = user.getUserUuid();
 					List<Car> cars = carService.selectByUserUuid(userUuid);
+					System.out.println("----------------------------------4");
 					if(cars.size()>0){
+						System.out.println("----------------------------------5");
 						for (Car car : cars) {
 							if(car!=null){
 								car.setIsSail(1);
 								carService.updateByPrimaryKey(car);
+								System.out.println("----------------------------------6");
 							}
 						}
 					}
