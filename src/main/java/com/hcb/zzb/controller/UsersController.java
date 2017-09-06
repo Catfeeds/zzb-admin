@@ -810,6 +810,17 @@ public class UsersController extends BaseControllers{
 			if(bodyInfo.getInt("user_status")==2){
 				user.setUserStatus(bodyInfo.getInt("user_status"));
 				rs=usersService.updateByPrimaryKeySelective(user);
+					String userUuid = user.getUserUuid();
+					List<Car> cars = carService.selectByUserUuid(userUuid);
+					if(cars.size()>0){
+						for (Car car : cars) {
+							if(car!=null){
+								car.setIsSail(1);
+								carService.updateByPrimaryKey(car);
+							}
+						}
+					}
+				
 			}else{
 				user.setUserStatus(bodyInfo.getInt("user_status"));
 				rs=usersService.updateByPrimaryKeySelective(user);
