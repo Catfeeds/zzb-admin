@@ -17,10 +17,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.hcb.zzb.controller.base.BaseControllers;
 import com.hcb.zzb.dto.Manager;
+import com.hcb.zzb.dto.PlatformConfig;
 import com.hcb.zzb.dto.PushInfo;
 import com.hcb.zzb.dto.Users;
 import com.hcb.zzb.dto.WithdrawalsRecord;
 import com.hcb.zzb.service.IManagerService;
+import com.hcb.zzb.service.IPlatformConfigService;
 import com.hcb.zzb.service.IPushInfoService;
 import com.hcb.zzb.service.IUsersService;
 import com.hcb.zzb.service.IWithdrawalsRecordService;
@@ -39,6 +41,8 @@ public class WithdrawalsRecordController extends BaseControllers{
 	private IPushInfoService pushInfoService;
 	@Autowired
 	IManagerService managerService;
+	@Autowired
+	private IPlatformConfigService platformConfigService;
 	/**
 	 * 提现记录列表
 	 * @return
@@ -279,6 +283,18 @@ public class WithdrawalsRecordController extends BaseControllers{
 				if(rs == 1) {
 					json.put("result", "0");
 					json.put("description", "操作成功");
+					
+					//平台账户减去
+					//只有审核通过后才把平台账户减去
+					List<PlatformConfig> platforms = new ArrayList<>();
+					platforms = platformConfigService.selectAll();
+					if(!platforms.isEmpty()) {
+						PlatformConfig platform=platforms.get(0);
+						float blan = platform.getBalance();
+						platform.setBalance(blan-withdrawalsRecord.getMoney());
+						platformConfigService.updateByPrimaryKeySelective(platform);
+					}
+					
 					//推送消息
 					PushInfo push = new PushInfo();
 					push.setCreateDatetime(new Date());

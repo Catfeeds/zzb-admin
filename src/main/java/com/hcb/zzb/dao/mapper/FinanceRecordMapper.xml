@@ -70,7 +70,7 @@
     <if test="user_uuid !='' and user_uuid != null">
     	and user_uuid=#{user_uuid,jdbcType=VARCHAR}
     </if>
-    and record_type in(2,4)
+    and record_type =2
   </select>
   
   <select id="selectByUuid" resultMap="BaseResultMap" parameterType="java.lang.String">

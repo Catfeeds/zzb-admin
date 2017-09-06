@@ -177,6 +177,9 @@ public class PlatformConfigController extends BaseControllers{
 			}else {
 				model.put("expenditure", 0);
 			}
+			//单独计算WithdrawalsRecord为  
+			
+			
 			/*PlatformConfig platform = platformConfigService.selectByPrimaryKey(39);
 			if(platform==null) {
 				json.put("result", "1");

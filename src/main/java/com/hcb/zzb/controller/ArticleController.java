@@ -216,9 +216,9 @@ public class ArticleController extends BaseControllers{
 			return buildReqJsonObject(json);
 		}
 /*		if(bodyInfo.getInt("articleType")==1){
-			article2.setLink("http://app.zzbcar.com/zzb-java/toActivePage?articleUuid="+article2.getArticleUuid());
+			article2.setLink("http://zzbtest.cto1024.com/zzb-java/toActivePage?articleUuid="+article2.getArticleUuid());
 		}else if(bodyInfo.getInt("articleType")==2){
-			article2.setLink("http://app.zzbcar.com/zzb-java/tofindPage?articleUuid="+article2.getArticleUuid());
+			article2.setLink("http://zzbtest.cto1024.com/zzb-java/tofindPage?articleUuid="+article2.getArticleUuid());
 		}else{
 			json.put("result", "1");
 			json.put("description", "参数articleType文章类型必须为1或者2");
@@ -371,9 +371,9 @@ public class ArticleController extends BaseControllers{
 		article.setCarIdList(carID1+","+carID2);
 		article.setActivityCat(bodyInfo.getInt("activityCarID"));
 		if(bodyInfo.getInt("articleType")==1){
-			article.setLink("http://app.zzbcar.com/zzb-java/toActivePage?articleUuid="+article.getArticleUuid());
+			article.setLink("http://zzbtest.cto1024.com/zzb-java/toActivePage?articleUuid="+article.getArticleUuid());
 		}else if(bodyInfo.getInt("articleType")==2){
-			article.setLink("http://app.zzbcar.com/zzb-java/tofindPage?articleUuid="+article.getArticleUuid());
+			article.setLink("http://zzbtest.cto1024.com/zzb-java/tofindPage?articleUuid="+article.getArticleUuid());
 		}else{
 			json.put("result", "1");
 			json.put("description", "参数articleType文章类型必须为1或者2");

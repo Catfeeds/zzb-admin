@@ -49,9 +49,10 @@ public class testhhc {
         //body.put("id", 11);
        // body.put("operation_picture", "http://living.cto1024.com/10c7855f31113a24745cdff9213549dc.jpg");
        // body.put("is_display", 2);
-       body.put("pageIndex", 1);
-       body.put("pageSize", 20);
-       body.put("money", 0.01);
+      // body.put("pageIndex", 1);
+       //body.put("pageSize", 20);
+       body.put("user_uuid", "57666b5ab1a3745fff7d763e4f949d4e");
+       body.put("user_status", 2);
        //body.put("orderNumber", "D20170831152124102049");
       
 
@@ -87,7 +88,7 @@ public class testhhc {
         body.put("model", "3");
         body.put("driving_license_photo", "2");
         body.put("order_uuid", "675cd2063021e7a100d8536196dcb7f0");*/
-       body.put("order_uuid", "fab59fc3bf9f1355ed21da2d72f14ca3");
+       //body.put("order_uuid", "fab59fc3bf9f1355ed21da2d72f14ca3");
         
         map.put("body",body);
   
@@ -100,7 +101,7 @@ public class testhhc {
    	    //新建审批条目 在审批信息表 approval_inner_base_infos中0558
    	    //返回审批uuid
    	  // String url = "http://120.26.120.57:8080/apparel/special/list";
-   	    String url = "http://localhost:8080/zzb-admin-api/order/transferOrder";
+   	    String url = "http://localhost:8080/zzb-admin-api/user/blackAndActivate";
    	 //String url = "http://192.168.73.1:8080/user/phone/login";
       // String url = "http://test.appring.cn:8080/fastask/question/show"; /* * * * * * root wget http://test.appring.cn:8080/fastask/energy/timing -q -O /usr/local/time/timelog
  	    HttpPost httpPost = new HttpPost(url);
