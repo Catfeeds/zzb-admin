@@ -143,6 +143,7 @@ public class WithdrawalsRecordController extends BaseControllers{
 				nmap.put("handleTime", withdrawalsRecord.getHandleTime()==null?"":new SimpleDateFormat().format(withdrawalsRecord.getHandleTime()));
 				nmap.put("handleDsp", withdrawalsRecord.getHandleDsp()==null?"":withdrawalsRecord.getHandleDsp());
 				nmap.put("status", withdrawalsRecord.getApplyStatus()==null?1:withdrawalsRecord.getApplyStatus());
+				nmap.put("bank", withdrawalsRecord.getBank()==null?"未知银行卡信息":withdrawalsRecord.getBank());
 				if(withdrawalsRecord.getHandleUuid()!=null){
 					Manager nana = managerService.selectByAccountUuid(withdrawalsRecord.getHandleUuid());
 					if(nana!=null){
