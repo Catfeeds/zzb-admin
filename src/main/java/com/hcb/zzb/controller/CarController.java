@@ -276,7 +276,7 @@ public class CarController extends BaseControllers{
 					}
 				   Integer rs1 = pushInfoService.insertSelective(push);
 					if(rs1==1){
-						String url = "http://zzbtest.cto1024.com/zzb-java/phppushinfo";
+						String url = "http://app.zzbcar.com/zzb-java/phppushinfo";
 						String str = HttpGet.sendGet(url, "push_uuid="+push.getPushUuid());
 						System.out.println("================="+str);
 						//推送消息
@@ -284,7 +284,7 @@ public class CarController extends BaseControllers{
 							public void run() {
 								PushInfo pushInfo = pushInfoService.selectByPushUuid(push.getPushUuid());
 								if(pushInfo!=null){
-									String url = "http://zzbtest.cto1024.com/zzb-java/phppushinfo";
+									String url = "http://app.zzbcar.com/zzb-java/phppushinfo";
 									String str = HttpGet.sendGet(url, "push_uuid="+push.getPushUuid());
 									System.out.println("================="+str);
 								}
@@ -310,7 +310,7 @@ public class CarController extends BaseControllers{
 					}
 				   Integer rs1 = pushInfoService.insertSelective(push);
 					if(rs1==1){
-						String url = "http://zzbtest.cto1024.com/zzb-java/phppushinfo";
+						String url = "http://app.zzbcar.com/zzb-java/phppushinfo";
 						String str = HttpGet.sendGet(url, "push_uuid="+push.getPushUuid());
 						System.out.println("================="+str);
 						//推送消息
@@ -318,7 +318,7 @@ public class CarController extends BaseControllers{
 							public void run() {
 								PushInfo pushInfo = pushInfoService.selectByPushUuid(push.getPushUuid());
 								if(pushInfo!=null){
-									String url = "http://zzbtest.cto1024.com/zzb-java/phppushinfo";
+									String url = "http://app.zzbcar.com/zzb-java/phppushinfo";
 									String str = HttpGet.sendGet(url, "push_uuid="+push.getPushUuid());
 									System.out.println("================="+str);
 								}
@@ -344,7 +344,7 @@ public class CarController extends BaseControllers{
 					}
 				   Integer rs1 = pushInfoService.insertSelective(push);
 					if(rs1==1){
-						String url = "http://zzbtest.cto1024.com/zzb-java/phppushinfo";
+						String url = "http://app.zzbcar.com/zzb-java/phppushinfo";
 						String str = HttpGet.sendGet(url, "push_uuid="+push.getPushUuid());
 						System.out.println("================="+str);
 						//推送消息
@@ -352,7 +352,7 @@ public class CarController extends BaseControllers{
 							public void run() {
 								PushInfo pushInfo = pushInfoService.selectByPushUuid(push.getPushUuid());
 								if(pushInfo!=null){
-									String url = "http://zzbtest.cto1024.com/zzb-java/phppushinfo";
+									String url = "http://app.zzbcar.com/zzb-java/phppushinfo";
 									String str = HttpGet.sendGet(url, "push_uuid="+push.getPushUuid());
 									System.out.println("================="+str);
 								}
@@ -378,7 +378,7 @@ public class CarController extends BaseControllers{
 					}
 				   Integer rs1 = pushInfoService.insertSelective(push);
 					if(rs1==1){
-						String url = "http://zzbtest.cto1024.com/zzb-java/phppushinfo";
+						String url = "http://app.zzbcar.com/zzb-java/phppushinfo";
 						String str = HttpGet.sendGet(url, "push_uuid="+push.getPushUuid());
 						System.out.println("================="+str);
 						//推送消息
@@ -386,7 +386,7 @@ public class CarController extends BaseControllers{
 							public void run() {
 								PushInfo pushInfo = pushInfoService.selectByPushUuid(push.getPushUuid());
 								if(pushInfo!=null){
-									String url = "http://zzbtest.cto1024.com/zzb-java/phppushinfo";
+									String url = "http://app.zzbcar.com/zzb-java/phppushinfo";
 									String str = HttpGet.sendGet(url, "push_uuid="+push.getPushUuid());
 									System.out.println("================="+str);
 								}

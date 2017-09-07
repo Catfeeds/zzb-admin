@@ -262,7 +262,7 @@ public class MessageBaseController extends BaseControllers {
 				}
 			   Integer rs1 = pushInfoService.insertSelective(push);
 				if(rs1==1){
-					String url = "http://zzbtest.cto1024.com/zzb-admin-java/phppushinfo";
+					String url = "http://app.zzbcar.com/zzb-admin-java/phppushinfo";
 					String str = HttpGet.sendGet(url, "push_uuid="+push.getPushUuid());
 					System.out.println("================="+str);
 					//推送消息
@@ -270,7 +270,7 @@ public class MessageBaseController extends BaseControllers {
 						public void run() {
 							PushInfo pushInfo = PushInfoService.selectByPushUuid(push.getPushUuid());
 							if(pushInfo!=null){
-								String url = "http://zzbtest.cto1024.com/zzb-java/phppushinfo";
+								String url = "http://app.zzbcar.com/zzb-java/phppushinfo";
 								String str = HttpGet.sendGet(url, "push_uuid="+push.getPushUuid());
 								System.out.println("================="+str);
 							}
