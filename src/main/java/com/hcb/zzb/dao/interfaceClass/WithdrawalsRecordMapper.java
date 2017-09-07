@@ -27,4 +27,6 @@ public interface WithdrawalsRecordMapper {
     int countSelectByMapLimit(Map<String, Object> map);
 
 	Float selectAlreadyMoney(String userUuid);
+
+	List<WithdrawalsRecord> selectByAgree(Map<String, Object> tmap1);
 }

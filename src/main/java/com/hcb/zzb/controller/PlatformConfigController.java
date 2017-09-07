@@ -19,12 +19,14 @@ import com.hcb.zzb.dto.FinanceRecord;
 import com.hcb.zzb.dto.Orders;
 import com.hcb.zzb.dto.PlatformConfig;
 import com.hcb.zzb.dto.Users;
+import com.hcb.zzb.dto.WithdrawalsRecord;
 import com.hcb.zzb.dto.platformPo;
 import com.hcb.zzb.service.ICarSevice;
 import com.hcb.zzb.service.IFinanceRecordService;
 import com.hcb.zzb.service.IOrderService;
 import com.hcb.zzb.service.IPlatformConfigService;
 import com.hcb.zzb.service.IUsersService;
+import com.hcb.zzb.service.IWithdrawalsRecordService;
 import com.hcb.zzb.util.DateUtil;
 import com.hcb.zzb.util.StringUtil;
 
@@ -42,6 +44,8 @@ public class PlatformConfigController extends BaseControllers{
 	IUsersService usersService;
 	@Autowired
 	private ICarSevice carService;
+	@Autowired
+	private IWithdrawalsRecordService withdrawalsRecordService;
 	/**
 	 * 平台账户收支明细列表
 	 * @return
@@ -161,8 +165,8 @@ public class PlatformConfigController extends BaseControllers{
 			}else {
 				model.put("expenditure", 0);
 			}*/
-			//////////
-			
+			//暂时不用
+			/*
 			Map<String, Object> tmap1=new HashMap<>();
 			//tmap1.put("recordType", 4);//记录类型；1：充值；2：提现；3：订单；4：平台收费
 			tmap1.put("financeType", 2);//1收入 2支出
@@ -177,8 +181,23 @@ public class PlatformConfigController extends BaseControllers{
 			}else {
 				model.put("expenditure", 0);
 			}
-			//单独计算WithdrawalsRecord为  
-			
+			*/
+			//注意：逻辑被修改了，上面备注掉的暂时不用
+			//单独计算WithdrawalsRecord为支出的情况  
+			Map<String, Object> tmap1=new HashMap<>();
+			//tmap1.put("recordType", 4);//记录类型；1：充值；2：提现；3：订单；4：平台收费
+			tmap1.put("applyStatus", 2);//1：申请中；2：已通过；3：已决绝(已驳回)
+			List<WithdrawalsRecord> newlist = withdrawalsRecordService.selectByAgree(tmap1);
+			if(newlist!=null&&!newlist.isEmpty()) {
+				float todayExpenditureTotal = 0;
+				for (WithdrawalsRecord withdrawalsRecord : newlist) {
+					todayExpenditureTotal = todayExpenditureTotal + withdrawalsRecord.getMoney();
+				}
+				model.put("expenditure", (float)(Math.round(todayExpenditureTotal*100))/100);
+				
+			}else {
+				model.put("expenditure", 0);
+			}
 			
 			/*PlatformConfig platform = platformConfigService.selectByPrimaryKey(39);
 			if(platform==null) {
