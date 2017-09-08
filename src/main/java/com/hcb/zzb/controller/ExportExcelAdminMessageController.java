@@ -82,15 +82,33 @@ public class ExportExcelAdminMessageController<T> extends BaseControllers{
 		for (AdminMessage adminMessage : list) {
 			AdminMessageExport ae=new AdminMessageExport();
 			ae.setSerialNumber(i);
-			if(adminMessage.getMessageType()==1) {
-				ae.setMessageType("类型一");
-			}else if(adminMessage.getMessageType()==2) {
-				ae.setMessageType("类型二");
-			}else {
-				ae.setMessageType("未知");
+			//消息类型  1:提现申请 2：上传车辆  3：个人资料
+			if(adminMessage.getMessageType()==null){
+				ae.setMessageType("--");
+			}else{
+				if(adminMessage.getMessageType()==1) {
+					ae.setMessageType("提现申请");
+				}else if(adminMessage.getMessageType()==2) {
+					ae.setMessageType("上传车辆");
+				}else if(adminMessage.getMessageType()==3){
+					ae.setMessageType("个人资料");
+				}else {
+					ae.setMessageType("--");
+				}
 			}
-			ae.setMessageContent(adminMessage.getMessageContent());
-			ae.setStatus("未知");
+			ae.setMessageContent(adminMessage.getMessageContent()==null?"":adminMessage.getMessageContent());
+			if(adminMessage.getIsRead()==null){
+				ae.setStatus("--");
+			}else{
+				if(adminMessage.getIsRead()==1){
+					ae.setStatus("未读");
+				}else if(adminMessage.getIsRead()==2){
+					ae.setStatus("已读");
+				}else{
+					ae.setStatus("--");
+				}
+			}
+			
 			ae.setDate(adminMessage.getCreateAt()==null?"":format.format(adminMessage.getCreateAt()));
 			exportList.add(ae);
 			i++;

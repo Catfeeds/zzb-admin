@@ -215,7 +215,16 @@ public class ArticleController extends BaseControllers{
 			json.put("description", "参数articleType文章类型必须为1或者2");
 			return buildReqJsonObject(json);
 		}
-		int rs =articleService.updateByPrimaryKeySelective(article2);
+/*		if(bodyInfo.getInt("articleType")==1){
+			article2.setLink("http://app.zzbcar.com/zzb-java/toActivePage?articleUuid="+article2.getArticleUuid());
+		}else if(bodyInfo.getInt("articleType")==2){
+			article2.setLink("http://app.zzbcar.com/zzb-java/tofindPage?articleUuid="+article2.getArticleUuid());
+		}else{
+			json.put("result", "1");
+			json.put("description", "参数articleType文章类型必须为1或者2");
+			return buildReqJsonObject(json);
+		}
+*/		int rs =articleService.updateByPrimaryKeySelective(article2);
 		if(id>0 && rs ==1) {
 			json.put("result", "0");
 			json.put("description", "新建文章成功");

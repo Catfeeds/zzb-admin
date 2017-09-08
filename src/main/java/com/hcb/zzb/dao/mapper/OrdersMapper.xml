@@ -36,13 +36,15 @@
     <result column="evaluate_dsp" property="evaluateDsp" jdbcType="VARCHAR" />
     <result column="take_car_address_map" property="takeCarAddressMap" jdbcType="VARCHAR" />
     <result column="return_car_address_map" property="returnCarAddressMap" jdbcType="VARCHAR" />
+    <result column="transfer" property="transfer" jdbcType="REAL" />
+    <result column="create_change" property="createChange" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, create_at, update_at, delete_at, order_uuid, order_number, user_uuid, car_owner_uuid, 
     car_uuid, start_time, end_time, take_car_time, take_car_address, return_car_time, 
     return_car_address, is_damage, damage_dsp, damage_picture, compensate_money, closing_time, 
     deposit, deposit_status, lease_price, insurance_price, other_price, total_price, 
-    pay_time, order_status, pay_type, order_remark, evaluate_score, evaluate_dsp
+    pay_time, order_status, pay_type, order_remark, evaluate_score, evaluate_dsp,transfer,create_change
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -130,7 +132,7 @@
   </select>
   
   <select id="selectPoolMoney" resultType="java.lang.Float" >
-    SELECT SUM(total_price) FROM orders WHERE delete_at IS NULL AND  deposit_status=2
+    SELECT SUM(deposit) FROM orders WHERE delete_at IS NULL AND  deposit_status=2
   </select>
   
   <select id="selectCountByUserUuid" resultType="int" parameterType="java.lang.String" >
@@ -182,6 +184,8 @@
     o.order_remark AS orderRemark, 
     o.evaluate_score AS evaluateScore,  
     o.evaluate_dsp AS evaluateDsp,
+    o.transfer AS money,
+    o.create_change AS createChange,
     u.user_name AS userName
   	from orders o left join users u on o.user_uuid=u.user_uuid
   	<where>
@@ -233,7 +237,7 @@
       deposit_status, lease_price, insurance_price, 
       other_price, total_price, pay_time, 
       order_status, pay_type, order_remark, 
-      evaluate_score, evaluate_dsp)
+      evaluate_score, evaluate_dsp,transfer,create_change)
     values (#{id,jdbcType=INTEGER}, #{createAt,jdbcType=TIMESTAMP}, #{updateAt,jdbcType=TIMESTAMP}, 
       #{deleteAt,jdbcType=TIMESTAMP}, #{orderUuid,jdbcType=VARCHAR}, #{orderNumber,jdbcType=VARCHAR}, 
       #{userUuid,jdbcType=VARCHAR}, #{carOwnerUuid,jdbcType=VARCHAR}, #{carUuid,jdbcType=VARCHAR}, 
@@ -244,7 +248,7 @@
       #{depositStatus,jdbcType=INTEGER}, #{leasePrice,jdbcType=REAL}, #{insurancePrice,jdbcType=REAL}, 
       #{otherPrice,jdbcType=REAL}, #{totalPrice,jdbcType=REAL}, #{payTime,jdbcType=TIMESTAMP}, 
       #{orderStatus,jdbcType=INTEGER}, #{payType,jdbcType=INTEGER}, #{orderRemark,jdbcType=VARCHAR}, 
-      #{evaluateScore,jdbcType=INTEGER}, #{evaluateDsp,jdbcType=VARCHAR})
+      #{evaluateScore,jdbcType=INTEGER}, #{evaluateDsp,jdbcType=VARCHAR}, #{transfer,jdbcType=REAL}, #{createChange,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.hcb.zzb.dto.Orders" >
     insert into orders
@@ -345,6 +349,12 @@
       <if test="evaluateDsp != null" >
         evaluate_dsp,
       </if>
+      <if test="transfer != null" >
+        transfer,
+      </if>
+      <if test="create_change != null" >
+        create_change,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -442,6 +452,12 @@
       </if>
       <if test="evaluateDsp != null" >
         #{evaluateDsp,jdbcType=VARCHAR},
+      </if>
+      <if test="transfer != null" >
+        #{transfer,jdbcType=REAL},
+      </if>
+      <if test="createChange != null" >
+        #{createChange,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -541,6 +557,12 @@
       <if test="evaluateDsp != null" >
         evaluate_dsp = #{evaluateDsp,jdbcType=VARCHAR},
       </if>
+      <if test="transfer != null" >
+        transfer = #{transfer,jdbcType=REAL},
+      </if>
+      <if test="createChange != null" >
+        create_change = #{createChange,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -576,7 +598,9 @@
       pay_type = #{payType,jdbcType=INTEGER},
       order_remark = #{orderRemark,jdbcType=VARCHAR},
       evaluate_score = #{evaluateScore,jdbcType=INTEGER},
-      evaluate_dsp = #{evaluateDsp,jdbcType=VARCHAR}
+      evaluate_dsp = #{evaluateDsp,jdbcType=VARCHAR},
+      transfer = #{transfer,jdbcType=REAL},
+      create_change = #{createChange,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

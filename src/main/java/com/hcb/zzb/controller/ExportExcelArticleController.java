@@ -81,17 +81,21 @@ public class ExportExcelArticleController<T> extends BaseControllers{
 		for (Article article : list) {
 			ArticleExport ae=new ArticleExport();
 			ae.setSerialNumber(i);
-			ae.setTitle(article.getTittle());
-			ae.setContent(article.getArticleContent());
-			if(article.getArticleType()==1) {
-				ae.setStatus("超值体验");
-			}else if(article.getArticleType()==2) {
-				ae.setStatus("发现");
-			}else {
-				ae.setStatus("未知");
+			ae.setTitle(article.getTittle()==null?"":article.getTittle());
+			ae.setContent(article.getArticleContent()==null?"":article.getArticleContent());
+			if(article.getArticleType()==null){
+				ae.setStatus("");
+			}else{
+				if(article.getArticleType()==1) {
+					ae.setStatus("超值体验");
+				}else if(article.getArticleType()==2) {
+					ae.setStatus("发现");
+				}else {
+					ae.setStatus("");
+				}
 			}
-			ae.setBrowseTime(article.getBrowseTime());
-			ae.setForwardTime(article.getForwardTime());
+			ae.setBrowseTime(article.getBrowseTime()==null?0:article.getBrowseTime());
+			ae.setForwardTime(article.getForwardTime()==null?0:article.getForwardTime());
 			ae.setDate(article.getCreateAt()==null?"":format.format(article.getCreateAt()));
 			exportList.add(ae);
 			i++;

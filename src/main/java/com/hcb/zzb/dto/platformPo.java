@@ -16,11 +16,34 @@ public class platformPo {
 	private String city;
 	private String orderNumber;
 	private Integer orderStatus;
+	private Integer depositStatus;
+	public Integer getDepositStatus() {
+		return depositStatus;
+	}
+	public void setDepositStatus(Integer depositStatus) {
+		this.depositStatus = depositStatus;
+	}
 	private Date takeCarTime;
 	private Date payTime;
 	private Integer payType;
 	private Float totalPrice;
 	private Float deposit;
+	//转账金额和操作人
+	private Float transfer;
+	private String createChange;
+	
+	public Float getTransfer() {
+		return transfer;
+	}
+	public void setTransfer(Float transfer) {
+		this.transfer = transfer;
+	}
+	public String getCreateChange() {
+		return createChange;
+	}
+	public void setCreateChange(String createChange) {
+		this.createChange = createChange;
+	}
 	public String getUserName() {
 		return userName;
 	}

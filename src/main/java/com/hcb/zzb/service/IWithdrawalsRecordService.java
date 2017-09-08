@@ -25,4 +25,8 @@ public interface IWithdrawalsRecordService {
 	List<WithdrawalsRecord> selectByMapLimit(Map<String, Object> map);
     
     int countSelectByMapLimit(Map<String, Object> map);
+
+	public Float selectAlreadyMoney(String userUuid);
+
+	public List<WithdrawalsRecord> selectByAgree(Map<String, Object> tmap1);
 }

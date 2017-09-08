@@ -60,6 +60,7 @@
     t.ticket_status AS ticketStatus, 
     t.user_uuid AS userUuid,
     t.deal_way AS dealway,
+    t.pictures AS pictures,
     u.user_name AS userName
   	from ticket t 
   	left join users u

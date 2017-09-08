@@ -99,7 +99,7 @@ public class ExportExcelManagerController<T> extends BaseControllers{
 		}
 		
 		ExportExcelManagerController<ManagerExport> ex=new ExportExcelManagerController<ManagerExport>();
-		String[] headers =  { "序号", "消息类型", "消息内容","状态", "时间"};
+		String[] headers =  { "序号", "账号", "密码","联系人","状态","时间"};
 		String avatar = "";
 		
 		try  

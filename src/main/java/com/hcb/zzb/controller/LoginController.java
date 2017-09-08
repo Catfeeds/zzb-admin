@@ -48,6 +48,7 @@ public class LoginController extends BaseControllers {
 				}else{
 					json.put("result", 0);
 					json.put("description", "登录成功");
+					json.put("managerLogin", managerLogin);
 				}
 			}
 		}

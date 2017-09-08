@@ -299,6 +299,7 @@ public class TicketController extends BaseControllers{
 			model.put("points", ticket.getPoints());
 			model.put("illegalCode", ticket.getIllegalCode());
 			model.put("ticketStatus", ticket.getTicketStatus());
+			model.put("pictures", ticket.getPictures()==null?"":ticket.getPictures());
 		}else {
 			model.put("result", "1");
 			model.put("description", "查询失败");
@@ -353,6 +354,8 @@ public class TicketController extends BaseControllers{
 	 * 修改罚单状态
 	 * @return
 	 */
+	///车主/违章信息（可附图）/罚款/扣分/
+	
 	@RequestMapping(value="updateStatus",method=RequestMethod.POST)
 	@ResponseBody
 	public String updateTicketStatus() {
@@ -363,32 +366,121 @@ public class TicketController extends BaseControllers{
 			return buildReqJsonInteger(1, json);
 		}
 		JSONObject bodyInfo=JSONObject.fromObject(bodyString);
-		if(bodyInfo.get("ticketUuid")==null||bodyInfo.get("ticketStatus")==null) {
+		if(bodyInfo.get("ticketUuid")==null||bodyInfo.get("ticketStatus")==null||bodyInfo.get("dealWay")==null) {
 			json.put("result", "1");
 			json.put("description", "请检查参数是否完整");
 			return buildReqJsonObject(json);
 		}
-		if("".equals(bodyInfo.get("ticketUuid"))||"".equals(bodyInfo.get("ticketStatus"))) {
+		if("".equals(bodyInfo.get("dealWay"))||"".equals(bodyInfo.get("ticketUuid"))||"".equals(bodyInfo.get("ticketStatus"))) {
 			json.put("result", "1");
 			json.put("description", "请检查参数是否正确");
 			return buildReqJsonObject(json);
 		}
 		ModelMap model=new ModelMap();
-		Ticket ticket=ticketService.selectByTicketUuid(bodyInfo.getString("ticketUuid"));	
-		if(ticket!=null) {
-			ticket.setTicketStatus(bodyInfo.getInt("ticketStatus"));
-			int rs=ticketService.updateByPrimaryKeySelective(ticket);
-			if(rs==1) {
-				model.put("result", "0");
-				model.put("description", "修改状态成功");
+		
+			Ticket ticket=ticketService.selectByTicketUuid(bodyInfo.getString("ticketUuid"));	
+			if(ticket!=null){
+				if(ticket.getTicketStatus()==1){
+					Long i1=new Date().getTime()/1000/60/60/24;
+					Long i2=ticket.getCreateAt().getTime()/1000/60/60/24;
+					long day = (i1-i2) ;
+					if(day>15){
+						//处理方式（自负/委托--价格：扣分*150+罚款金额+50元手续费/单，12分代扣1万元）/已处理凭证上传
+						if(ticket.getPoints()>12){
+							//直接委托
+							Users user = usersService.selectByUserUuid(ticket.getUserUuid());
+							user.setFrozenBalance(user.getFrozenBalance()-10000);
+							int rs0 = usersService.updateByPrimaryKey(user);
+							
+							ticket.setTicketStatus(bodyInfo.getInt("ticketStatus"));
+							ticket.setDealWay(bodyInfo.getInt("dealWay"));
+							int rs=ticketService.updateByPrimaryKeySelective(ticket);
+							if(rs==1&&rs0==1) {
+								model.put("result", "0");
+								model.put("description", "修改状态成功");
+							}else {
+								model.put("result", "1");
+								model.put("description", "修改状态失败");
+							}
+						}else{
+							//自负
+							Float total=ticket.getPoints()*150+ticket.getMoney()+50;
+							Users user = usersService.selectByUserUuid(ticket.getUserUuid());
+							user.setFrozenBalance(user.getFrozenBalance()+10000-total);
+							int rs0 = usersService.updateByPrimaryKey(user);
+							
+							ticket.setTicketStatus(bodyInfo.getInt("ticketStatus"));
+							ticket.setDealWay(bodyInfo.getInt("dealWay"));
+							int rs=ticketService.updateByPrimaryKeySelective(ticket);
+							if(rs==1&&rs0==1) {
+								model.put("result", "0");
+								model.put("description", "修改状态成功");
+							}else {
+								model.put("result", "1");
+								model.put("description", "修改状态失败");
+							}
+						}
+						
+					}else{
+						if(bodyInfo.getInt("dealWay")==1){
+							//自负
+							Users user = usersService.selectByUserUuid(ticket.getUserUuid());
+							user.setFrozenBalance(user.getFrozenBalance()+10000);
+							int rs0 = usersService.updateByPrimaryKey(user);
+							
+							ticket.setTicketStatus(bodyInfo.getInt("ticketStatus"));
+							ticket.setDealWay(bodyInfo.getInt("dealWay"));
+							int rs=ticketService.updateByPrimaryKeySelective(ticket);
+							if(rs==1&&rs0==1) {
+								model.put("result", "0");
+								model.put("description", "修改状态成功");
+							}else {
+								model.put("result", "1");
+								model.put("description", "修改状态失败");
+							}
+						}else{
+							//委托
+							Float total=ticket.getPoints()*150+ticket.getMoney()+50;
+							Users user = usersService.selectByUserUuid(ticket.getUserUuid());
+							user.setFrozenBalance(user.getFrozenBalance()+10000-total);
+							int rs0 = usersService.updateByPrimaryKey(user);
+							
+							ticket.setTicketStatus(bodyInfo.getInt("ticketStatus"));
+							ticket.setDealWay(bodyInfo.getInt("dealWay"));
+							int rs=ticketService.updateByPrimaryKeySelective(ticket);
+							if(rs==1&&rs0==1) {
+								model.put("result", "0");
+								model.put("description", "修改状态成功");
+							}else {
+								model.put("result", "1");
+								model.put("description", "修改状态失败");
+							}
+						}
+					}
+				}
+				
+			}else{
+				model.put("result", "1");
+				model.put("description", "操作失败，没有查询到该罚单");
+			}
+			
+			/*if(ticket!=null) {
+				ticket.setTicketStatus(bodyInfo.getInt("ticketStatus"));
+				ticket.setDealWay(bodyInfo.getInt("dealWay"));
+				int rs=ticketService.updateByPrimaryKeySelective(ticket);
+				if(rs==1) {
+					model.put("result", "0");
+					model.put("description", "修改状态成功");
+				}else {
+					model.put("result", "1");
+					model.put("description", "修改状态失败");
+				}
 			}else {
 				model.put("result", "1");
-				model.put("description", "修改状态失败");
-			}
-		}else {
-			model.put("result", "1");
-			model.put("description", "操作失败，没有查询到该罚单");
-		}
+				model.put("description", "操作失败，没有查询到该罚单");
+			}*/
+		
+		
 		return buildReqJsonObject(model);
 	}
 	

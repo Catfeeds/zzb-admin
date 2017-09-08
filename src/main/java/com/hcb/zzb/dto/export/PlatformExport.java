@@ -4,7 +4,7 @@ public class PlatformExport {
 													
 	private Integer serialNumber;//序号
 	private String orderNumber;//订单号
-	private int status;//订单状态
+	private String status;//订单状态
 	private String zuKe;//租客
 	private String carOwner;//车东
 	private String carmodel;//车款
@@ -14,7 +14,7 @@ public class PlatformExport {
 	private Float payMoney;//付款金额
 	private Float deposit;//押金金额
 	private String city;//城市
-	private String link;//订单链接
+	//private String link;//订单链接
 	private String date;//时间
 	public Integer getSerialNumber() {
 		return serialNumber;
@@ -28,10 +28,10 @@ public class PlatformExport {
 	public void setOrderNumber(String orderNumber) {
 		this.orderNumber = orderNumber;
 	}
-	public int getStatus() {
+	public String getStatus() {
 		return status;
 	}
-	public void setStatus(int status) {
+	public void setStatus(String status) {
 		this.status = status;
 	}
 	public String getZuKe() {
@@ -88,18 +88,12 @@ public class PlatformExport {
 	public void setCity(String city) {
 		this.city = city;
 	}
-	public String getLink() {
-		return link;
-	}
-	public void setLink(String link) {
-		this.link = link;
-	}
+	
 	public String getDate() {
 		return date;
 	}
 	public void setDate(String date) {
 		this.date = date;
 	}
-	
 	
 }

@@ -2,8 +2,10 @@ package com.hcb.zzb.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,14 +16,18 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.aliyun.oss.model.Owner;
 import com.hcb.zzb.controller.base.BaseControllers;
+import com.hcb.zzb.dto.BankCard;
 import com.hcb.zzb.dto.Car;
 import com.hcb.zzb.dto.Orders;
 import com.hcb.zzb.dto.OwnerPo;
 import com.hcb.zzb.dto.UserCredit;
 import com.hcb.zzb.dto.Users;
+import com.hcb.zzb.service.IBankCardService;
 import com.hcb.zzb.service.ICarSevice;
 import com.hcb.zzb.service.IOrderService;
 import com.hcb.zzb.service.IUsersService;
+import com.hcb.zzb.service.IWithdrawalsRecordService;
+import com.hcb.zzb.util.DateUtil;
 
 import net.sf.json.JSONObject;
 @Controller
@@ -33,6 +39,10 @@ public class UsersController extends BaseControllers{
 	ICarSevice carService;
 	@Autowired
 	IOrderService orderService;
+	@Autowired
+	IBankCardService bankCardService;
+	@Autowired
+	private IWithdrawalsRecordService withdrawalsRecordService;
 	/**
 	 * 用户信息列表
 	 * @return
@@ -156,13 +166,30 @@ public class UsersController extends BaseControllers{
 						if(userUuid!=null){
 							 consume=orderService.selectCountByConsume(userUuid);
 							 money=orderService.selectMoneyByConsume(userUuid);
+							 String mone="";
+							 int mm;
+							 if(money==null){
+								//消费积分=该用户下总计充值并消费金额
+								  //String sstr=String.valueOf(Math.floor(money));
+								 money=0f;
+								 mone=money.toString().substring(0, 1);
+								 int parseInt = Integer.parseInt(mone);
+								 user.setConsumeIntegration(parseInt);
+							 }else{
+								 mone=money.toString().substring(0, 1);
+								 int parseInt = Integer.parseInt(mone);
+								 user.setConsumeIntegration(parseInt);
+							 }
+							 //System.out.println(mo);
+							//double floor = Math.floor(money);
 							 user.setMoney(money);
 							 user.setConsume(consume);
 							 user.setProfit(0f);
 							 user.setProfitRate(0f);
-							 user.setConsumeIntegration(consume);
-							 user.setGrade(0);
-							 user.setCashbalance(0f);
+							 //会员等级=订单数（1单连续30天，算30单） / 5单。说明：即5个订单为1级。500天订单为100级
+							 int grade= consume/5;
+							 user.setGrade(grade);
+							 user.setCashbalance(user.getBalance()==null?0f:user.getBalance());
 							 user.setGivebalance(0f);
 							 /*map2.put("consume", consume);
 							 map2.put("money", money);
@@ -284,16 +311,20 @@ public class UsersController extends BaseControllers{
 							 ///可提现金额
 							 //提现中金额
 							//已提现金额
+							Float alreadymoney=withdrawalsRecordService.selectAlreadyMoney(userUuid);
+							if(alreadymoney==null){
+								alreadymoney=0f;
+							}
 							 OwnerPo ownerPo=new OwnerPo();
-							 ownerPo.setAlreadybalance(0);
+							 ownerPo.setAlreadybalance(alreadymoney);
 							 ownerPo.setAvg(0f);
 							 ownerPo.setCarnum1(carnum1);
 							 ownerPo.setCarnum2(carnum2);
 							 ownerPo.setCars(car);
-							 ownerPo.setCashbalance(0f);
+							 ownerPo.setCashbalance(user.getFrozenBalance());
 							 ownerPo.setChajialirun(0f);
 							 ownerPo.setGdp(0f);
-							 ownerPo.setKetixianjiner(0f);
+							 ownerPo.setKetixianjiner(user.getBalance());
 							 ownerPo.setSureordercount(sureordercount);
 							 user.setOwnerPo(ownerPo);
 						}else{
@@ -353,6 +384,36 @@ public class UsersController extends BaseControllers{
 		}
 		Users user=usersService.selectByUserUuid(bodyInfo.getString("user_uuid"));
 		if(user!=null) {
+			String userUuid = user.getUserUuid();
+			//绑定卡号
+			List<BankCard> Bank= bankCardService.selectByUserUuid(userUuid);
+			if(Bank.size()>0){
+				json.put("bank", Bank);
+			}else{
+				json.put("bank", "");
+			}
+			//驾驶时长 int time;
+			//驾驶车型数 int modelNum;
+			//历史总成交 int totalNum;
+			//驾驶次数
+			//平均响应时间
+			//平均接单量
+			List<Car> cars = carService.selectByUserUuid(userUuid);
+			if(cars!=null){
+				//上传车辆
+				for (Car car : cars) {
+					car.setTime(0);
+					car.setModelNum(0);
+					car.setTotalNum(0);
+					car.setDriverCount(0);
+					car.setRes(0);
+					car.setAvg(0);
+				}
+				json.put("car", cars);
+				
+			}else{
+				json.put("car", "");
+			}
 			json.put("result", "0");
 			json.put("description", "查询成功");
 			json.put("user", user);
@@ -421,9 +482,39 @@ public class UsersController extends BaseControllers{
 		}
 		Users user=usersService.selectByUserUuid(bodyInfo.getString("user_uuid"));
 		if(user!=null) {
-			user.setUserStatus(bodyInfo.getInt("user_status"));
 			int rs=0;
-			rs=usersService.updateByPrimaryKeySelective(user);
+			if(bodyInfo.getInt("user_status")==4){
+				user.setUserStatus(bodyInfo.getInt("user_status"));
+				rs=usersService.updateByPrimaryKeySelective(user);
+				String userUuid = user.getUserUuid();
+				List<Car> cars = carService.selectByUserUuid(userUuid);
+				if(cars.size()>0){
+					for (Car car : cars) {
+						if(car!=null){
+							car.setIsSail(1);
+							carService.updateByPrimaryKey(car);
+						}
+					}
+				}
+			}else if(bodyInfo.getInt("user_status")==2){
+				user.setUserStatus(bodyInfo.getInt("user_status"));
+				rs=usersService.updateByPrimaryKeySelective(user);
+					String userUuid = user.getUserUuid();
+					List<Car> cars = carService.selectByUserUuid(userUuid);
+					if(cars.size()>0){
+						for (Car car : cars) {
+							if(car!=null){
+								car.setIsSail(1);
+								carService.updateByPrimaryKey(car);
+							}
+						}
+					}
+			}else{
+				user.setUserStatus(bodyInfo.getInt("user_status"));
+				rs=usersService.updateByPrimaryKeySelective(user);
+			}
+			//user.setUserStatus(bodyInfo.getInt("user_status"));
+			//rs=usersService.updateByPrimaryKeySelective(user);
 			if(rs==1) {
 				json.put("result", "0");
 				json.put("description", "操作成功");
@@ -586,6 +677,10 @@ public class UsersController extends BaseControllers{
 			json.put("description", "请检查参数格式是否正确");
 			return buildReqJsonObject(json);
 		}
+		
+		
+		
+		
 		Users user=usersService.selectByUserUuid(bodyInfo.getString("user_uuid"));
 		List<Car> carList=carService.selectByUserUuid(bodyInfo.getString("user_uuid"));
 		ModelMap model=new ModelMap();
@@ -703,8 +798,9 @@ public class UsersController extends BaseControllers{
 		}
 		Users user=usersService.selectByUserUuid(bodyInfo.getString("user_uuid"));
 		if(user!=null) {
-			if(user.getUserStatus()!=null) {
-				if(user.getUserStatus()==2&&bodyInfo.getInt("user_status")==2) {
+				/*
+				 * if(user.getUserStatus()!=null) {
+				 * if(user.getUserStatus()==2&&bodyInfo.getInt("user_status")==2) {
 					json.put("result", "1");
 					json.put("description", "用户已拉黑,请不要重复拉黑");
 					return buildReqJsonObject(json);
@@ -714,10 +810,47 @@ public class UsersController extends BaseControllers{
 					json.put("description", "用户已激活,请不要重复激活");
 					return buildReqJsonObject(json);
 				}
-			}
-			user.setUserStatus(bodyInfo.getInt("user_status"));
+				}
+				*/
+				//徐进现代吗
+			
+			/*if(bodyInfo.getInt("user_status")==2){
+				String userUuid = user.getUserUuid();
+				List<Car> cars = carService.selectByUserUuid(userUuid);
+				if(cars.size()>0){
+					for (Car car : cars) {
+						if(car!=null){
+							car.setIsSail(1);
+							carService.updateByPrimaryKey(car);
+						}
+					}
+				}
+			}*/
 			int rs=0;
-			rs=usersService.updateByPrimaryKeySelective(user);
+			System.out.println("----------------------------------1");
+			if(bodyInfo.getInt("user_status")==2){
+				System.out.println("----------------------------------2");
+				user.setUserStatus(bodyInfo.getInt("user_status"));
+				rs=usersService.updateByPrimaryKeySelective(user);
+				System.out.println("----------------------------------3");
+					String userUuid = user.getUserUuid();
+					List<Car> cars = carService.selectByUserUuid(userUuid);
+					System.out.println("----------------------------------4");
+					if(cars.size()>0){
+						System.out.println("----------------------------------5");
+						for (Car car : cars) {
+							if(car!=null){
+								car.setIsSail(1);
+								carService.updateByPrimaryKey(car);
+								System.out.println("----------------------------------6");
+							}
+						}
+					}
+				
+			}else{
+				user.setUserStatus(bodyInfo.getInt("user_status"));
+				rs=usersService.updateByPrimaryKeySelective(user);
+			}
 			if(rs==1) {
 				json.put("result", "0");
 				json.put("description", "操作成功");

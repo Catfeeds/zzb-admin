@@ -1,6 +1,7 @@
 package com.hcb.zzb.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,12 +19,14 @@ import com.hcb.zzb.dto.FinanceRecord;
 import com.hcb.zzb.dto.Orders;
 import com.hcb.zzb.dto.PlatformConfig;
 import com.hcb.zzb.dto.Users;
+import com.hcb.zzb.dto.WithdrawalsRecord;
 import com.hcb.zzb.dto.platformPo;
 import com.hcb.zzb.service.ICarSevice;
 import com.hcb.zzb.service.IFinanceRecordService;
 import com.hcb.zzb.service.IOrderService;
 import com.hcb.zzb.service.IPlatformConfigService;
 import com.hcb.zzb.service.IUsersService;
+import com.hcb.zzb.service.IWithdrawalsRecordService;
 import com.hcb.zzb.util.DateUtil;
 import com.hcb.zzb.util.StringUtil;
 
@@ -41,6 +44,8 @@ public class PlatformConfigController extends BaseControllers{
 	IUsersService usersService;
 	@Autowired
 	private ICarSevice carService;
+	@Autowired
+	private IWithdrawalsRecordService withdrawalsRecordService;
 	/**
 	 * 平台账户收支明细列表
 	 * @return
@@ -98,13 +103,21 @@ public class PlatformConfigController extends BaseControllers{
 		ModelMap model=new ModelMap();
 		//总营收（历史成功订单总数）
 		Float totalmoney =orderService.selectMoney();
+		if(totalmoney==null){
+			totalmoney=0f;
+		}
 		model.put("totalmoney", 0 * totalmoney);
 		//历史新高（日期-金额）
 		Float highmoney =orderService.selectHighMoney();
-		
+		if(highmoney==null){
+			highmoney=0f;
+		}
 		model.put("highmoney", 0 * highmoney);
 		//押金池，
 		Float poolmoney =orderService.selectPoolMoney();
+		if(poolmoney==null){
+			poolmoney=0f;
+		}
 		model.put("poolmoney", poolmoney);
 		//平台账户收支明细列表
 		//订单状态（预定成功，服务中，已还车，已结案）
@@ -131,13 +144,14 @@ public class PlatformConfigController extends BaseControllers{
 				for (FinanceRecord financeRecord : todayIncomeList) {
 					todayIncomeTotal= todayIncomeTotal + financeRecord.getMoney();
 				}
-				
+				todayIncomeTotal=0*todayIncomeTotal;
 				model.put("income", (float)(Math.round(todayIncomeTotal*100))/100);
 			}else {
 				model.put("income", 0);
 			}	
 			//平台账户今日支出
-			Map<String, Object> tmap1=new HashMap<>();
+			//////
+			/*Map<String, Object> tmap1=new HashMap<>();
 			tmap1.put("recordType", 4);//记录类型；1：充值；2：提现；3：订单；4：平台收费
 			tmap1.put("financeType", 2);//1收入 2支出
 			List<FinanceRecord> todayExpenditureList= financeRecordService.selectIncomeAndExpenditureByToday(tmap1);
@@ -145,6 +159,39 @@ public class PlatformConfigController extends BaseControllers{
 				float todayExpenditureTotal = 0;
 				for (FinanceRecord financeRecord : todayExpenditureList) {
 					todayExpenditureTotal = todayExpenditureTotal + financeRecord.getMoney();
+				}
+				model.put("expenditure", (float)(Math.round(todayExpenditureTotal*100))/100);
+				
+			}else {
+				model.put("expenditure", 0);
+			}*/
+			//暂时不用
+			/*
+			Map<String, Object> tmap1=new HashMap<>();
+			//tmap1.put("recordType", 4);//记录类型；1：充值；2：提现；3：订单；4：平台收费
+			tmap1.put("financeType", 2);//1收入 2支出
+			List<FinanceRecord> todayExpenditureList= financeRecordService.selectOutcomeAndExpenditureByToday(tmap1);
+			if(todayExpenditureList!=null&&!todayExpenditureList.isEmpty()) {
+				float todayExpenditureTotal = 0;
+				for (FinanceRecord financeRecord : todayExpenditureList) {
+					todayExpenditureTotal = todayExpenditureTotal + financeRecord.getMoney();
+				}
+				model.put("expenditure", (float)(Math.round(todayExpenditureTotal*100))/100);
+				
+			}else {
+				model.put("expenditure", 0);
+			}
+			*/
+			//注意：逻辑被修改了，上面备注掉的暂时不用
+			//单独计算WithdrawalsRecord为支出的情况  
+			Map<String, Object> tmap1=new HashMap<>();
+			//tmap1.put("recordType", 4);//记录类型；1：充值；2：提现；3：订单；4：平台收费
+			tmap1.put("applyStatus", 2);//1：申请中；2：已通过；3：已决绝(已驳回)
+			List<WithdrawalsRecord> newlist = withdrawalsRecordService.selectByAgree(tmap1);
+			if(newlist!=null&&!newlist.isEmpty()) {
+				float todayExpenditureTotal = 0;
+				for (WithdrawalsRecord withdrawalsRecord : newlist) {
+					todayExpenditureTotal = todayExpenditureTotal + withdrawalsRecord.getMoney();
 				}
 				model.put("expenditure", (float)(Math.round(todayExpenditureTotal*100))/100);
 				
@@ -189,8 +236,8 @@ public class PlatformConfigController extends BaseControllers{
 						if(user!=null){
 							//json.put("user", user);
 							//map2.put("user", user);
-							newpo.setUserName(user.getUserName());
-							newpo.setPhone(user.getUserPhone());
+							newpo.setUserName(user.getUserName()==null?"":user.getUserName());
+							newpo.setPhone(user.getUserPhone()==null?"":user.getUserPhone());
 						}else{
 							//json.put("user", "");
 							//map2.put("user", user);
@@ -200,8 +247,8 @@ public class PlatformConfigController extends BaseControllers{
 						if(userOwner!=null){
 							//json.put("userOwner", userOwner);
 							//map2.put("userOwner", userOwner);
-							newpo.setOwnerName(userOwner.getUserName());
-							newpo.setOwnerPhone(userOwner.getUserPhone());
+							newpo.setOwnerName(userOwner.getUserName()==null?"":userOwner.getUserName());
+							newpo.setOwnerPhone(userOwner.getUserPhone()==null?"":userOwner.getUserPhone());
 						}else{
 							//json.put("userOwner", "");
 							//map2.put("userOwner", "");
@@ -215,8 +262,8 @@ public class PlatformConfigController extends BaseControllers{
 							//json.put("city", car.getCity());
 							//map2.put("carBrand", car.getBrand());
 							//map2.put("city", car.getCity());
-							newpo.setCarBrand(car.getBrand());
-							newpo.setCity(car.getCity());
+							newpo.setCarBrand(car.getBrand()==null?"":car.getBrand());
+							newpo.setCity(car.getCity()==null?"":car.getCity());
 						}
 						//（预定成功，服务中，已还车，已结案）
 						//if(orderStatus==3){}
@@ -236,13 +283,18 @@ public class PlatformConfigController extends BaseControllers{
 						map2.put("deposit", String.valueOf(order.getDeposit()==null?"":order.getDeposit()));*/
 						newpo.setOrderNumber(order.getOrderNumber()==null?"":order.getOrderNumber());
 						newpo.setOrderStatus(order.getOrderStatus()==null?0:order.getOrderStatus());
-						newpo.setTakeCarTime(order.getTakeCarTime());
-						newpo.setPayTime(order.getPayTime());
+						newpo.setTakeCarTime(order.getTakeCarTime()==null?new Date():order.getTakeCarTime());
+						newpo.setPayTime(order.getPayTime()==null?new Date():order.getPayTime());
 						newpo.setPayType(order.getPayType()==null?1:order.getPayType());
 						newpo.setTotalPrice(order.getTotalPrice()==null?0f:order.getTotalPrice());
 						newpo.setDeposit(order.getDeposit()==null?0f:order.getDeposit());
+						newpo.setDepositStatus(order.getDepositStatus()==null?0:order.getDepositStatus());
+						newpo.setTransfer(order.getTransfer()==null?0f:order.getTransfer());
+						newpo.setCreateChange(order.getCreateChange()==null?"":order.getCreateChange());
+						if(newpo!=null){
+							financeRecord.setPlat(newpo);
+						}
 						
-						financeRecord.setPlat(newpo);
 					}
 					//listlist.add(map2);
 				}

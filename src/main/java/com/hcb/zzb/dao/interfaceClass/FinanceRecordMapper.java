@@ -33,4 +33,8 @@ public interface FinanceRecordMapper {
     List<FinanceRecord> selectByRecordType(Map<String, Object> map);
     
     int countSelectByRecordType(Map<String, Object> map);
+
+	List<FinanceRecord> selectOutcomeAndExpenditureByToday(Map<String, Object> tmap1);
+
+	Float selectMoney(String orderUuid);
 }

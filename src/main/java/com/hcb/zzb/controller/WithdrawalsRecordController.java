@@ -16,9 +16,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.hcb.zzb.controller.base.BaseControllers;
+import com.hcb.zzb.dto.Manager;
+import com.hcb.zzb.dto.PlatformConfig;
 import com.hcb.zzb.dto.PushInfo;
 import com.hcb.zzb.dto.Users;
 import com.hcb.zzb.dto.WithdrawalsRecord;
+import com.hcb.zzb.service.IManagerService;
+import com.hcb.zzb.service.IPlatformConfigService;
 import com.hcb.zzb.service.IPushInfoService;
 import com.hcb.zzb.service.IUsersService;
 import com.hcb.zzb.service.IWithdrawalsRecordService;
@@ -35,7 +39,10 @@ public class WithdrawalsRecordController extends BaseControllers{
 	private IUsersService userService;
 	@Autowired
 	private IPushInfoService pushInfoService;
-	
+	@Autowired
+	IManagerService managerService;
+	@Autowired
+	private IPlatformConfigService platformConfigService;
 	/**
 	 * 提现记录列表
 	 * @return
@@ -49,6 +56,7 @@ public class WithdrawalsRecordController extends BaseControllers{
 			json.put("description", "请检查参数格式是否正确或者参数是否完整");
 			return buildReqJsonInteger(1, json);
 		}
+		JSONObject headInfo=JSONObject.fromObject(headString);
 		JSONObject bodyInfo=JSONObject.fromObject(bodyString);
 		if(bodyInfo.get("pageIndex")==null||bodyInfo.get("pageSize")==null) {
 			json.put("result", "1");
@@ -88,6 +96,7 @@ public class WithdrawalsRecordController extends BaseControllers{
 		}else {
 			map.put("orderBy", 2);
 		}
+		Manager manager = managerService.selectByAccount(headInfo.getString("account"));
 		int count = withdrawalsRecordService.countSelectByMapLimit(map);
 		if(count==0) {
 			json.put("result", "1");
@@ -121,7 +130,6 @@ public class WithdrawalsRecordController extends BaseControllers{
 			for (WithdrawalsRecord withdrawalsRecord : newlist) {
 				
 				Users user =userService.selectByUserUuid(withdrawalsRecord.getApplyUuid());
-
 				Map<String, Object> nmap=new HashMap<>();
 				nmap.put("withdrawalsRecordUuid", withdrawalsRecord.getWithdrawalsRecordUuid());
 				nmap.put("id", withdrawalsRecord.getId());
@@ -135,6 +143,13 @@ public class WithdrawalsRecordController extends BaseControllers{
 				nmap.put("handleTime", withdrawalsRecord.getHandleTime()==null?"":new SimpleDateFormat().format(withdrawalsRecord.getHandleTime()));
 				nmap.put("handleDsp", withdrawalsRecord.getHandleDsp()==null?"":withdrawalsRecord.getHandleDsp());
 				nmap.put("status", withdrawalsRecord.getApplyStatus()==null?1:withdrawalsRecord.getApplyStatus());
+				nmap.put("bank", withdrawalsRecord.getBank()==null?"未知银行卡信息":withdrawalsRecord.getBank());
+				if(withdrawalsRecord.getHandleUuid()!=null){
+					Manager nana = managerService.selectByAccountUuid(withdrawalsRecord.getHandleUuid());
+					if(nana!=null){
+						nmap.put("createName", nana.getAccount());
+					}
+				}
 				lists.add(nmap);
 			}
 			
@@ -242,7 +257,7 @@ public class WithdrawalsRecordController extends BaseControllers{
 			return buildReqJsonInteger(1, json);
 		}
 		JSONObject bodyInfo=JSONObject.fromObject(bodyString);
-		
+		JSONObject headInfo=JSONObject.fromObject(headString);
 		if(bodyInfo.get("id")==null) {
 			json.put("result", "1");
 			json.put("description", "请检查参数是否正确或者完整");
@@ -269,6 +284,18 @@ public class WithdrawalsRecordController extends BaseControllers{
 				if(rs == 1) {
 					json.put("result", "0");
 					json.put("description", "操作成功");
+					
+					//平台账户减去
+					//只有审核通过后才把平台账户减去
+					List<PlatformConfig> platforms = new ArrayList<>();
+					platforms = platformConfigService.selectAll();
+					if(!platforms.isEmpty()) {
+						PlatformConfig platform=platforms.get(0);
+						float blan = platform.getBalance();
+						platform.setBalance(blan-withdrawalsRecord.getMoney());
+						platformConfigService.updateByPrimaryKeySelective(platform);
+					}
+					
 					//推送消息
 					PushInfo push = new PushInfo();
 					push.setCreateDatetime(new Date());
@@ -285,7 +312,7 @@ public class WithdrawalsRecordController extends BaseControllers{
 					}
 				   Integer rs1 = pushInfoService.insertSelective(push);
 					if(rs1==1){
-						String url = "http://zzbtest.cto1024.com/zzb-java/phppushinfo";
+						String url = "http://app.zzbcar.com/zzb-java/phppushinfo";
 						String str = HttpGet.sendGet(url, "push_uuid="+push.getPushUuid());
 						System.out.println("================="+str);
 						//推送消息
@@ -293,7 +320,7 @@ public class WithdrawalsRecordController extends BaseControllers{
 							public void run() {
 								PushInfo pushInfo = pushInfoService.selectByPushUuid(push.getPushUuid());
 								if(pushInfo!=null){
-									String url = "http://zzbtest.cto1024.com/zzb-java/phppushinfo";
+									String url = "http://app.zzbcar.com/zzb-java/phppushinfo";
 									String str = HttpGet.sendGet(url, "push_uuid="+push.getPushUuid());
 									System.out.println("================="+str);
 								}
@@ -380,7 +407,7 @@ public class WithdrawalsRecordController extends BaseControllers{
 					}
 				   Integer rs1 = pushInfoService.insertSelective(push);
 					if(rs1==1){
-						String url = "http://zzbtest.cto1024.com/zzb-java/phppushinfo";
+						String url = "http://app.zzbcar.com/zzb-java/phppushinfo";
 						String str = HttpGet.sendGet(url, "push_uuid="+push.getPushUuid());
 						System.out.println("================="+str);
 						//推送消息
@@ -388,7 +415,7 @@ public class WithdrawalsRecordController extends BaseControllers{
 							public void run() {
 								PushInfo pushInfo = pushInfoService.selectByPushUuid(push.getPushUuid());
 								if(pushInfo!=null){
-									String url = "http://zzbtest.cto1024.com/zzb-java/phppushinfo";
+									String url = "http://app.zzbcar.com/zzb-java/phppushinfo";
 									String str = HttpGet.sendGet(url, "push_uuid="+push.getPushUuid());
 									System.out.println("================="+str);
 								}

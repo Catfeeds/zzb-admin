@@ -67,6 +67,16 @@
 		limit #{start},#{end} 
 	</select>
 	
+	<select id="selectByAgree" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from withdrawals_record
+		where delete_at is null
+		and to_days(update_at) = to_days(now()) 
+    	and apply_status=#{applyStatus,jdbcType=INTEGER} 
+	</select>
+	
+	
 	<select id="countSelectByMapLimit" resultType="java.lang.Integer" parameterType="java.util.HashMap">
 		select count(1)
 		from withdrawals_record
@@ -76,6 +86,12 @@
 		</if>
 	</select>
 	
+	<select id="selectAlreadyMoney" resultType="java.lang.Float" parameterType="java.lang.String">
+		select SUM(money)
+		from withdrawals_record
+		where delete_at is null
+		AND apply_uuid=#{applyUuuid,jdbcType=VARCHAR} AND apply_status=2
+	</select>
 	
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
 		delete from withdrawals_record
