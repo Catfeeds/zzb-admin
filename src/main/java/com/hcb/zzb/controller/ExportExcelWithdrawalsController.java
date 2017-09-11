@@ -128,7 +128,7 @@ public class ExportExcelWithdrawalsController<T> extends BaseControllers{
 		String[] headers =  { "序号", "打款流水号", "用户id","姓名", "提现方式", "提现账户", "金额","负责人id","操作时间","状态"};
 		String avatar = "";
 		List<WithdrawalsRecordExport> dataset=new ArrayList<WithdrawalsRecordExport>();
-		for (WithdrawalsRecordExport withdrawalsRecordExport : dataset) {
+		for (WithdrawalsRecordExport withdrawalsRecordExport : exportList) {
 			dataset.add(withdrawalsRecordExport);
 		}
 		try  

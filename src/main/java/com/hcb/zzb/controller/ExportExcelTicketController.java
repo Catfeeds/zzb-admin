@@ -140,10 +140,10 @@ public class ExportExcelTicketController<T> extends BaseControllers{
 			ticketExp.setMoney(ticket.get("money")==null?"0":ticket.get("money").toString());
 			ticketExp.setPoints(ticket.get("points")==null?0:Integer.parseInt(ticket.get("points").toString()));
 			//处理方式 1：自负 2：委托
-			if(ticket.get("points")!=null){
-				if(ticket.get("points").equals(1)){
+			if(ticket.get("dealway")!=null){
+				if(ticket.get("dealway").equals(1)){
 					ticketExp.setDisposeWay("自负");
-				}else if(ticket.get("points").equals(2)){
+				}else if(ticket.get("dealway").equals(2)){
 					ticketExp.setDisposeWay("委托");
 				}else{
 					ticketExp.setDisposeWay("");
