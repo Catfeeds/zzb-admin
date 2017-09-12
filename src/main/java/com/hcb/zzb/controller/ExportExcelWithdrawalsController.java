@@ -38,9 +38,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.model.ObjectMetadata;
 import com.hcb.zzb.controller.base.BaseControllers;
+import com.hcb.zzb.dto.Manager;
 import com.hcb.zzb.dto.Users;
 import com.hcb.zzb.dto.WithdrawalsRecord;
 import com.hcb.zzb.dto.export.WithdrawalsRecordExport;
+import com.hcb.zzb.service.IManagerService;
 import com.hcb.zzb.service.IUsersService;
 import com.hcb.zzb.service.IWithdrawalsRecordService;
 import com.hcb.zzb.util.Config;
@@ -58,6 +60,8 @@ public class ExportExcelWithdrawalsController<T> extends BaseControllers{
 	private IWithdrawalsRecordService withdrawalsRecordService;
 	@Autowired
 	private IUsersService userService;
+	@Autowired
+	IManagerService managerService;
 	
 	@RequestMapping(value="exportExcelWithdrawalsRecord",method=RequestMethod.POST)
 	@ResponseBody
@@ -113,7 +117,18 @@ public class ExportExcelWithdrawalsController<T> extends BaseControllers{
 				withExp.setWithdrawalsType("未知");
 			}
 			withExp.setMoney(withdrawalsRecord.getMoney()==null?0:withdrawalsRecord.getMoney());
-			withExp.setHandUuid(withdrawalsRecord.getId().toString());
+			if(withdrawalsRecord.getHandleUuid()!=null){
+				Manager nana = managerService.selectByAccountUuid(withdrawalsRecord.getHandleUuid());
+				if(nana!=null){
+					withExp.setHandUuid(nana.getId().toString());
+				}else{
+					withExp.setHandUuid("");
+				}
+			}else{
+				withExp.setHandUuid("");
+			}
+			
+			
 			withExp.setDate(withdrawalsRecord.getHandleTime()==null?"":new SimpleDateFormat().format(withdrawalsRecord.getHandleTime()));
 			if(withdrawalsRecord.getApplyStatus()==null||withdrawalsRecord.getApplyStatus()==1) {
 				withExp.setStatus("申请中");
@@ -131,10 +146,10 @@ public class ExportExcelWithdrawalsController<T> extends BaseControllers{
 		}
 		
 		ExportExcelWithdrawalsController<WithdrawalsRecordExport> ex=new ExportExcelWithdrawalsController<WithdrawalsRecordExport>(); 
-		String[] headers =  { "序号", "打款流水号", "用户id","姓名", "提现方式", "提现账户", "金额","负责人id","操作时间","状态"};
+		String[] headers =  { "序号", "打款流水号", "用户id","姓名", "提现方式", "金额","负责人id","操作时间","状态"};
 		String avatar = "";
 		List<WithdrawalsRecordExport> dataset=new ArrayList<WithdrawalsRecordExport>();
-		for (WithdrawalsRecordExport withdrawalsRecordExport : dataset) {
+		for (WithdrawalsRecordExport withdrawalsRecordExport : exportList) {
 			dataset.add(withdrawalsRecordExport);
 		}
 		try  

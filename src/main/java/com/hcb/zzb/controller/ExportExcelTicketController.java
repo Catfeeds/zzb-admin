@@ -140,10 +140,10 @@ public class ExportExcelTicketController<T> extends BaseControllers{
 			ticketExp.setMoney(ticket.get("money")==null?"0":ticket.get("money").toString());
 			ticketExp.setPoints(ticket.get("points")==null?0:Integer.parseInt(ticket.get("points").toString()));
 			//处理方式 1：自负 2：委托
-			if(ticket.get("points")!=null){
-				if(ticket.get("points").equals(1)){
+			if(ticket.get("dealway")!=null){
+				if(ticket.get("dealway").toString().equals("1")){
 					ticketExp.setDisposeWay("自负");
-				}else if(ticket.get("points").equals(2)){
+				}else if(ticket.get("dealway").toString().equals("2")){
 					ticketExp.setDisposeWay("委托");
 				}else{
 					ticketExp.setDisposeWay("");
@@ -159,7 +159,7 @@ public class ExportExcelTicketController<T> extends BaseControllers{
 		
 		ExportExcelTicketController<TicketExport> ex=new ExportExcelTicketController<TicketExport>();
 	  //String[] headers =  { "序号", "订单号", "用户","车主","违章信息","罚款","扣分","处理方式","时间"};
-		String[] headers =  { "序号", "订单号", "用户","车主","违章信息","罚款","扣分","处理方式",};
+		String[] headers =  { "序号", "订单号", "用户","车主","违章信息","罚款","扣分","处理方式"};
 		String avatar = "";
 		try  
 	        {         

@@ -144,7 +144,6 @@ public class WithdrawalsRecordController extends BaseControllers{
 				nmap.put("type", withdrawalsRecord.getAccountType()==null?1:withdrawalsRecord.getAccountType());
 				nmap.put("accountNumber", withdrawalsRecord.getAccountNumber()==null?"":withdrawalsRecord.getAccountNumber());
 				nmap.put("money", withdrawalsRecord.getMoney()==null?0:withdrawalsRecord.getMoney());
-				nmap.put("handleUuid", withdrawalsRecord.getId().toString());
 				nmap.put("handleTime", withdrawalsRecord.getHandleTime()==null?"":new SimpleDateFormat().format(withdrawalsRecord.getHandleTime()));
 				nmap.put("handleDsp", withdrawalsRecord.getHandleDsp()==null?"":withdrawalsRecord.getHandleDsp());
 				nmap.put("status", withdrawalsRecord.getApplyStatus()==null?1:withdrawalsRecord.getApplyStatus());
@@ -152,6 +151,7 @@ public class WithdrawalsRecordController extends BaseControllers{
 				if(withdrawalsRecord.getHandleUuid()!=null){
 					Manager nana = managerService.selectByAccountUuid(withdrawalsRecord.getHandleUuid());
 					if(nana!=null){
+						nmap.put("handleUuid", nana.getId().toString());
 						nmap.put("createName", nana.getAccount());
 					}
 				}
