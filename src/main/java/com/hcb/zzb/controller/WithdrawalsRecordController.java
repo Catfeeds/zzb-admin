@@ -144,7 +144,7 @@ public class WithdrawalsRecordController extends BaseControllers{
 				nmap.put("type", withdrawalsRecord.getAccountType()==null?1:withdrawalsRecord.getAccountType());
 				nmap.put("accountNumber", withdrawalsRecord.getAccountNumber()==null?"":withdrawalsRecord.getAccountNumber());
 				nmap.put("money", withdrawalsRecord.getMoney()==null?0:withdrawalsRecord.getMoney());
-				nmap.put("handleUuid", withdrawalsRecord.getHandleUuid()==null?"":withdrawalsRecord.getHandleUuid());
+				nmap.put("handleUuid", withdrawalsRecord.getId().toString());
 				nmap.put("handleTime", withdrawalsRecord.getHandleTime()==null?"":new SimpleDateFormat().format(withdrawalsRecord.getHandleTime()));
 				nmap.put("handleDsp", withdrawalsRecord.getHandleDsp()==null?"":withdrawalsRecord.getHandleDsp());
 				nmap.put("status", withdrawalsRecord.getApplyStatus()==null?1:withdrawalsRecord.getApplyStatus());
@@ -317,7 +317,7 @@ public class WithdrawalsRecordController extends BaseControllers{
 					}
 				   Integer rs1 = pushInfoService.insertSelective(push);
 					if(rs1==1){
-						String url = "http://app.zzbcar.com/zzb-java/phppushinfo";
+						String url = "http://zzbtest.cto1024.com/zzb-java/phppushinfo";
 						String str = HttpGet.sendGet(url, "push_uuid="+push.getPushUuid());
 						System.out.println("================="+str);
 						//推送消息
@@ -325,7 +325,7 @@ public class WithdrawalsRecordController extends BaseControllers{
 							public void run() {
 								PushInfo pushInfo = pushInfoService.selectByPushUuid(push.getPushUuid());
 								if(pushInfo!=null){
-									String url = "http://app.zzbcar.com/zzb-java/phppushinfo";
+									String url = "http://zzbtest.cto1024.com/zzb-java/phppushinfo";
 									String str = HttpGet.sendGet(url, "push_uuid="+push.getPushUuid());
 									System.out.println("================="+str);
 								}
@@ -412,7 +412,7 @@ public class WithdrawalsRecordController extends BaseControllers{
 					}
 				   Integer rs1 = pushInfoService.insertSelective(push);
 					if(rs1==1){
-						String url = "http://app.zzbcar.com/zzb-java/phppushinfo";
+						String url = "http://zzbtest.cto1024.com/zzb-java/phppushinfo";
 						String str = HttpGet.sendGet(url, "push_uuid="+push.getPushUuid());
 						System.out.println("================="+str);
 						//推送消息
@@ -420,7 +420,7 @@ public class WithdrawalsRecordController extends BaseControllers{
 							public void run() {
 								PushInfo pushInfo = pushInfoService.selectByPushUuid(push.getPushUuid());
 								if(pushInfo!=null){
-									String url = "http://app.zzbcar.com/zzb-java/phppushinfo";
+									String url = "http://zzbtest.cto1024.com/zzb-java/phppushinfo";
 									String str = HttpGet.sendGet(url, "push_uuid="+push.getPushUuid());
 									System.out.println("================="+str);
 								}

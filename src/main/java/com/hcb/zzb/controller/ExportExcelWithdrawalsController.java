@@ -113,7 +113,7 @@ public class ExportExcelWithdrawalsController<T> extends BaseControllers{
 				withExp.setWithdrawalsType("未知");
 			}
 			withExp.setMoney(withdrawalsRecord.getMoney()==null?0:withdrawalsRecord.getMoney());
-			withExp.setHandUuid(withdrawalsRecord.getHandleUuid()==null?"":withdrawalsRecord.getHandleUuid());
+			withExp.setHandUuid(withdrawalsRecord.getId().toString());
 			withExp.setDate(withdrawalsRecord.getHandleTime()==null?"":new SimpleDateFormat().format(withdrawalsRecord.getHandleTime()));
 			if(withdrawalsRecord.getApplyStatus()==null||withdrawalsRecord.getApplyStatus()==1) {
 				withExp.setStatus("申请中");
