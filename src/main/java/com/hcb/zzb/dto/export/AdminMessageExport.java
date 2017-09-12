@@ -3,6 +3,14 @@ package com.hcb.zzb.dto.export;
 public class AdminMessageExport {
 	private Integer serialNumber;//序号
 	private String messageType;//消息类型
+	private String messageId;//消息类型
+	
+	public String getMessageId() {
+		return messageId;
+	}
+	public void setMessageId(String messageId) {
+		this.messageId = messageId;
+	}
 	private String messageContent;//消息内容
 	private String status;//状态
 	private String date;//时间

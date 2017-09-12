@@ -99,6 +99,7 @@ public class ExportExcelAdminMessageController<T> extends BaseControllers{
 				}
 			}
 			ae.setMessageContent(adminMessage.getMessageContent()==null?"":adminMessage.getMessageContent());
+			ae.setMessageId(adminMessage.getId().toString());
 			if(adminMessage.getIsRead()==null){
 				ae.setStatus("--");
 			}else{
@@ -117,7 +118,7 @@ public class ExportExcelAdminMessageController<T> extends BaseControllers{
 		}
 		
 		ExportExcelAdminMessageController<AdminMessageExport> ex=new ExportExcelAdminMessageController<AdminMessageExport>();
-		String[] headers =  { "序号", "消息类型", "消息内容","状态", "时间"};
+		String[] headers =  { "序号", "消息类型","用户ID", "消息内容","状态", "时间"};
 		String avatar = "";
 		
 		try  

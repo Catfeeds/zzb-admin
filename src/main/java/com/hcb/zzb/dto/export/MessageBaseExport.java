@@ -3,6 +3,13 @@ package com.hcb.zzb.dto.export;
 public class MessageBaseExport {
 	private Integer serialNumber;//序号
 	private String title;//标题
+	private String uuid;//用户id
+	public String getUuid() {
+		return uuid;
+	}
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
 	private String content;//内容
 	private String time;//注册时间
 	public Integer getSerialNumber() {
