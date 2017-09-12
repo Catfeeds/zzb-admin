@@ -105,6 +105,8 @@ public class ExportExcelWithdrawalsController<T> extends BaseControllers{
 			withExp.setUuid(withdrawalsRecord.getWithdrawalsRecordUuid()==null?"":withdrawalsRecord.getWithdrawalsRecordUuid());
 			withExp.setUserId(user.getId());
 			withExp.setUserName(user.getUserName()==null?"":user.getUserName());
+			withExp.setBank(withdrawalsRecord.getBank()==null?"":withdrawalsRecord.getBank());
+			withExp.setAccountNumber(withdrawalsRecord.getAccountNumber()==null?"":withdrawalsRecord.getAccountNumber());
 			if(withdrawalsRecord.getAccountType()==null) {
 				withExp.setWithdrawalsType("银行卡");
 			}else if(withdrawalsRecord.getAccountType()==1){
@@ -146,7 +148,7 @@ public class ExportExcelWithdrawalsController<T> extends BaseControllers{
 		}
 		
 		ExportExcelWithdrawalsController<WithdrawalsRecordExport> ex=new ExportExcelWithdrawalsController<WithdrawalsRecordExport>(); 
-		String[] headers =  { "序号", "打款流水号", "用户id","姓名", "提现方式", "金额","负责人id","操作时间","状态"};
+		String[] headers =  { "序号", "打款流水号", "用户id","姓名", "开户银行","提现账户", "金额","负责人id","操作时间","状态"};
 		String avatar = "";
 		List<WithdrawalsRecordExport> dataset=new ArrayList<WithdrawalsRecordExport>();
 		for (WithdrawalsRecordExport withdrawalsRecordExport : exportList) {

@@ -10,6 +10,21 @@ public class WithdrawalsRecordExport {
 	private String handUuid;//负责人uuid
 	private String date;//操作时间
 	private String status;//状态
+	private String bank;//开户银行
+	private String accountNumber;//提现账户
+	
+	public String getAccountNumber() {
+		return accountNumber;
+	}
+	public void setAccountNumber(String accountNumber) {
+		this.accountNumber = accountNumber;
+	}
+	public String getBank() {
+		return bank;
+	}
+	public void setBank(String bank) {
+		this.bank = bank;
+	}
 	public Integer getSerialNumber() {
 		return serialNumber;
 	}
