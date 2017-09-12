@@ -34,6 +34,11 @@ import com.hcb.zzb.util.MD5Util;
 import net.sf.json.JSONObject;
 @Controller
 @RequestMapping("MessageBase")
+/**
+ * 消息接口
+ * @author kk
+ *
+ */
 public class MessageBaseController extends BaseControllers {
 
 	@Autowired
@@ -45,7 +50,10 @@ public class MessageBaseController extends BaseControllers {
 	@Autowired
 	private IMessageChildService messageChildService;
 	private IPushInfoService pushInfoService;
-	
+	/**
+	 * 消息列表
+	 * @return
+	 */
 	@RequestMapping(value="list",method=RequestMethod.POST)
 	@ResponseBody
 	public String messageList(){
@@ -169,7 +177,10 @@ public class MessageBaseController extends BaseControllers {
 		a = a.replace("\"[", "[");
 		a = a.replace("]\"", "]");*/
 	} 
-	
+	/**
+	 * 新增消息
+	 * @return
+	 */
 	@RequestMapping(value ="add", method = RequestMethod.POST)
 	@ResponseBody
 	@Transactional
@@ -284,6 +295,10 @@ public class MessageBaseController extends BaseControllers {
 		
 		return buildReqJsonObject(json);
 	}
+	/**
+	 * 删除消息
+	 * @return
+	 */
 	@RequestMapping(value ="delete", method = RequestMethod.POST)
 	@ResponseBody
 	@Transactional

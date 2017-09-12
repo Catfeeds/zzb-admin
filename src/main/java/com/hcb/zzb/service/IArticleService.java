@@ -6,7 +6,11 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 import com.hcb.zzb.dto.Article;
-
+/**
+ * 运营文章
+ * @author kk
+ *
+ */
 @Service("ArticleService")
 public interface IArticleService {
 	int deleteByPrimaryKey(Integer id);
@@ -51,8 +55,16 @@ public interface IArticleService {
 	int selectAllByArticleTypeCount(int articleType);
 
 	List<Article> selectTypeAll();
-	
+	/**
+     * 根据输入内容查询列表
+     * @param map
+     * @return
+     */
 	List<Article> selectByMapLimit(Map<String, Object> map);
-	
+	/**
+     * 根据输入内容查询条数
+     * @param map
+     * @return
+     */
 	int countSelectByMapLimit(Map<String, Object> map);
 }

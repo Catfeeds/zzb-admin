@@ -47,6 +47,12 @@ import com.hcb.zzb.util.Config;
 
 import net.sf.json.JSONObject;
 @Controller
+/**
+ * 提现记录
+ * @author kk
+ *
+ * @param <T>
+ */
 public class ExportExcelWithdrawalsController<T> extends BaseControllers{
 	@Autowired
 	private IWithdrawalsRecordService withdrawalsRecordService;

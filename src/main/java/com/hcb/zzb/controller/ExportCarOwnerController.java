@@ -48,7 +48,12 @@ import com.hcb.zzb.service.IUsersService;
 import com.hcb.zzb.util.Config;
 
 import net.sf.json.JSONObject;
-
+/**
+ * 导出车主excel
+ * @author kk
+ *
+ * @param <T>
+ */
 @Controller
 public class ExportCarOwnerController<T> extends BaseControllers {
 	@Autowired

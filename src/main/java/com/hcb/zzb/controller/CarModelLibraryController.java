@@ -27,6 +27,11 @@ import com.sun.org.apache.bcel.internal.generic.NEW;
 import net.sf.json.JSONObject;
 @Controller
 @RequestMapping(value="carMoldeLibrary")
+/**
+ * 车型库相关接口
+ * @author kk
+ *
+ */
 public class CarModelLibraryController extends BaseControllers{
 	@Autowired
 	ICarModel carModelService; 

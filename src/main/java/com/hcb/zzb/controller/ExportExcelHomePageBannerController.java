@@ -53,7 +53,13 @@ public class ExportExcelHomePageBannerController<T> extends BaseControllers{
 	@Autowired
 	IhomePageBanner homePageBannerService;
 	
-	
+	/**
+	 * 首页轮播导出
+	 * @param req
+	 * @param res
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping(value="exportExcelHomePageBanner",method=RequestMethod.POST)
 	@ResponseBody
 	public String exportExcelHomePageBanner(HttpServletRequest req, 

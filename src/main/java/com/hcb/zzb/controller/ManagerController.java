@@ -30,7 +30,10 @@ public class ManagerController extends BaseControllers {
 	
 	@Autowired
 	IManagerService managerService;
-
+/**
+ * 账户列表
+ * @return
+ */
 	@RequestMapping(value="list",method = RequestMethod.POST)
 	@ResponseBody
 	public String messages() {
@@ -142,7 +145,10 @@ public class ManagerController extends BaseControllers {
 		}
 		return buildReqJsonObject(json);
 	}
-	
+	/**
+	 * 删除账户
+	 * @return
+	 */
 	@RequestMapping(value="delete",method = RequestMethod.POST)
 	@ResponseBody
 	public String delete() {
@@ -176,7 +182,10 @@ public class ManagerController extends BaseControllers {
 		}
 		return buildReqJsonObject(json);
 	}
-	
+	/**
+	 * 修改状态
+	 * @return
+	 */
 	@RequestMapping(value="changestatus",method = RequestMethod.POST)
 	@ResponseBody
 	public String changestatus() {
@@ -211,7 +220,10 @@ public class ManagerController extends BaseControllers {
 		}
 		return buildReqJsonObject(json);
 	}
-	
+	/**
+	 * 新建账户
+	 * @return
+	 */
 	@RequestMapping(value="add",method = RequestMethod.POST)
 	@ResponseBody
 	public String newManager() {
@@ -277,7 +289,10 @@ public class ManagerController extends BaseControllers {
 		return a;
 		//return buildReqJsonObject(json);
 	}
-	
+	/**
+	 * 修改账户
+	 * @return
+	 */
 	@RequestMapping(value="update",method = RequestMethod.POST)
 	@ResponseBody
 	public String updateManager() {
@@ -334,7 +349,10 @@ public class ManagerController extends BaseControllers {
 		}
 		return buildReqJsonObject(json);
 	}
-	
+	/**
+	 * 修改账户密码
+	 * @return
+	 */
 	@RequestMapping(value="updatepassword",method = RequestMethod.POST)
 	@ResponseBody
 	public String updatepassword() {

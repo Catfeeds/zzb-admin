@@ -33,6 +33,11 @@ import com.hcb.zzb.util.StringUtil;
 import net.sf.json.JSONObject;
 @Controller
 @RequestMapping("platform")
+/**
+ * 平台账户接口
+ * @author kk
+ *
+ */
 public class PlatformConfigController extends BaseControllers{
 	@Autowired
 	IFinanceRecordService financeRecordService;

@@ -38,6 +38,11 @@ import com.hcb.zzb.service.IUsersService;
 import net.sf.json.JSONObject;
 @Controller
 @RequestMapping(value="order")
+/**
+ * 订单相关接口
+ * @author kk
+ *
+ */
 public class OrdersController extends BaseControllers{
 	@Autowired
 	private IOrderService orderService;

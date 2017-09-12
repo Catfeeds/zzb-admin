@@ -20,6 +20,11 @@ import com.hcb.zzb.service.IAdminMessageService;
 import net.sf.json.JSONObject;
 @Controller
 @RequestMapping("adminmessage")
+/**
+ * 系统消息
+ * @author kk
+ *
+ */
 public class AdminMessageController extends BaseControllers{
 	@Autowired
 	IAdminMessageService adminMessageService;
@@ -141,7 +146,10 @@ public class AdminMessageController extends BaseControllers{
 		}
 		return buildReqJsonObject(json);
 	}
-	
+	/**
+	 * 删除消息
+	 * @return
+	 */
 	@RequestMapping(value="delete",method = RequestMethod.POST)
 	@ResponseBody
 	public String delete() {

@@ -28,7 +28,11 @@ import com.hcb.zzb.util.HttpGet;
 import com.hcb.zzb.util.MD5Util;
 
 import net.sf.json.JSONObject;
-
+/**
+ * 车辆car
+ * @author kk
+ *
+ */
 @Controller
 @RequestMapping(value="car")
 public class CarController extends BaseControllers{

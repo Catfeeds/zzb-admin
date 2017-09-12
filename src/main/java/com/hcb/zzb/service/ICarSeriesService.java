@@ -3,7 +3,11 @@ package com.hcb.zzb.service;
 import java.util.List;
 
 import com.hcb.zzb.dto.carSeries;
-
+/**
+ * 车系
+ * @author kk
+ *
+ */
 public interface ICarSeriesService {
 	int deleteByPrimaryKey(Integer id);
 

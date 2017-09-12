@@ -24,7 +24,11 @@ import com.gexin.rp.sdk.base.impl.SingleMessage;
 import com.gexin.rp.sdk.base.impl.Target;
 import com.gexin.rp.sdk.base.payload.APNPayload;
 import com.gexin.rp.sdk.exceptions.RequestException;
-
+/**
+ * 推送消息的接口
+ * @author kk
+ *
+ */
 @Controller
 public class PushInfoController  extends BaseController{
 

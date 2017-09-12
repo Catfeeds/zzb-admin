@@ -49,6 +49,13 @@ import com.hcb.zzb.util.Config;
 
 import net.sf.json.JSONObject;
 @Controller
+/**
+ * 订单导出
+ * @author kk
+ *
+ * @param <T>
+ */
+
 public class ExportExcelOrderController<T> extends BaseControllers {
 	@Autowired
 	IOrderService orderService;

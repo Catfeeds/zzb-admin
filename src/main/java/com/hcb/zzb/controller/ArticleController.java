@@ -24,6 +24,11 @@ import com.hcb.zzb.service.IManagerService;
 import net.sf.json.JSONObject;
 @Controller
 @RequestMapping(value="article")
+/**
+ * 运营文章
+ * @author kk
+ *
+ */
 public class ArticleController extends BaseControllers{
 	@Autowired
 	IArticleService articleService;

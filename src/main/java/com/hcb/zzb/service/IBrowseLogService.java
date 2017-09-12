@@ -4,7 +4,11 @@ import java.util.List;
 import java.util.Map;
 
 import com.hcb.zzb.dto.BrowseLog;
-
+/**
+ * 浏览记录
+ * @author kk
+ *
+ */
 public interface IBrowseLogService {
 	public int deleteByPrimaryKey(Integer id);
 

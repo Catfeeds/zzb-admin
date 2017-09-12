@@ -32,6 +32,11 @@ import com.hcb.zzb.util.MD5Util;
 import net.sf.json.JSONObject;
 @Controller
 @RequestMapping(value="withdrawalsRecord")
+/**
+ * 提现记录接口
+ * @author kk
+ *
+ */
 public class WithdrawalsRecordController extends BaseControllers{
 	@Autowired
 	private IWithdrawalsRecordService withdrawalsRecordService;

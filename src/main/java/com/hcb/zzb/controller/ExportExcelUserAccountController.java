@@ -45,6 +45,12 @@ import com.hcb.zzb.util.Config;
 
 import net.sf.json.JSONObject;
 @Controller
+/**
+ * 用户导出excel
+ * @author kk
+ *
+ * @param <T>
+ */
 public class ExportExcelUserAccountController<T> extends BaseControllers{
 	@Autowired
 	IUsersService userService;

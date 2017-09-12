@@ -19,6 +19,11 @@ import com.hcb.zzb.service.IUsersService;
 import net.sf.json.JSONObject;
 @Controller
 @RequestMapping("userAccount")
+/**
+ * 用户账户接口
+ * @author kk
+ *
+ */
 public class UserAccountController extends BaseControllers{
 	@Autowired
 	IUsersService userService;

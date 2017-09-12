@@ -4,7 +4,11 @@ import java.util.List;
 import java.util.Map;
 
 import com.hcb.zzb.dto.MessageChild;
-
+/**
+ * 子消息接口
+ * @author kk
+ *
+ */
 public interface IMessageChildService {
 	 	int deleteByPrimaryKey(Integer id);
 

@@ -4,7 +4,11 @@ import java.util.List;
 import java.util.Map;
 
 import com.hcb.zzb.dto.CarModel;
-
+/**
+ * 车型
+ * @author kk
+ *
+ */
 public interface ICarModel {
 	int deleteByPrimaryKey(Integer id);
 
@@ -23,9 +27,17 @@ public interface ICarModel {
 	List<CarModel> selectByCarBrand(String brand);
 
 	List<CarModel> selectByApplyId(String userUuid);
-	
+	/**
+	 * 根据筛选条件查询
+	 * @param map
+	 * @return
+	 */
 	List<CarModel> selectByMapLimit(Map<String, Object> map);
-	
+	/**
+	 * 根据筛选条件查询数目
+	 * @param map
+	 * @return
+	 */
 	int countByMap(Map<String, Object> map);
 	
 	CarModel selectByUuid(String uuid);

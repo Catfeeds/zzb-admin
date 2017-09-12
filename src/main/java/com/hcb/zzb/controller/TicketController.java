@@ -28,6 +28,11 @@ import com.hcb.zzb.service.IUsersService;
 import net.sf.json.JSONObject;
 @Controller
 @RequestMapping(value="ticket")
+/**
+ * 罚单接口
+ * @author kk
+ *
+ */
 public class TicketController extends BaseControllers{
 	private static final String String = null;
 	@Autowired

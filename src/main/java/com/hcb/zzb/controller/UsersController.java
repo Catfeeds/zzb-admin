@@ -32,6 +32,11 @@ import com.hcb.zzb.util.DateUtil;
 import net.sf.json.JSONObject;
 @Controller
 @RequestMapping(value="user")
+/**
+ * 用户信息接口
+ * @author kk
+ *
+ */
 public class UsersController extends BaseControllers{
 	@Autowired
 	IUsersService usersService;
@@ -457,7 +462,7 @@ public class UsersController extends BaseControllers{
 		return buildReqJsonObject(json);
 	}
 	/**
-	 * 用户驳回，冻结，通过
+	 * 用户驳回，冻结，通过  拉黑、激活
 	 * @return
 	 */
 	@RequestMapping(value="operationStatus",method=RequestMethod.POST)
@@ -773,7 +778,7 @@ public class UsersController extends BaseControllers{
 	}
 	
 	/**
-	 * 用户拉黑/激活
+	 * 用户拉黑/激活  此接口暂且不用
 	 * @return
 	 */
 	@RequestMapping(value="blackAndActivate",method=RequestMethod.POST)

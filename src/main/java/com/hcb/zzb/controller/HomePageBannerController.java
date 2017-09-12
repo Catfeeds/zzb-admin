@@ -22,7 +22,11 @@ import com.hcb.zzb.service.IManagerService;
 import com.hcb.zzb.service.IhomePageBanner;
 
 import net.sf.json.JSONObject;
-
+/**
+ * 首页banner相关接口
+ * @author kk
+ *
+ */
 @Controller
 @RequestMapping("homePage")
 public class HomePageBannerController extends BaseControllers {
@@ -33,6 +37,10 @@ public class HomePageBannerController extends BaseControllers {
 	IManagerService managerService;
 	@RequestMapping(value = "list", method = RequestMethod.POST)
 	@ResponseBody
+	/**
+	 * 首页banner列表
+	 * @return
+	 */
 	public String homePageList() {
 		JSONObject json=new JSONObject();
 		if(sign==1||sign==2) {
@@ -337,7 +345,10 @@ public class HomePageBannerController extends BaseControllers {
 		
 		return buildReqJsonObject(json);
 	}
-	
+	/**
+	 * 轮播图详情
+	 * @return
+	 */
 	@RequestMapping(value="detail",method=RequestMethod.POST)
 	@ResponseBody
 	public String detail(){

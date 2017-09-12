@@ -11,7 +11,11 @@ import com.hcb.zzb.dto.Manager;
 import com.hcb.zzb.service.IManagerService;
 
 import net.sf.json.JSONObject;
-
+/**
+ * 后台账号登录接口
+ * @author kk
+ *
+ */
 @Controller
 public class LoginController extends BaseControllers {
 	
