@@ -5,13 +5,14 @@ public class WithdrawalsRecordExport {
 	private String uuid;//打款流水号
 	private Integer userId;//用户id
 	private String userName;//用户姓名
-	private String withdrawalsType;//提现方式
+	private String bank;//开户银行
+	private String accountNumber;//提现账户
+	//private String withdrawalsType;//提现方式
 	private Float money;//金额
 	private String handUuid;//负责人uuid
 	private String date;//操作时间
 	private String status;//状态
-	private String bank;//开户银行
-	private String accountNumber;//提现账户
+	
 	
 	public String getAccountNumber() {
 		return accountNumber;
@@ -49,12 +50,12 @@ public class WithdrawalsRecordExport {
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
-	public String getWithdrawalsType() {
+	/*public String getWithdrawalsType() {
 		return withdrawalsType;
 	}
 	public void setWithdrawalsType(String withdrawalsType) {
 		this.withdrawalsType = withdrawalsType;
-	}
+	}*/
 	public Float getMoney() {
 		return money;
 	}
